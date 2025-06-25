@@ -1,0 +1,14 @@
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# VS Code (на всякий случай)
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
