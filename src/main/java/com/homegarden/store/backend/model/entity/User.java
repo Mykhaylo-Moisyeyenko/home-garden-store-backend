@@ -17,17 +17,15 @@ public class User {
     @Id
     @GeneratedValue
     @EqualsAndHashCode.Include
-    private Long id;
+    private Long userId;
 
     private String name;
 
-    private String surname;
-
     private String email;
 
-    private String password;
+    private String phoneNumber;
 
-    private String postAddress; // БД будет искать по запросу post_address // postAddress
+    private String passwordHash;
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;

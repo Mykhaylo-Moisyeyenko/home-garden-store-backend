@@ -13,7 +13,6 @@ public class UserConverter implements Converter<User, CreateUserRequestDTO, User
 
     @Override
     public UserResponseDTO toDto(User User) {
-        return new UserResponseDTO(User.getId(), User.getName(),
-                User.getSurname());
+        return new UserResponseDTO(User.getUserId(), User.getName());
     }
 }
