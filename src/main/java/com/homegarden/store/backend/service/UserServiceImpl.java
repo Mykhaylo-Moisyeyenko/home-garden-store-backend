@@ -1,5 +1,6 @@
 package com.homegarden.store.backend.service;
 
+import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.model.entity.User;
 import com.homegarden.store.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void delete(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException("Пользователь с id " + id + " не найден");
+        }
+        userRepository.deleteById(id);
+    }
+
+    @Override
     public Optional<User> getByEmail(String email) {
         return userRepository.findByEmail(email);
+
     }
 }

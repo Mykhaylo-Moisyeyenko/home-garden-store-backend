@@ -5,17 +5,18 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-//@Table(name = "local users")
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long userId;
 
