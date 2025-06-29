@@ -1,6 +1,6 @@
 
 --changeset mykhaylo:create-all-tables
-create type user_role as enum ('role_user', 'role_administrator');
+create type user_role as enum ('ROLE_USER', 'ROLE_ADMINISTRATOR');
 
 create table users
 (
@@ -54,12 +54,12 @@ create table cart_items
 );
 
 create type order_status as enum (
-    'status_created',
-    'status_awaiting_payment',
-    'status_paid',
-    'status_shipped',
-    'status_delivered',
-    'status_cancelled'
+    'STATUS_CREATED',
+    'STATUS_AWAITING_PAYMENT',
+    'STATUS_PAID',
+    'STATUS_SHIPPED',
+    'STATUS_DELIVERED',
+    'STATUS_CANCELLED'
 );
 
 create table orders
@@ -70,7 +70,7 @@ create table orders
     delivery_address varchar(255) not null,
     contact_phone    varchar(20)  not null,
     delivery_method  varchar(100) not null,
-    status           order_status not null default 'status_created',
+    status           order_status not null default 'STATUS_CREATED',
     updated_at       timestamp             default current_timestamp
 );
 
