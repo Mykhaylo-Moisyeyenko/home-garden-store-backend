@@ -1,8 +1,8 @@
 package com.homegarden.store.backend.service;
 
+import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.model.entity.User;
 import com.homegarden.store.backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +11,6 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private UserRepository userRepository;
 
     @Override
@@ -20,7 +19,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(User localUser) {
+    public User create(User User) {
         return null;
     }
 
@@ -30,7 +29,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void delete(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException("Пользователь с id " + id + " не найден");
+        }
+        userRepository.deleteById(id);
+    }
+
+    @Override
     public Optional<User> getByEmail(String email) {
         return userRepository.findByEmail(email);
+
     }
 }
