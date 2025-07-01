@@ -19,10 +19,10 @@ public class FavoriteController {
 
     private final FavoriteService favoriteService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<FavoriteDto> getAll(@PathVariable @Min(1) Long id) {
-        return favoriteService.getAll(id);
+    public List<FavoriteDto> getAll(@PathVariable @Min(1) Long userId) {
+        return favoriteService.getAll(userId);
     }
 
     @PostMapping
