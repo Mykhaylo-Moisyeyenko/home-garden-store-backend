@@ -14,7 +14,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
                 )
-                .csrf(csrf -> csrf.disable()); // современный способ отключения CSRF
+                .csrf(csrf -> csrf.disable()); 
 
         return http.build();
 
