@@ -3,15 +3,17 @@ package com.homegarden.store.backend.service;
 import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.model.entity.User;
 import com.homegarden.store.backend.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<User> getAll() {
@@ -20,25 +22,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User User) {
-        return null;
+        return userRepository.save(User);
     }
 
     @Override
     public User getById(Long userId) {
-        return null;
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
     }
 
     @Override
     public void delete(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new UserNotFoundException("Пользователь с id " + id + " не найден");
-        }
-        userRepository.deleteById(id);
+        User user = getById(id);
+        userRepository.delete(user);
     }
 
     @Override
     public Optional<User> getByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return Optional.ofNullable(userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found")));
 
     }
+
 }
