@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<User> getAll() {
@@ -20,25 +20,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User User) {
-        return null;
+        return userRepository.save(User);
     }
 
     @Override
     public User getById(Long userId) {
-        return null;
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
     }
 
     @Override
     public void delete(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new UserNotFoundException("Пользователь с id " + id + " не найден");
-        }
-        userRepository.deleteById(id);
+        User user = getById(id);
+        userRepository.delete(user);
     }
 
     @Override
     public Optional<User> getByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return Optional.ofNullable(userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found")));
 
+    }
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 }

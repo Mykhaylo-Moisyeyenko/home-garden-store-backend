@@ -13,8 +13,11 @@ public record CreateUserRequestDTO(
         @Email(message = "Некорректный email")
         String email,
 
+        @NotBlank(message = "Номер телефона обязателен")
+        String phoneNumber,
+
         @NotBlank(message = "Пароль обязателен")
         @Size(min = 8, message = "Пароль должен содержать минимум 8 символов")
-        String password
+        String password) {
 
-) {}
+}
