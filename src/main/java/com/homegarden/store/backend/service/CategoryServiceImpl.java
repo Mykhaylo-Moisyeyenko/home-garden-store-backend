@@ -1,16 +1,18 @@
 package com.homegarden.store.backend.service;
 
+import com.homegarden.store.backend.converter.CategoryConverter;
 import com.homegarden.store.backend.exception.CategoryNotFoundException;
 import com.homegarden.store.backend.model.dto.CategoryDto;
 import com.homegarden.store.backend.model.entity.Category;
 import com.homegarden.store.backend.repository.CategoryRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.homegarden.store.backend.converter.CategoryConverter.toDto;
+import static com.homegarden.store.backend.converter.CategoryConverter.toEntity;
 
 @Service
 @RequiredArgsConstructor
@@ -28,17 +30,16 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDto> getAll() {
         return categoryRepository.findAll().stream()
-                .map(this::toDto)
+                .map(CategoryConverter::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public CategoryDto getById(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Категория с id " + id + " не найдена"));
+                .orElseThrow(() -> new CategoryNotFoundException("Категория с id " + id + " не найдена"));
         return toDto(category);
     }
-
 
     @Override
     public CategoryDto update(Long categoryId, CategoryDto dto) {
@@ -48,7 +49,6 @@ public class CategoryServiceImpl implements CategoryService {
         category.setName(dto.name());
 
         Category updatedCategory = categoryRepository.save(category);
-
         return toDto(updatedCategory);
     }
 
@@ -58,19 +58,6 @@ public class CategoryServiceImpl implements CategoryService {
             throw new CategoryNotFoundException("Категория с id " + categoryId + " не найдена");
         }
         categoryRepository.deleteById(categoryId);
-    }
-
-
-
-    private CategoryDto toDto(Category category) {
-        return new CategoryDto(category.getCategoryId(), category.getName());
-    }
-
-    private Category toEntity(CategoryDto dto) {
-        return Category.builder()
-                .categoryId(dto.categoryId())
-                .name(dto.name())
-                .build();
     }
 }
 
