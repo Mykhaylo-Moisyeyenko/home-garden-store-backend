@@ -7,6 +7,7 @@ import com.homegarden.store.backend.model.dto.UserResponseDTO;
 import com.homegarden.store.backend.model.entity.User;
 import com.homegarden.store.backend.service.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v1/users")
 //@Slf4j
 public class UserController {
@@ -25,15 +28,19 @@ public class UserController {
     private final UserConverter converter;
 
     @GetMapping
-    public List<User> getAll() {
-        return userService.getAll();
+    public ResponseEntity<List<UserResponseDTO>> getAll() {
+        List<UserResponseDTO> response = userService.getAll().stream()
+                .map(converter::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    UserResponseDTO create(@RequestBody @Valid CreateUserRequestDTO userRequestDTO) {
+    public ResponseEntity<UserResponseDTO> create(@RequestBody @Valid CreateUserRequestDTO userRequestDTO) {
         User entity = converter.toEntity(userRequestDTO);
         User user = userService.create(entity);
-        return converter.toDto(user);
+        UserResponseDTO response = converter.toDto(user);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/id/{id}")
@@ -54,11 +61,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         userService.delete(id);
-    }
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-        this.converter = new UserConverter();
     }
 
 }

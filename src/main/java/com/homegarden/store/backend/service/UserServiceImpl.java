@@ -3,11 +3,13 @@ package com.homegarden.store.backend.service;
 import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.model.entity.User;
 import com.homegarden.store.backend.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -39,7 +41,5 @@ public class UserServiceImpl implements UserService {
         return Optional.ofNullable(userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found")));
 
     }
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+
 }
