@@ -1,40 +1,49 @@
 package com.homegarden.store.backend.controller;
-
+import com.homegarden.store.backend.converter.CategoryConverter;
 import com.homegarden.store.backend.model.dto.CategoryDto;
+import com.homegarden.store.backend.model.entity.Category;
 import com.homegarden.store.backend.service.CategoryService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v1/categories")
 public class CategoryController {
 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
-    @Autowired
-    public void setCategoryService(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+    private final CategoryConverter converter;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto create(@RequestBody @Valid CategoryDto dto) {
-        return categoryService.create(dto);
+        Category entity = converter.toEntity(dto);
+        Category category = categoryService.create(entity);
+        CategoryDto response = converter.toDto(category);
+        return response;
     }
 
     @GetMapping
-    public List<CategoryDto> getAll() {
-        return categoryService.getAll();
+    public ResponseEntity<List<CategoryDto>> getAll() {
+        List<CategoryDto> response = categoryService.getAll().stream()
+                .map(converter::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public CategoryDto getById(@PathVariable Long id) {
-        return categoryService.getById(id);
+    public ResponseEntity<CategoryDto> getById(@PathVariable Long id) {
+        Category category = categoryService.getById(id);
+        CategoryDto response = converter.toDto(category);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
@@ -47,8 +56,9 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> updateCategory(
             @PathVariable("id") Long id,
             @RequestBody @Valid CategoryDto dto) {
-        CategoryDto updated = categoryService.update(id, dto);
-        return ResponseEntity.ok(updated);
+         Category updated = categoryService.update(id,dto.name());
+         CategoryDto response = converter.toDto(updated);
+        return ResponseEntity.ok(response);
     }
 
 
