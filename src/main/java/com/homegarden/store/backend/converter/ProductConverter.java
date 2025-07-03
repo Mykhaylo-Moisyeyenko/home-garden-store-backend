@@ -2,13 +2,49 @@ package com.homegarden.store.backend.converter;
 
 import com.homegarden.store.backend.model.dto.ProductDto;
 import com.homegarden.store.backend.model.entity.Product;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ProductConverter {
-    public Product toEntity(ProductDto productDto) {
-        return Product.;
+
+    public Product toEntity(ProductDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        Product product = new Product();
+        // Если у тебя есть ID в DTO — можно его ставить. Обычно при создании ID генерируется.
+        product.setProductId(dto.getProductId());
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        product.setCategoryId(dto.getCategoryId());
+        product.setImageUrl(dto.getImageUrl());
+        product.setDiscountPrice(dto.getDiscountPrice());
+        product.setCreatedAt(dto.getCreatedAt());
+        product.setUpdatedAt(dto.getUpdatedAt());
+
+        return product;
     }
 
     public ProductDto toDto(Product product) {
-        return null;
+        if (product == null) {
+            return null;
+        }
+
+        ProductDto dto = new ProductDto();
+        dto.setProductId(product.getProductId());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setCategoryId(product.getCategoryId());
+        dto.setImageUrl(product.getImageUrl());
+        dto.setDiscountPrice(product.getDiscountPrice());
+        dto.setCreatedAt(product.getCreatedAt());
+        dto.setUpdatedAt(product.getUpdatedAt());
+
+        return dto;
     }
 }
+
+

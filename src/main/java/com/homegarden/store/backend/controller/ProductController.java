@@ -1,11 +1,16 @@
 package com.homegarden.store.backend.controller;
 
+import com.homegarden.store.backend.model.dto.CategoryDto;
 import com.homegarden.store.backend.model.dto.ProductDto;
+import com.homegarden.store.backend.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping
 public class ProductController {
     private final ProductService productService;
 
@@ -33,5 +38,13 @@ public class ProductController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         productService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDto> updateProduct(
+            @PathVariable("id") Long id,
+            @RequestBody @Valid CategoryDto dto) {
+        ProductDto updated = productService.update(id, dto);
+        return ResponseEntity.ok(updated);
     }
 }

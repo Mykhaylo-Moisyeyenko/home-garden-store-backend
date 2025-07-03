@@ -1,15 +1,27 @@
 package com.homegarden.store.backend.model.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ProductDto {
-    private Long id;
+    private String ProductId;
     private String name;
-    private Double price;
-    private Long categoryId;
     private String description;
-    private Integer quantityInStock;
+    private Number price;
+    private String categoryId;
+    private String imageUrl;
+    private String discountPrice;
+    private String createdAt;
+    private String updatedAt;
 
 
-    public Long getCategoryId() {
-        return null;
-    }
+
+
+
+
+
+
+
 }
