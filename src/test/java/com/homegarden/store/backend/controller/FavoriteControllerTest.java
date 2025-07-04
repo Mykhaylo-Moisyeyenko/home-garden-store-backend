@@ -67,4 +67,3 @@ class FavoriteControllerTest {
                 .andExpect(status().isNoContent());
     }
 }
-
