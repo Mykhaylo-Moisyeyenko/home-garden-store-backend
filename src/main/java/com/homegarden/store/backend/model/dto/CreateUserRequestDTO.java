@@ -6,18 +6,18 @@ import jakarta.validation.constraints.Size;
 
 public record CreateUserRequestDTO(
 
-        @NotBlank(message = "Имя пользователя обязательно")
+        @NotBlank(message = "Username can't be empty")
         String username,
 
-        @NotBlank(message = "Email обязателен")
-        @Email(message = "Некорректный email")
+        @NotBlank(message = "Email can't be empty")
+        @Email(message = "E-mail format is invalid")
         String email,
 
-        @NotBlank(message = "Номер телефона обязателен")
+        @NotBlank(message = "Phone number can't be empty")
         String phoneNumber,
 
-        @NotBlank(message = "Пароль обязателен")
-        @Size(min = 8, message = "Пароль должен содержать минимум 8 символов")
+        @NotBlank(message = "Password can't be empty")
+        @Size(min = 8, message = "Password must be at least 8 characters long")
         String password) {
 
 }

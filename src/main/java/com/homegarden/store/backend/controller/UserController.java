@@ -1,6 +1,7 @@
 package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.converter.UserConverter;
+import com.homegarden.store.backend.exception.UserAlreadyExistsException;
 import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.model.dto.CreateUserRequestDTO;
 import com.homegarden.store.backend.model.dto.UserResponseDTO;
@@ -37,6 +38,10 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponseDTO> create(@RequestBody @Valid CreateUserRequestDTO userRequestDTO) {
+        Optional<User> sameUser = userService.getByEmail(userRequestDTO.email());
+        if (sameUser.isPresent()) {
+            throw new UserAlreadyExistsException("User with e-mail " + userRequestDTO.email() + " already exists");
+        }
         User entity = converter.toEntity(userRequestDTO);
         User user = userService.create(entity);
         UserResponseDTO response = converter.toDto(user);
