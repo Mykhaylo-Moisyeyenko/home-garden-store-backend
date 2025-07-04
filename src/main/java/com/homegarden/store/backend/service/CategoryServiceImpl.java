@@ -1,18 +1,12 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.converter.CategoryConverter;
 import com.homegarden.store.backend.exception.CategoryNotFoundException;
-import com.homegarden.store.backend.model.dto.CategoryDto;
 import com.homegarden.store.backend.model.entity.Category;
 import com.homegarden.store.backend.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.homegarden.store.backend.converter.CategoryConverter.toDto;
-import static com.homegarden.store.backend.converter.CategoryConverter.toEntity;
 
 @Service
 @RequiredArgsConstructor
@@ -21,43 +15,33 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public CategoryDto create(CategoryDto dto) {
-        Category category = toEntity(dto);
-        Category saved = categoryRepository.save(category);
-        return toDto(saved);
+    public Category create(Category category) {
+        return categoryRepository.save(category);
     }
 
     @Override
-    public List<CategoryDto> getAll() {
-        return categoryRepository.findAll().stream()
-                .map(CategoryConverter::toDto)
-                .collect(Collectors.toList());
+    public List<Category> getAll() {
+        return categoryRepository.findAll();
     }
 
     @Override
-    public CategoryDto getById(Long id) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Категория с id " + id + " не найдена"));
-        return toDto(category);
+    public Category getById(Long сategoryId) {
+        return categoryRepository.findById(сategoryId).orElseThrow(() -> new CategoryNotFoundException("Category with id " + сategoryId + " not found"));
     }
 
     @Override
-    public CategoryDto update(Long categoryId, CategoryDto dto) {
+    public Category update(Long categoryId, String name) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException("Категория с id " + categoryId + " не найдена"));
-
-        category.setName(dto.name());
-
+                .orElseThrow(() -> new CategoryNotFoundException("Category with id " + categoryId + " not found"));
+        category.setName(name);
         Category updatedCategory = categoryRepository.save(category);
-        return toDto(updatedCategory);
+        return updatedCategory;
     }
 
     @Override
-    public void delete(Long categoryId) {
-        if (!categoryRepository.existsById(categoryId)) {
-            throw new CategoryNotFoundException("Категория с id " + categoryId + " не найдена");
-        }
-        categoryRepository.deleteById(categoryId);
+    public void delete(Long id) {
+        Category category = getById(id);
+        categoryRepository.delete(category);
     }
 }
 
