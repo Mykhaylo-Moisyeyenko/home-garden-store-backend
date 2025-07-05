@@ -38,14 +38,13 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponseDTO> create(@RequestBody @Valid CreateUserRequestDTO userRequestDTO) {
-        Optional<User> sameUser = userService.getByEmail(userRequestDTO.email());
-        if (sameUser.isPresent()) {
-            throw new UserAlreadyExistsException("User with e-mail " + userRequestDTO.email() + " already exists");
+        if(userService.existsByEmail(userRequestDTO.email())){
+            throw new UserAlreadyExistsException("User with email " + userRequestDTO.email() + " allredy exists");
         }
         User entity = converter.toEntity(userRequestDTO);
         User user = userService.create(entity);
         UserResponseDTO response = converter.toDto(user);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/id/{id}")
@@ -55,17 +54,9 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<UserResponseDTO> getByEmail(@PathVariable String email) {
-        Optional<User> user = userService.getByEmail(email);
-        UserResponseDTO response = converter.toDto(user.orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found")));
-        return ResponseEntity.ok(response);
-    }
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         userService.delete(id);
     }
-
 }
