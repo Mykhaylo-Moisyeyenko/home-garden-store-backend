@@ -1,9 +1,6 @@
 package com.homegarden.store.backend.controller;
 
-import com.homegarden.store.backend.exception.CategoryNotFoundException;
-import com.homegarden.store.backend.exception.OrderNotFoundException;
-import com.homegarden.store.backend.exception.ProductNotFoundException;
-import com.homegarden.store.backend.exception.UserNotFoundException;
+import com.homegarden.store.backend.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

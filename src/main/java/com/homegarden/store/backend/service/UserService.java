@@ -13,7 +13,7 @@ public interface UserService {
 
     User getById(Long id);
 
-    Optional<User> getByEmail(String email);
+    boolean existsByEmail(String email);
 
     void delete(Long id);
 }
