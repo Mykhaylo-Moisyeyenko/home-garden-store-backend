@@ -4,7 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 
@@ -12,10 +15,7 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ProductDto {
-
-    private Long productId;
+public class CreateProductDto {
 
     @NotBlank
     @Size(min = 1, max = 255)
@@ -26,14 +26,6 @@ public class ProductDto {
     @NotNull
     @Positive
     private Double price;
-
     private String categoryId;
-
     private String imageUrl;
-
-    private Double discountPrice;
-
-    private Timestamp createdAt;
-
-    private Timestamp updatedAt;
 }

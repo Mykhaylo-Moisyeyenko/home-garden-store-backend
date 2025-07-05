@@ -13,8 +13,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -27,5 +27,4 @@ public class Product {
     private Double discountPrice;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-
 }
