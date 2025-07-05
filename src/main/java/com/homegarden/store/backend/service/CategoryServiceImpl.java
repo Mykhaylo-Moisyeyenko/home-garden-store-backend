@@ -22,9 +22,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto create(CategoryDto dto) {
-        Category category = toEntity(dto);
+        CategoryDto safeDto = new CategoryDto(null, dto.name());
+        Category category = toEntity(safeDto);
         Category saved = categoryRepository.save(category);
         return toDto(saved);
+
     }
 
     @Override
