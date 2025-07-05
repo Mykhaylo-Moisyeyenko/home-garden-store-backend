@@ -34,8 +34,4 @@ public class AdviceController {
         return exception.getMessage();
     }
 
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public String handleUserAlreadyExistsException(UserAlreadyExistsException exception) {
-        return exception.getMessage();}
 }
