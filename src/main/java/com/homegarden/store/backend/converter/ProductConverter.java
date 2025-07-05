@@ -2,18 +2,16 @@ package com.homegarden.store.backend.converter;
 
 import com.homegarden.store.backend.model.dto.ProductDto;
 import com.homegarden.store.backend.model.entity.Product;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductConverter {
+@Primary
+public class ProductConverter implements Converter<ProductDto, Product> {
 
+    @Override
     public Product toEntity(ProductDto dto) {
-        if (dto == null) {
-            return null;
-        }
-
         Product product = new Product();
-        // Если у тебя есть ID в DTO — можно его ставить. Обычно при создании ID генерируется.
         product.setProductId(dto.getProductId());
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
@@ -23,15 +21,11 @@ public class ProductConverter {
         product.setDiscountPrice(dto.getDiscountPrice());
         product.setCreatedAt(dto.getCreatedAt());
         product.setUpdatedAt(dto.getUpdatedAt());
-
         return product;
     }
 
+    @Override
     public ProductDto toDto(Product product) {
-        if (product == null) {
-            return null;
-        }
-
         ProductDto dto = new ProductDto();
         dto.setProductId(product.getProductId());
         dto.setName(product.getName());
@@ -42,9 +36,10 @@ public class ProductConverter {
         dto.setDiscountPrice(product.getDiscountPrice());
         dto.setCreatedAt(product.getCreatedAt());
         dto.setUpdatedAt(product.getUpdatedAt());
-
         return dto;
     }
 }
+
+
 
 

@@ -1,37 +1,46 @@
 package com.homegarden.store.backend.controller;
 
-import com.homegarden.store.backend.model.dto.CategoryDto;
+import com.homegarden.store.backend.converter.Converter;
+import com.homegarden.store.backend.converter.ProductConverter;
 import com.homegarden.store.backend.model.dto.ProductDto;
+import com.homegarden.store.backend.model.entity.Product;
 import com.homegarden.store.backend.service.ProductService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping
+@RequestMapping("/v1/products")
+@RequiredArgsConstructor
 public class ProductController {
-    private final ProductService productService;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
+    private final ProductService productService;
+    private final ProductConverter productConverter; // ✅ Инжектируем интерфейс!
 
     @PostMapping
-    public ResponseEntity<ProductDto> create(@RequestBody ProductDto productDto) {
-        ProductDto created = productService.create(productDto);
-        return ResponseEntity.ok(created);
+    public ResponseEntity<ProductDto> create(@RequestBody @Valid ProductDto productDto) {
+        Product product = productConverter.toEntity(productDto);
+        Product created = productService.create(product);
+        return ResponseEntity.ok(productConverter.toDto(created));
     }
 
     @GetMapping
     public ResponseEntity<List<ProductDto>> getAll() {
-        return ResponseEntity.ok(productService.getAll());
+        List<ProductDto> dtos = productService.getAll().stream()
+                .map(productConverter::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getById(id));
+        Product product = productService.getById(id);
+        return ResponseEntity.ok(productConverter.toDto(product));
     }
 
     @DeleteMapping("/{id}")
@@ -43,8 +52,15 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductDto> updateProduct(
             @PathVariable("id") Long id,
-            @RequestBody @Valid CategoryDto dto) {
-        ProductDto updated = productService.update(id, dto);
-        return ResponseEntity.ok(updated);
+            @RequestBody @Valid ProductDto productDto) {
+        Product productToUpdate = productConverter.toEntity(productDto);
+        productToUpdate.setProductId(id); // ✅ Теперь должно работать, если productId в Product — Long
+        Product updated = productService.update(productToUpdate);
+        return ResponseEntity.ok(productConverter.toDto(updated));
     }
-}
+    }
+
+
+
+
+

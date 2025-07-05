@@ -1,24 +1,31 @@
 package com.homegarden.store.backend.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.sql.Timestamp;
 
 @Entity
 @Getter
 @Setter
-public class Product {
+@Table
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode
 
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String ProductId;
+    @EqualsAndHashCode.Include
+    private Long productId;
     private String name;
     private String description;
-    private Number price;
-    private String categoryId;
+    private Double price;
+    private Long categoryId;
     private String imageUrl;
-    private String discountPrice;
-    private String createdAt;
-    private String updatedAt;
+    private Double discountPrice;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 
 }

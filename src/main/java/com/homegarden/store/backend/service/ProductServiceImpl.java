@@ -1,49 +1,61 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.converter.ProductConverter;
-import com.homegarden.store.backend.model.dto.ProductDto;
+import com.homegarden.store.backend.exception.ProductNotFoundException;
 import com.homegarden.store.backend.model.entity.Product;
 import com.homegarden.store.backend.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ProductServiceImpl extends ProductService {
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductConverter productConverter;
 
     @Override
-    public ProductDto create(ProductDto productDto) {
-        Product product = productConverter.toEntity(productDto);
-        Product saved = productRepository.save(product);
-        return productConverter.toDto(saved);
+    public Product create(Product product) {
+        return productRepository.save(product);
     }
 
     @Override
-    public List<ProductDto> getAll() {
-        return productRepository.findAll().stream()
-                .map(productConverter::toDto)
-                .collect(Collectors.toList());
+    public List<Product> getAll() {
+        return productRepository.findAll();
     }
 
     @Override
-    public ProductDto getById(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
-        return productConverter.toDto(product);
+    public Product getById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
     }
 
     @Override
     public void delete(Long id) {
-        if (!productRepository.existsById(id)) {
-            throw new RuntimeException("Product not found with id: " + id);
-        }
+        // Не дублируем existsById, а используем getById — если не найдёт, выбросит ProductNotFoundException
+        getById(id);
         productRepository.deleteById(id);
     }
+
+    @Override
+    public Product update(Product product) {
+        Long id = Long.valueOf(product.getProductId()); // или UUID → адаптируй под тип твоего ID
+
+        Product existing = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
+
+        // Обновляем нужные поля
+        existing.setName(product.getName());
+        existing.setDescription(product.getDescription());
+        existing.setPrice(product.getPrice());
+        existing.setCategoryId(product.getCategoryId());
+        existing.setImageUrl(product.getImageUrl());
+        existing.setDiscountPrice(product.getDiscountPrice());
+        existing.setUpdatedAt(product.getUpdatedAt());
+
+        return productRepository.save(existing);
+    }
 }
+
+
 
