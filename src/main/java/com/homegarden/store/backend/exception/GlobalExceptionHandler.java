@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
         return "HTTP method argument not valid: " + exception.getMessage();
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UserAlreadyExistsException.class)
     public String handleConflict(UserAlreadyExistsException ex) {
         return ex.getMessage();

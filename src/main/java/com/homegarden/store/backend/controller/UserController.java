@@ -2,20 +2,17 @@ package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.converter.UserConverter;
 import com.homegarden.store.backend.exception.UserAlreadyExistsException;
-import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.model.dto.CreateUserRequestDTO;
 import com.homegarden.store.backend.model.dto.UserResponseDTO;
 import com.homegarden.store.backend.model.entity.User;
 import com.homegarden.store.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -39,7 +36,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserResponseDTO> create(@RequestBody @Valid CreateUserRequestDTO userRequestDTO) {
         if(userService.existsByEmail(userRequestDTO.email())){
-            throw new UserAlreadyExistsException("User with email " + userRequestDTO.email() + " allredy exists");
+            throw new UserAlreadyExistsException("User with email " + userRequestDTO.email() + " already exists");
         }
         User entity = converter.toEntity(userRequestDTO);
         User user = userService.create(entity);
