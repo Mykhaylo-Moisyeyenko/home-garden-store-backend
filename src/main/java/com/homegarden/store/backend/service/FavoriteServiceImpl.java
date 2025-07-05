@@ -1,6 +1,7 @@
 package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.converter.FavoriteConverter;
+import com.homegarden.store.backend.exception.ProductNotFoundException;
 import com.homegarden.store.backend.model.dto.FavoriteDto;
 import com.homegarden.store.backend.model.entity.Favorite;
 import com.homegarden.store.backend.repository.FavoriteRepository;
@@ -28,7 +29,10 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public void addToFavorites(FavoriteDto favoriteDto) {
-        Optional<Favorite> favorite = favoriteRepository.findByUserIdAndProductId(favoriteDto.userId(), favoriteDto.productId());
+        favoriteRepository.findProductByProductId((favoriteDto.productId()))
+                .orElseThrow(()->new ProductNotFoundException("Product with id " + favoriteDto.productId() + " not found"));
+        Optional<Favorite> favorite = favoriteRepository
+                .findByUserIdAndProductId(favoriteDto.userId(), favoriteDto.productId());
         if (favorite.isPresent()) {
             return;
         }
