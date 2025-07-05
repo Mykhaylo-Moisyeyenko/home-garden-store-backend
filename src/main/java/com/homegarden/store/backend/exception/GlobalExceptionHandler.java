@@ -64,7 +64,4 @@ public class GlobalExceptionHandler {
     public String handleConflict(UserAlreadyExistsException ex) {
         return ex.getMessage();
     }
-
-
-
 }
