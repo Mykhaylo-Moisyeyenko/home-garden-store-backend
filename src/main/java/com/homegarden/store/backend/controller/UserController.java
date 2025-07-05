@@ -2,6 +2,7 @@ package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.converter.UserConverter;
 import com.homegarden.store.backend.exception.UserAlreadyExistsException;
+import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.model.dto.CreateUserRequestDTO;
 import com.homegarden.store.backend.model.dto.UserResponseDTO;
 import com.homegarden.store.backend.model.entity.User;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
