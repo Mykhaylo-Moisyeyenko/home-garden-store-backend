@@ -16,7 +16,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category create(Category category) {
-        return categoryRepository.save(category);
+        try {
+            return categoryRepository.save(category);
+        } catch (Exception e) {
+            throw new RuntimeException("Error occurred while creating category", e);
+        }
     }
 
     @Override
@@ -25,8 +29,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getById(Long сategoryId) {
-        return categoryRepository.findById(сategoryId).orElseThrow(() -> new CategoryNotFoundException("Category with id " + сategoryId + " not found"));
+    public Category getById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException("Category with id " + categoryId + " not found"));
     }
 
     @Override
@@ -34,8 +39,8 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryNotFoundException("Category with id " + categoryId + " not found"));
         category.setName(name);
-        Category updatedCategory = categoryRepository.save(category);
-        return updatedCategory;
+        return categoryRepository.save(category);
+
     }
 
     @Override

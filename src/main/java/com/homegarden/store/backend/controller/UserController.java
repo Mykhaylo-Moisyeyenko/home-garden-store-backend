@@ -3,6 +3,7 @@ package com.homegarden.store.backend.controller;
 import com.homegarden.store.backend.converter.UserConverter;
 import com.homegarden.store.backend.exception.UserAlreadyExistsException;
 import com.homegarden.store.backend.model.dto.CreateUserRequestDTO;
+import com.homegarden.store.backend.model.dto.UpdateUserRequestDTO;
 import com.homegarden.store.backend.model.dto.UserResponseDTO;
 import com.homegarden.store.backend.model.entity.User;
 import com.homegarden.store.backend.service.UserService;
@@ -42,6 +43,15 @@ public class UserController {
         User user = userService.create(entity);
         UserResponseDTO response = converter.toDto(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserResponseDTO> update(
+            @PathVariable Long userId,
+            @RequestBody @Valid UpdateUserRequestDTO updateDto) {
+        User updatedUser = userService.update(userId, updateDto);
+        UserResponseDTO response = converter.toDto(updatedUser);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/id/{id}")

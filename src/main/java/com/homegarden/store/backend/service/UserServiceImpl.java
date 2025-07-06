@@ -1,13 +1,13 @@
 package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.exception.UserNotFoundException;
+import com.homegarden.store.backend.model.dto.UpdateUserRequestDTO;
 import com.homegarden.store.backend.model.entity.User;
 import com.homegarden.store.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -23,6 +23,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(User User) {
         return userRepository.save(User);
+    }
+
+    @Override
+    public User update(Long userId, UpdateUserRequestDTO updateDto) {
+        User user = getById(userId);
+        user.setName(updateDto.username());
+        user.setPhoneNumber(updateDto.phoneNumber());
+        return userRepository.save(user);
     }
 
     @Override
