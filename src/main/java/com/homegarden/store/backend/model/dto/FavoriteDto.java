@@ -6,11 +6,12 @@ import lombok.Builder;
 
 @Builder
 public record FavoriteDto(
-        @NotNull
-        @Positive
+
+        @NotNull(message = "UserId name can't be empty")
+        @Positive(message = "UserId must be more than 0")
         Long userId,
 
-        @NotNull
-        @Positive
+        @NotNull(message = "ProductId name can't be empty")
+        @Positive(message = "ProductId must be more than 0")
         Long productId) {
 }
