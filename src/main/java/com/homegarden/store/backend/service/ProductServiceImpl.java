@@ -40,8 +40,7 @@ public class ProductServiceImpl implements ProductService {
     public Product update(Product product) {
         Long id = (product.getProductId());
 
-        Product existing = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
+        Product existing = getById(id);
 
         existing.setName(product.getName());
         existing.setDescription(product.getDescription());

@@ -1,4 +1,4 @@
-package com.homegarden.store.backend.repository.specification;
+package com.homegarden.store.backend.utils;
 
 import com.homegarden.store.backend.model.entity.Product;
 import jakarta.persistence.criteria.Path;
