@@ -7,7 +7,7 @@
     <changeSet id="insert-users" author="Sofia">
         <sql>
             INSERT INTO users (name, email, phone_number, password_hash, role)
-            VALUES ('Anna', 'anna@gmail.com', '+37412345676','password2', 'ROLE_USER'),
+            VALUES ('Anna', 'anna@gmail.com', '+37412345676','password2', 'ROLE_ADMINISTRATOR'),
                    ('Bob', 'bob@gmail.com', '+13427774568','password3', 'ROLE_USER'),
                    ('Betty', 'betty@gmail.com', '+1009456888','password4', 'ROLE_USER'),
                    ('John', 'john@gmail.com', '+1789098567','password5', 'ROLE_USER');
