@@ -5,6 +5,9 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
+    <include file="db/changelog/test_data/truncate_tables.xml"/>
     <include file="db/changelog/changeSets/create.table.sql"/>
+    <include file="db/changelog/test_data/test_data_init.xml"/>
+
 
 </databaseChangeLog>
