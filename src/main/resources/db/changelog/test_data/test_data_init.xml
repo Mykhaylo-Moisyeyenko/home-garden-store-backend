@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="insert-users" author="Sofia">
+    <changeSet id="insert-users" author="Sofia" runAlways="true">
         <sql>
             INSERT INTO users (name, email, phone_number, password_hash, role)
             VALUES ('Anna', 'anna@gmail.com', '+37412345676','password2', 'ROLE_ADMINISTRATOR'),
@@ -14,7 +14,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="insert-categories" author="Sofia">
+    <changeSet id="insert-categories" author="Sofia" runAlways="true">
         <sql>
             INSERT INTO categories (name)
             VALUES ('Tools'),
@@ -23,7 +23,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="insert-products" author="Sofia">
+    <changeSet id="insert-products" author="Sofia" runAlways="true">
         <sql>
             INSERT INTO products (name, description, price, category_id, image_url, discount_price)
             VALUES ('Garden Rake', 'Lightweight aluminum rake', 14.99, 1, 'https://example.com/images/rake.jpg', NULL),
@@ -32,7 +32,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="insert-favorites" author="Sofia">
+    <changeSet id="insert-favorites" author="Sofia" runAlways="true">
         <sql>
             INSERT INTO favorites (user_id, product_id)
             VALUES (1, 2),
@@ -40,7 +40,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="insert-carts" author="Sofia">
+    <changeSet id="insert-carts" author="Sofia" runAlways="true">
         <sql>
             INSERT INTO cart (user_id)
             VALUES (1),
@@ -48,7 +48,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="insert-cart-items" author="Sofia">
+    <changeSet id="insert-cart-items" author="Sofia" runAlways="true">
         <sql>
             INSERT INTO cart_items (cart_id, product_id, quantity)
             VALUES (1, 1, 2), -- Anna's cart has 2 rakes
@@ -56,7 +56,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="insert-orders" author="Sofia">
+    <changeSet id="insert-orders" author="Sofia" runAlways="true">
         <sql>
             INSERT INTO orders (user_id, delivery_address, contact_phone, delivery_method, status)
             VALUES (1, 'Berlin, Panorama str. 1A','+49-123-456789','Courier', 'STATUS_CREATED'),
@@ -64,7 +64,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="insert-order-items" author="Sofia">
+    <changeSet id="insert-order-items" author="Sofia" runAlways="true">
         <sql>
             INSERT INTO order_items (order_id, product_id, quantity, price_at_purchase)
             VALUES (1, 2, 1, 19.99), -- Anna ordered 1 shovel
