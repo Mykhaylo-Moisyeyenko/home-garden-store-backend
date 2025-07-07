@@ -1,6 +1,6 @@
 package com.homegarden.store.backend.controller;
 
-import com.homegarden.store.backend.converter.UserConverter;
+import com.homegarden.store.backend.converter.Converter;
 import com.homegarden.store.backend.exception.UserAlreadyExistsException;
 import com.homegarden.store.backend.model.dto.CreateUserRequestDTO;
 import com.homegarden.store.backend.model.dto.UpdateUserRequestDTO;
@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/users")
-//@Slf4j
+
 public class UserController {
 
     private final UserService userService;
 
-    private final UserConverter converter;
+    private final Converter<User, CreateUserRequestDTO, UserResponseDTO> converter;
 
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAll() {

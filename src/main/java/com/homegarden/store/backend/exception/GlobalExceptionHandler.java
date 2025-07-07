@@ -15,26 +15,9 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(UserNotFoundException.class)
-    public String handleUserNotFoundException(UserNotFoundException exception){
-        return exception.getMessage();
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(CategoryNotFoundException.class)
-    public String handleCategoryNotFoundException(CategoryNotFoundException exception){
-        return exception.getMessage();
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(OrderNotFoundException.class)
-    public String handleOrderNotFoundException(OrderNotFoundException exception){
-        return exception.getMessage();
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(ProductNotFoundException.class)
-    public String handleProductNotFoundException(ProductNotFoundException exception){
+    @ExceptionHandler(value = {UserNotFoundException.class, CategoryNotFoundException.class,
+            OrderNotFoundException.class, ProductNotFoundException.class})
+    public String handleNotFoundException(Exception exception){
         return exception.getMessage();
     }
 

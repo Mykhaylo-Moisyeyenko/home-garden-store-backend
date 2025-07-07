@@ -13,10 +13,11 @@ public interface UserService {
 
     User update(Long userId, UpdateUserRequestDTO updateDto);
 
-
     User getById(Long id);
 
     boolean existsByEmail(String email);
+
+    boolean existsById(Long id);
 
     void delete(Long id);
 }

@@ -3,7 +3,6 @@ package com.homegarden.store.backend.converter;
 import com.homegarden.store.backend.model.dto.CreateUserRequestDTO;
 import com.homegarden.store.backend.model.dto.UserResponseDTO;
 import com.homegarden.store.backend.model.entity.User;
-import com.homegarden.store.backend.model.enums.Role;
 import org.springframework.stereotype.Component;
 
 @Component
