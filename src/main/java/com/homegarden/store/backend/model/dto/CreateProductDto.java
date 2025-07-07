@@ -1,9 +1,6 @@
 package com.homegarden.store.backend.model.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,15 +14,17 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class CreateProductDto {
 
-    @NotBlank
+        @NotBlank(message = "Product name can't be empty")
     @Size(min = 1, max = 255)
     private String name;
 
     private String description;
 
     @NotNull
-    @Positive
+    @PositiveOrZero(message = "Price cannot be negative")
     private Double price;
+
+    @NotBlank(message = "Category Id can't be empty")
     private String categoryId;
     private String imageUrl;
 }

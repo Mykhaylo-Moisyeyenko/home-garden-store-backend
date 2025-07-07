@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductConverter productConverter; // ✅ Инжектируем интерфейс!
+    private final ProductConverter productConverter;
 
     @PostMapping
     public ResponseEntity<ProductDto> create(@RequestBody @Valid CreateProductDto productDto) {

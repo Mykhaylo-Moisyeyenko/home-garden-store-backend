@@ -19,8 +19,9 @@ public class ProductConverter implements Converter<Product, CreateProductDto, Pr
         product.setDescription(createProductDto.getDescription());
         product.setPrice(createProductDto.getPrice());
         product.setCategoryId(Long.valueOf(createProductDto.getCategoryId()));
-        return null;
+        return product;
     }
+
     @Override
     public ProductDto toDto(Product product) {
         ProductDto dto = new ProductDto();
@@ -36,7 +37,3 @@ public class ProductConverter implements Converter<Product, CreateProductDto, Pr
         return dto;
     }
 }
-
-
-
-

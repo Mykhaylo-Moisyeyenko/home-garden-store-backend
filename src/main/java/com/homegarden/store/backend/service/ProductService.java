@@ -16,5 +16,3 @@ public interface ProductService {
 
     Product update(Product product);
 }
-
-

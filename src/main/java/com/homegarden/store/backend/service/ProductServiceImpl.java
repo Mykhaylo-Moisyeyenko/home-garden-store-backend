@@ -32,19 +32,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(Long id) {
-        // Не дублируем existsById, а используем getById — если не найдёт, выбросит ProductNotFoundException
         getById(id);
         productRepository.deleteById(id);
     }
 
     @Override
     public Product update(Product product) {
-        Long id = Long.valueOf(product.getProductId()); // или UUID → адаптируй под тип твоего ID
+        Long id = (product.getProductId());
 
         Product existing = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
 
-        // Обновляем нужные поля
         existing.setName(product.getName());
         existing.setDescription(product.getDescription());
         existing.setPrice(product.getPrice());
@@ -56,6 +54,3 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(existing);
     }
 }
-
-
-
