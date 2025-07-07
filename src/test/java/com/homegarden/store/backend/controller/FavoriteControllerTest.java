@@ -1,8 +1,6 @@
 package com.homegarden.store.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.homegarden.store.backend.config.SecurityConfig;
-import com.homegarden.store.backend.controller.FavoriteController;
 import com.homegarden.store.backend.model.dto.FavoriteDto;
 import com.homegarden.store.backend.service.FavoriteService;
 import org.junit.jupiter.api.DisplayName;
@@ -10,15 +8,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(FavoriteController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -30,7 +29,7 @@ class FavoriteControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private FavoriteService favoriteService;
 
     @Test
