@@ -1,28 +1,20 @@
-package com.homegarden.store.backend.model.entity;
+package com.homegarden.store.backend.model.dto;
 
-import jakarta.persistence.*;
 import lombok.*;
-
 import java.sql.Timestamp;
 
-@Entity
 @Getter
 @Setter
-@Table
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Product {
+public class ProductDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long productId;
     private String name;
     private String description;
     private Double price;
-    private Long categoryId;
+    private String categoryId;
     private String imageUrl;
     private Double discountPrice;
     private Timestamp createdAt;
