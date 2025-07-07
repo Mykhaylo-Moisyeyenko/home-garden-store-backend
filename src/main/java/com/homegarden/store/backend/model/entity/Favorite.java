@@ -4,19 +4,21 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "favorites")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
-public class Category {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class Favorite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long categoryId;
+    private Long favoriteId;
 
-    private String name;
+    Long userId;
+
+    Long productId;
 }

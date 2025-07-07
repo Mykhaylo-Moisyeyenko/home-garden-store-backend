@@ -1,4 +1,6 @@
 package com.homegarden.store.backend.model.dto;
 
-public record UserResponseDTO(Long id, String name) {
+import com.homegarden.store.backend.model.enums.Role;
+
+public record UserResponseDTO(Long userId, String name, String email, String phoneNumber, Role role) {
 }

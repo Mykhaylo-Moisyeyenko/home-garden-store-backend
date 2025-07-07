@@ -1,0 +1,52 @@
+package com.homegarden.store.backend.service;
+
+import com.homegarden.store.backend.exception.CategoryNotFoundException;
+import com.homegarden.store.backend.model.entity.Category;
+import com.homegarden.store.backend.repository.CategoryRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class CategoryServiceImpl implements CategoryService {
+
+    private final CategoryRepository categoryRepository;
+
+    @Override
+    public Category create(Category category) {
+        try {
+            return categoryRepository.save(category);
+        } catch (Exception e) {
+            throw new RuntimeException("Error occurred while creating category", e);
+        }
+    }
+
+    @Override
+    public List<Category> getAll() {
+        return categoryRepository.findAll();
+    }
+
+    @Override
+    public Category getById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException("Category with id " + categoryId + " not found"));
+    }
+
+    @Override
+    public Category update(Long categoryId, String name) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException("Category with id " + categoryId + " not found"));
+        category.setName(name);
+        return categoryRepository.save(category);
+
+    }
+
+    @Override
+    public void delete(Long id) {
+        Category category = getById(id);
+        categoryRepository.delete(category);
+    }
+}
+
