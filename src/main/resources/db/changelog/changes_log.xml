@@ -9,5 +9,4 @@
     <include file="db/changelog/changeSets/create.table.sql"/>
     <include file="db/changelog/test_data/test_data_init.xml"/>
 
-
 </databaseChangeLog>

@@ -55,7 +55,6 @@ public class CategoryServiceImplTest {
         when(categoryRepository.save(category2)).thenReturn(category2);
         Category actual = categoryService.update(1L, category2.getName());
         assertEquals(category2, actual);
-
     }
 
     @Test

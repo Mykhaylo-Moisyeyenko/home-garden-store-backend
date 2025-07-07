@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/categories")
@@ -60,6 +59,4 @@ public class CategoryController {
          CategoryDto response = converter.toDto(updated);
         return ResponseEntity.ok(response);
     }
-
-
 }
