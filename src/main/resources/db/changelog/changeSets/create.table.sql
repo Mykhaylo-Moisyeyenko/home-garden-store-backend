@@ -54,12 +54,12 @@ create table cart_items
 );
 
 create type order_status as enum (
-    'STATUS_CREATED',
-    'STATUS_AWAITING_PAYMENT',
-    'STATUS_PAID',
-    'STATUS_SHIPPED',
-    'STATUS_DELIVERED',
-    'STATUS_CANCELLED'
+    'CREATED',
+    'AWAITING_PAYMENT',
+    'PAID',
+    'SHIPPED',
+    'DELIVERED',
+    'CANCELLED'
 );
 
 create table orders
