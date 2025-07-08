@@ -2,6 +2,8 @@ package com.homegarden.store.backend.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.List;
 
 @Entity
 @Table(name = "categories")
@@ -19,4 +21,9 @@ public class Category {
     private Long categoryId;
 
     private String name;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @JsonManagedReference
+    private List<Product> products;
 }

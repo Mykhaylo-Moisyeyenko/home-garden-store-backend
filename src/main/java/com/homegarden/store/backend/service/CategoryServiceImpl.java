@@ -16,11 +16,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category create(Category category) {
-        try {
-            return categoryRepository.save(category);
-        } catch (Exception e) {
-            throw new RuntimeException("Error occurred while creating category", e);
-        }
+        return categoryRepository.save(category);
     }
 
     @Override
