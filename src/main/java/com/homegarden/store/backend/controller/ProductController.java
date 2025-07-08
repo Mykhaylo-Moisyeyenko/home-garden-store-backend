@@ -7,6 +7,10 @@ import com.homegarden.store.backend.model.dto.ProductDto;
 import com.homegarden.store.backend.model.entity.Product;
 import com.homegarden.store.backend.service.ProductService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +37,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getAll() {
-        List<ProductDto> dtos = productService.getAll().stream()
+    public ResponseEntity<List<ProductDto>> getAll(
+            @RequestParam(required = false) @Min(1) Long categoryId,
+            @RequestParam(required = false) @PositiveOrZero Double minPrice,
+            @RequestParam(required = false) @Positive Double maxPrice,
+            @RequestParam(required = false) Boolean discount,
+            @RequestParam(required = false) @Pattern(regexp = "ASC|DESC") String sort
+    ) {
+        List<ProductDto> dtos = productService.getAll(categoryId, minPrice, maxPrice, discount,sort).stream()
                 .map(productConverter::toDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);

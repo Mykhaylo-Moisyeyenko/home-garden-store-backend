@@ -8,7 +8,12 @@ public interface ProductService {
 
     Product create(Product product);
 
-    List<Product> getAll();
+    List<Product> getAll(
+            Long categoryId,
+            Double minPrice,
+            Double maxPrice,
+            Boolean discount,
+            String sort);
 
     Product getById(Long id);
 
