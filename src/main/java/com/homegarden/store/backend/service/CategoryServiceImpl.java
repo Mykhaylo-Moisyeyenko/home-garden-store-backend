@@ -16,11 +16,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category create(Category category) {
-        try {
             return categoryRepository.save(category);
-        } catch (Exception e) {
-            throw new RuntimeException("Error occurred while creating category", e);
-        }
     }
 
     @Override
@@ -36,17 +32,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category update(Long categoryId, String name) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException("Category with id " + categoryId + " not found"));
+        Category category = getById(categoryId);
         category.setName(name);
         return categoryRepository.save(category);
-
     }
 
     @Override
     public void delete(Long id) {
-        Category category = getById(id);
-        categoryRepository.delete(category);
+        categoryRepository.delete(getById(id));
     }
 }
-
