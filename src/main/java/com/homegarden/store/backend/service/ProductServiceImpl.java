@@ -3,7 +3,9 @@ package com.homegarden.store.backend.service;
 import com.homegarden.store.backend.exception.ProductNotFoundException;
 import com.homegarden.store.backend.model.entity.Product;
 import com.homegarden.store.backend.repository.ProductRepository;
+import com.homegarden.store.backend.utils.ProductFilterSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +22,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAll() {
-        return productRepository.findAll();
+    public List<Product> getAll(
+            Long categoryId,
+            Double minPrice,
+            Double maxPrice,
+            Boolean discount,
+            String sort
+    ) {
+        Specification<Product> specification = ProductFilterSpecification.filter(
+                categoryId, minPrice, maxPrice, discount, sort);
+        return productRepository.findAll(specification);
     }
 
     @Override
