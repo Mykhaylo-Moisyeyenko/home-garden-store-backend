@@ -38,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product update(Product product) {
-        Long id = (product.getProductId());
+        Long id = product.getProductId();
 
         Product existing = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
@@ -46,7 +46,11 @@ public class ProductServiceImpl implements ProductService {
         existing.setName(product.getName());
         existing.setDescription(product.getDescription());
         existing.setPrice(product.getPrice());
-        existing.setCategoryId(product.getCategoryId());
+
+        if (product.getCategory() != null) {
+            existing.setCategory(product.getCategory()); // обновлена категория
+        }
+
         existing.setImageUrl(product.getImageUrl());
         existing.setDiscountPrice(product.getDiscountPrice());
         existing.setUpdatedAt(product.getUpdatedAt());

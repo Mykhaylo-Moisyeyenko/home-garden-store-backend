@@ -1,11 +1,10 @@
 package com.homegarden.store.backend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Entity
 @Getter
@@ -36,8 +35,4 @@ public class Product {
     private Double discountPrice;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private List<Favorite> favorites;
 }

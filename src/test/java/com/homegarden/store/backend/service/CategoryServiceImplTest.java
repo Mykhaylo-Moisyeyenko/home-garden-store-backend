@@ -24,7 +24,7 @@ public class CategoryServiceImplTest {
     @InjectMocks
     private CategoryServiceImpl categoryService;
 
-    Category category1 = new Category(1L, "tools");
+    Category category1 = new Category(1L, "tools", List.of());
 
     @Test
     void createTest() throws Exception {
@@ -51,7 +51,8 @@ public class CategoryServiceImplTest {
     void updateTest() throws Exception {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category1))
                 .thenReturn(Optional.of(category1));
-        Category category2 = new Category(1L, "trees");
+
+        Category category2 = new Category(1L, "trees", List.of());
         when(categoryRepository.save(category2)).thenReturn(category2);
         Category actual = categoryService.update(1L, category2.getName());
         assertEquals(category2, actual);

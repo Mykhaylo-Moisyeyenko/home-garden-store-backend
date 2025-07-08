@@ -36,22 +36,26 @@ class FavoriteServiceImplTest {
 
     @Test
     void getAll_shouldReturnListOfDto() {
-        Favorite entity = Favorite.builder().userId(1L).productId(101L).build();
-        when(favoriteRepository.findByUserId(1L)).thenReturn(List.of(entity));
+        Favorite entity = Favorite.builder()
+                .user(User.builder().userId(1L).build())
+                .product(Product.builder().productId(101L).build())
+                .build();
 
+        when(favoriteRepository.findByUser_UserId(1L)).thenReturn(List.of(entity));
         List<FavoriteDto> result = favoriteService.getAll(1L);
 
         assertEquals(1, result.size());
         assertEquals(101L, result.get(0).productId());
-        verify(favoriteRepository).findByUserId(1L);
+        verify(favoriteRepository).findByUser_UserId(1L);
     }
 
     @Test
     void addToFavorites_shouldSaveIfNotExists() {
         when(userService.getById(1L)).thenReturn(User.builder().userId(1L).build());
         when(productService.getById(101L)).thenReturn(Product.builder().productId(101L).build());
-        when(favoriteRepository.findByUserIdAndProductId(1L, 101L))
+        when(favoriteRepository.findByUser_UserIdAndProduct_ProductId(1L, 101L))
                 .thenReturn(Optional.empty());
+
 
         favoriteService.addToFavorites(dto);
 
@@ -64,7 +68,7 @@ class FavoriteServiceImplTest {
 
         assertThrows(UserNotFoundException.class, () -> favoriteService.addToFavorites(dto));
         verify(productService, never()).getById(anyLong());
-        verify(favoriteRepository, never()).findByUserIdAndProductId(anyLong(), anyLong());
+        verify(favoriteRepository, never()).findByUser_UserIdAndProduct_ProductId(anyLong(), anyLong());
         verify(favoriteRepository, never()).save(any());
     }
 
@@ -74,7 +78,7 @@ class FavoriteServiceImplTest {
         when(productService.getById(101L)).thenThrow(new ProductNotFoundException("Product not found"));
 
         assertThrows(ProductNotFoundException.class, () -> favoriteService.addToFavorites(dto));
-        verify(favoriteRepository, never()).findByUserIdAndProductId(anyLong(), anyLong());
+        verify(favoriteRepository, never()).findByUser_UserIdAndProduct_ProductId(anyLong(), anyLong());
         verify(favoriteRepository, never()).save(any());
     }
 
@@ -82,18 +86,22 @@ class FavoriteServiceImplTest {
     void addToFavorites_shouldNotSave_IfUserHasProductInFavorites() {
         when(userService.getById(1L)).thenReturn(User.builder().userId(1L).build());
         when(productService.getById(101L)).thenReturn(Product.builder().productId(101L).build());
-        when(favoriteRepository.findByUserIdAndProductId(1L, 101L))
-                .thenReturn(Optional.of(Favorite.builder().userId(1L).productId(101L).build()));
+        when(favoriteRepository.findByUser_UserIdAndProduct_ProductId(1L, 101L))
+                .thenReturn(Optional.of(Favorite.builder()
+                        .user(User.builder().userId(1L).build())
+                        .product(Product.builder().productId(101L).build())
+                        .build()));
 
         favoriteService.addToFavorites(dto);
-
         verify(favoriteRepository, never()).save(any());
     }
+
 
     @Test
     void removeFromFavorites_shouldCallDelete() {
         favoriteService.removeFromFavorites(dto);
 
-        verify(favoriteRepository).deleteByUserIdAndProductId(1L, 101L);
+        verify(favoriteRepository).deleteByUser_UserIdAndProduct_ProductId(1L, 101L);
+
     }
 }
