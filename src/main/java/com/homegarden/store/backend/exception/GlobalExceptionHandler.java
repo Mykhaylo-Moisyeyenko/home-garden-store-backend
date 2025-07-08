@@ -1,7 +1,5 @@
 package com.homegarden.store.backend.exception;
 
-import jakarta.validation.ConstraintViolationException;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,7 +22,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public String handleBadRequestException(MethodArgumentTypeMismatchException exception){
-        return "HTTP method argument type mismatch";
+        return "HTTP method argument invalid type";  //when we get a String id instead of a Long id in Postman
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -34,12 +32,6 @@ public class GlobalExceptionHandler {
                 .map(field -> field.getField() + ": " + field.getDefaultMessage())
                 .collect(Collectors.joining("; "));
         return "HTTP body fields not valid: " + message;
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ConstraintViolationException.class)
-    public String handleInvalidArgumentException(ConstraintViolationException exception){
-        return "HTTP method argument not valid: " + exception.getMessage();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

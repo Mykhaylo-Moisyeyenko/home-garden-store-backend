@@ -13,9 +13,6 @@ public class FavoriteConverter {
     }
 
     public static FavoriteDto toDto(Favorite favorite) {
-        return FavoriteDto.builder()
-                .userId(favorite.getUserId())
-                .productId(favorite.getProductId())
-                .build();
+        return new FavoriteDto(favorite.getUserId(), favorite.getProductId());
     }
 }
