@@ -70,7 +70,7 @@ create table orders
     delivery_address varchar(255) not null,
     contact_phone    varchar(20)  not null,
     delivery_method  varchar(100) not null,
-    status           order_status not null default 'STATUS_CREATED',
+    status           order_status not null default 'CREATED',
     updated_at       timestamp             default current_timestamp
 );
 
