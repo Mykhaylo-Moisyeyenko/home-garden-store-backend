@@ -9,7 +9,7 @@ public interface ProductService {
     Product create(Product product);
 
     List<Product> getAll(
-            Long productId,
+            Long categoryId,
             Double minPrice,
             Double maxPrice,
             Boolean discount,
