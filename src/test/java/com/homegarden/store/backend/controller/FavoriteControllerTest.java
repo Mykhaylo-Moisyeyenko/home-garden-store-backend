@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.homegarden.store.backend.model.dto.FavoriteDto;
+import com.homegarden.store.backend.dto.FavoriteDto;
 import com.homegarden.store.backend.service.FavoriteService;
 import com.homegarden.store.backend.service.UserService;
 import org.junit.jupiter.api.DisplayName;

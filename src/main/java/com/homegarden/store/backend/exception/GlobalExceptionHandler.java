@@ -39,4 +39,10 @@ public class GlobalExceptionHandler {
     public String handleConflict(UserAlreadyExistsException ex) {
         return ex.getMessage();
     }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @ExceptionHandler(FavoriteAlreadyExistsException.class)
+    public String handleConflict(FavoriteAlreadyExistsException ex) {
+        return ex.getMessage();
+    }
 }

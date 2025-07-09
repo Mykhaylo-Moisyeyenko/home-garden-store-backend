@@ -1,6 +1,6 @@
 package com.homegarden.store.backend.utils;
 
-import com.homegarden.store.backend.model.entity.Product;
+import com.homegarden.store.backend.entity.Product;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;

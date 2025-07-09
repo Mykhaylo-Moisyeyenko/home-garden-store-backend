@@ -1,8 +1,8 @@
 package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.converter.CategoryConverter;
-import com.homegarden.store.backend.model.dto.CategoryDto;
-import com.homegarden.store.backend.model.entity.Category;
+import com.homegarden.store.backend.dto.CategoryDto;
+import com.homegarden.store.backend.entity.Category;
 import com.homegarden.store.backend.service.CategoryService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

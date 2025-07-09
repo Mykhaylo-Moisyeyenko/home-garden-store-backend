@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.model.dto.CategoryDto;
-import com.homegarden.store.backend.model.entity.Category;
+import com.homegarden.store.backend.dto.CategoryDto;
+import com.homegarden.store.backend.entity.Category;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
