@@ -1,7 +1,5 @@
 package com.homegarden.store.backend.exception;
 
-import jakarta.validation.ConstraintViolationException;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,33 +13,16 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(UserNotFoundException.class)
-    public String handleUserNotFoundException(UserNotFoundException exception){
-        return exception.getMessage();
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(CategoryNotFoundException.class)
-    public String handleCategoryNotFoundException(CategoryNotFoundException exception){
-        return exception.getMessage();
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(OrderNotFoundException.class)
-    public String handleOrderNotFoundException(OrderNotFoundException exception){
-        return exception.getMessage();
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(ProductNotFoundException.class)
-    public String handleProductNotFoundException(ProductNotFoundException exception){
+    @ExceptionHandler(value = {UserNotFoundException.class, CategoryNotFoundException.class,
+            OrderNotFoundException.class, ProductNotFoundException.class})
+    public String handleNotFoundException(Exception exception){
         return exception.getMessage();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public String handleBadRequestException(MethodArgumentTypeMismatchException exception){
-        return "HTTP method argument type mismatch";
+        return "HTTP method argument invalid type";  //when we get a String id instead of a Long id in Postman
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -54,14 +35,14 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ConstraintViolationException.class)
-    public String handleInvalidArgumentException(ConstraintViolationException exception){
-        return "HTTP method argument not valid: " + exception.getMessage();
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UserAlreadyExistsException.class)
     public String handleConflict(UserAlreadyExistsException ex) {
+        return ex.getMessage();
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @ExceptionHandler(FavoriteAlreadyExistsException.class)
+    public String handleConflict(FavoriteAlreadyExistsException ex) {
         return ex.getMessage();
     }
 }

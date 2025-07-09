@@ -1,8 +1,11 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.converter.FavoriteConverter;
-import com.homegarden.store.backend.model.dto.FavoriteDto;
-import com.homegarden.store.backend.model.entity.Favorite;
+import com.homegarden.store.backend.exception.ProductNotFoundException;
+import com.homegarden.store.backend.exception.UserNotFoundException;
+import com.homegarden.store.backend.dto.FavoriteDto;
+import com.homegarden.store.backend.entity.Favorite;
+import com.homegarden.store.backend.entity.Product;
+import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.repository.FavoriteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,18 +13,25 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class FavoriteServiceImplTest {
 
     private FavoriteRepository favoriteRepository;
+    private ProductService productService;
+    private UserService userService;
     private FavoriteServiceImpl favoriteService;
+    FavoriteDto dto;
 
     @BeforeEach
     void setUp() {
         favoriteRepository = mock(FavoriteRepository.class);
-        favoriteService = new FavoriteServiceImpl(favoriteRepository);
+        productService = mock(ProductService.class);
+        userService = mock(UserService.class);
+        favoriteService = new FavoriteServiceImpl(favoriteRepository, productService, userService);
+        dto = new FavoriteDto(1L, 101L);
     }
 
     @Test
@@ -38,8 +48,10 @@ class FavoriteServiceImplTest {
 
     @Test
     void addToFavorites_shouldSaveIfNotExists() {
-        FavoriteDto dto = new FavoriteDto(1L, 101L);
-        when(favoriteRepository.findByUserIdAndProductId(1L, 101L)).thenReturn(Optional.empty());
+        when(userService.getById(1L)).thenReturn(User.builder().userId(1L).build());
+        when(productService.getById(101L)).thenReturn(Product.builder().productId(101L).build());
+        when(favoriteRepository.findByUserIdAndProductId(1L, 101L))
+                .thenReturn(Optional.empty());
 
         favoriteService.addToFavorites(dto);
 
@@ -47,10 +59,31 @@ class FavoriteServiceImplTest {
     }
 
     @Test
-    void addToFavorites_shouldNotSaveIfExists() {
-        FavoriteDto dto = new FavoriteDto(1L, 101L);
+    void addToFavorites_shouldNotSave_IfUserNotExists() {
+        when(userService.getById(1L)).thenThrow(new UserNotFoundException("User not found"));
+
+        assertThrows(UserNotFoundException.class, () -> favoriteService.addToFavorites(dto));
+        verify(productService, never()).getById(anyLong());
+        verify(favoriteRepository, never()).findByUserIdAndProductId(anyLong(), anyLong());
+        verify(favoriteRepository, never()).save(any());
+    }
+
+    @Test
+    void addToFavorites_shouldNotSave_IfProductNotExists() {
+        when(userService.getById(1L)).thenReturn(User.builder().userId(1L).build());
+        when(productService.getById(101L)).thenThrow(new ProductNotFoundException("Product not found"));
+
+        assertThrows(ProductNotFoundException.class, () -> favoriteService.addToFavorites(dto));
+        verify(favoriteRepository, never()).findByUserIdAndProductId(anyLong(), anyLong());
+        verify(favoriteRepository, never()).save(any());
+    }
+
+    @Test
+    void addToFavorites_shouldNotSave_IfUserHasProductInFavorites() {
+        when(userService.getById(1L)).thenReturn(User.builder().userId(1L).build());
+        when(productService.getById(101L)).thenReturn(Product.builder().productId(101L).build());
         when(favoriteRepository.findByUserIdAndProductId(1L, 101L))
-                .thenReturn(Optional.of(new Favorite()));
+                .thenReturn(Optional.of(Favorite.builder().userId(1L).productId(101L).build()));
 
         favoriteService.addToFavorites(dto);
 
@@ -59,8 +92,6 @@ class FavoriteServiceImplTest {
 
     @Test
     void removeFromFavorites_shouldCallDelete() {
-        FavoriteDto dto = new FavoriteDto(1L, 101L);
-
         favoriteService.removeFromFavorites(dto);
 
         verify(favoriteRepository).deleteByUserIdAndProductId(1L, 101L);

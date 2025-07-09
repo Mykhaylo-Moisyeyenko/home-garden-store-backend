@@ -1,9 +1,8 @@
 package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.converter.FavoriteConverter;
-import com.homegarden.store.backend.exception.ProductNotFoundException;
-import com.homegarden.store.backend.model.dto.FavoriteDto;
-import com.homegarden.store.backend.model.entity.Favorite;
+import com.homegarden.store.backend.dto.FavoriteDto;
+import com.homegarden.store.backend.entity.Favorite;
 import com.homegarden.store.backend.repository.FavoriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +17,10 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
 
+    private final ProductService productService;
+
+    private final UserService userService;
+
     @Override
     public List<FavoriteDto> getAll(Long userId) {
         List<Favorite> favorites = favoriteRepository.findByUserId(userId);
@@ -29,10 +32,12 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public void addToFavorites(FavoriteDto favoriteDto) {
-        favoriteRepository.findProductByProductId((favoriteDto.productId()))
-                .orElseThrow(()->new ProductNotFoundException("Product with id " + favoriteDto.productId() + " not found"));
+        userService.getById(favoriteDto.userId());
+        productService.getById(favoriteDto.productId());
+
         Optional<Favorite> favorite = favoriteRepository
                 .findByUserIdAndProductId(favoriteDto.userId(), favoriteDto.productId());
+
         if (favorite.isPresent()) {
             return;
         }

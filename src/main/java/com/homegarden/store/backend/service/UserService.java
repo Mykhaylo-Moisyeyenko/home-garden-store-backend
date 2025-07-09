@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.model.dto.UpdateUserRequestDTO;
-import com.homegarden.store.backend.model.entity.User;
+import com.homegarden.store.backend.dto.UpdateUserRequestDTO;
+import com.homegarden.store.backend.entity.User;
 
 import java.util.List;
 
@@ -13,10 +13,11 @@ public interface UserService {
 
     User update(Long userId, UpdateUserRequestDTO updateDto);
 
-
     User getById(Long id);
 
     boolean existsByEmail(String email);
+
+    boolean existsById(Long id);
 
     void delete(Long id);
 }

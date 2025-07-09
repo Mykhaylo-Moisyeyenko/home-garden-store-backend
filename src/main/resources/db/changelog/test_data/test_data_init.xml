@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="insert-users" author="Sofia" runAlways="true">
+        <sql>
+            INSERT INTO users (name, email, phone_number, password_hash, role)
+            VALUES ('Anna', 'anna@gmail.com', '+37412345676','password2', 'ROLE_ADMINISTRATOR'),
+                   ('Bob', 'bob@gmail.com', '+13427774568','password3', 'ROLE_USER'),
+                   ('Betty', 'betty@gmail.com', '+1009456888','password4', 'ROLE_USER'),
+                   ('John', 'john@gmail.com', '+1789098567','password5', 'ROLE_USER');
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-categories" author="Sofia" runAlways="true">
+        <sql>
+            INSERT INTO categories (name)
+            VALUES ('Tools'),
+                   ('Digging'),
+                   ('Watering');
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-products" author="Sofia" runAlways="true">
+        <sql>
+            INSERT INTO products (name, description, price, category_id, image_url, discount_price)
+            VALUES ('Garden Rake', 'Lightweight aluminum rake', 14.99, 1, 'https://example.com/images/rake.jpg', NULL),
+                   ('Shovel', 'Steel digging shovel', 24.50, 2, 'https://example.com/images/shovel.jpg', 19.99),
+                   ('Watering Hose', 'Flexible hose for garden watering', 29.90, 3, NULL, NULL);
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-favorites" author="Sofia" runAlways="true">
+        <sql>
+            INSERT INTO favorites (user_id, product_id)
+            VALUES (1, 2),
+                   (3, 3);
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-carts" author="Sofia" runAlways="true">
+        <sql>
+            INSERT INTO cart (user_id)
+            VALUES (1),
+                   (2);
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-cart-items" author="Sofia" runAlways="true">
+        <sql>
+            INSERT INTO cart_items (cart_id, product_id, quantity)
+            VALUES (1, 1, 2), -- Anna's cart has 2 rakes
+                   (2, 3, 1); -- Bob's cart has 1 hose
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-orders" author="Sofia" runAlways="true">
+        <sql>
+            INSERT INTO orders (user_id, delivery_address, contact_phone, delivery_method, status)
+            VALUES (1, 'Berlin, Panorama str. 1A','+49-123-456789','Courier', 'CREATED'),
+                   (4, 'Hamburg, Platz d.Deutschen Einheit 4','+49-555-888999', 'Pickup', 'DELIVERED');
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-order-items" author="Sofia" runAlways="true">
+        <sql>
+            INSERT INTO order_items (order_id, product_id, quantity, price_at_purchase)
+            VALUES (1, 2, 1, 19.99), -- Anna ordered 1 shovel
+                   (1, 3, 2, 29.90), -- Anna ordered 2 hoses
+                   (2, 1, 1, 14.99); -- John ordered 1 rake
+        </sql>
+    </changeSet>
+</databaseChangeLog>

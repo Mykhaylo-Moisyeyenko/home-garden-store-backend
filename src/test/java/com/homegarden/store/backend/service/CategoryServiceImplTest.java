@@ -1,6 +1,6 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.model.entity.Category;
+import com.homegarden.store.backend.entity.Category;
 import com.homegarden.store.backend.repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +55,6 @@ public class CategoryServiceImplTest {
         when(categoryRepository.save(category2)).thenReturn(category2);
         Category actual = categoryService.update(1L, category2.getName());
         assertEquals(category2, actual);
-
     }
 
     @Test

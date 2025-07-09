@@ -1,8 +1,8 @@
 package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.exception.UserNotFoundException;
-import com.homegarden.store.backend.model.dto.UpdateUserRequestDTO;
-import com.homegarden.store.backend.model.entity.User;
+import com.homegarden.store.backend.dto.UpdateUserRequestDTO;
+import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,7 +45,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsByEmail(String email){
-        return userRepository.existsByEmail(email);
-    }
+    public boolean existsByEmail(String email){ return userRepository.existsByEmail(email); }
+
+    @Override
+    public boolean existsById(Long id) { return userRepository.existsById(id); }
 }

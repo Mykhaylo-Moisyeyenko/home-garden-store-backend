@@ -1,8 +1,8 @@
 package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.exception.UserNotFoundException;
-import com.homegarden.store.backend.model.entity.User;
-import com.homegarden.store.backend.model.enums.Role;
+import com.homegarden.store.backend.entity.User;
+import com.homegarden.store.backend.enums.Role;
 import com.homegarden.store.backend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -109,5 +109,25 @@ class UserServiceImplTest {
 
         assertFalse(result);
         verify(userRepository).existsByEmail("false@gmail.com");
+    }
+
+    @Test
+    void existsByIdTest() {
+        when(userRepository.existsById(1L)).thenReturn(true);
+
+        boolean result = userServiceImpl.existsById(1L);
+
+        assertTrue(result);
+        verify(userRepository).existsById(1L);
+    }
+
+    @Test
+    void existsByIdTest_shouldReturnFalse_WhenUserNotFound() {
+        when(userRepository.existsById(6L)).thenReturn(false);
+
+        boolean result = userServiceImpl.existsById(6L);
+
+        assertFalse(result);
+        verify(userRepository).existsById(6L);
     }
 }

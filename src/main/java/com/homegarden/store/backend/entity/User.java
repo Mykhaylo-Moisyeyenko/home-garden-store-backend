@@ -1,12 +1,8 @@
-package com.homegarden.store.backend.model.entity;
+package com.homegarden.store.backend.entity;
 
-import com.homegarden.store.backend.model.enums.Role;
+import com.homegarden.store.backend.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.dialect.PostgreSQLEnumJdbcType;
-import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "users")
@@ -34,6 +30,5 @@ public class User {
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private Role role = Role.ROLE_USER;
 }

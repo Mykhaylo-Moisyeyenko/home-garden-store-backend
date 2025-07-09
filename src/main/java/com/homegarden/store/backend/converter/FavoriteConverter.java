@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.model.dto.FavoriteDto;
-import com.homegarden.store.backend.model.entity.Favorite;
+import com.homegarden.store.backend.dto.FavoriteDto;
+import com.homegarden.store.backend.entity.Favorite;
 
 public class FavoriteConverter {
 
@@ -13,9 +13,6 @@ public class FavoriteConverter {
     }
 
     public static FavoriteDto toDto(Favorite favorite) {
-        return FavoriteDto.builder()
-                .userId(favorite.getUserId())
-                .productId(favorite.getProductId())
-                .build();
+        return new FavoriteDto(favorite.getUserId(), favorite.getProductId());
     }
 }

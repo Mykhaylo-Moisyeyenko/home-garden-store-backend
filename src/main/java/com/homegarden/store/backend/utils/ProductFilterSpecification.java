@@ -1,6 +1,6 @@
-package com.homegarden.store.backend.repository.specification;
+package com.homegarden.store.backend.utils;
 
-import com.homegarden.store.backend.model.entity.Product;
+import com.homegarden.store.backend.entity.Product;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,8 +32,12 @@ public class ProductFilterSpecification {
                 predicates.add(criteriaBuilder.le(root.get("price"), maxPrice));
             }
 
-            if (discount != null && discount == true) {
-                predicates.add(criteriaBuilder.isNotNull(root.get("discountPrice")));
+            if (discount != null) {
+                if(discount){
+                    predicates.add(criteriaBuilder.isNotNull(root.get("discountPrice")));
+                } else {
+                    predicates.add(criteriaBuilder.isNull(root.get("discountPrice")));
+                }
             }
 
             if (sort != null) {

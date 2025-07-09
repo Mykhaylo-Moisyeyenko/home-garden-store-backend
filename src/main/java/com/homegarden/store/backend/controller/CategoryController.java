@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.controller;
 import com.homegarden.store.backend.converter.CategoryConverter;
-import com.homegarden.store.backend.model.dto.CategoryDto;
-import com.homegarden.store.backend.model.entity.Category;
+import com.homegarden.store.backend.dto.CategoryDto;
+import com.homegarden.store.backend.entity.Category;
 import com.homegarden.store.backend.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -60,6 +59,4 @@ public class CategoryController {
          CategoryDto response = converter.toDto(updated);
         return ResponseEntity.ok(response);
     }
-
-
 }
