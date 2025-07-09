@@ -3,6 +3,7 @@ package com.homegarden.store.backend.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homegarden.store.backend.model.dto.FavoriteDto;
 import com.homegarden.store.backend.service.FavoriteService;
+import com.homegarden.store.backend.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,14 @@ class FavoriteControllerTest {
     @MockitoBean
     private FavoriteService favoriteService;
 
+    @MockitoBean
+    private UserService userService;
+
     @Test
     @DisplayName("GET /v1/favorites/{userId} должен возвращать список избранного")
     void shouldReturnFavoriteList() throws Exception {
         FavoriteDto favoriteDto = new FavoriteDto(1L, 200L);
+        when(userService.existsById(1L)).thenReturn(true);
         when(favoriteService.getAll(1L)).thenReturn(List.of(favoriteDto));
 
         mockMvc.perform(get("/v1/favorites/1"))
