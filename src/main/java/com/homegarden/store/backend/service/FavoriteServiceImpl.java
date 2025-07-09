@@ -23,7 +23,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public List<FavoriteDto> getAll(Long userId) {
-        List<Favorite> favorites = favoriteRepository.findByUserId(userId);
+        List<Favorite> favorites = favoriteRepository.findByUser_UserId(userId);
         List<FavoriteDto> favoriteDtos = favorites.stream()
                 .map(FavoriteConverter::toDto)
                 .collect(Collectors.toList());
@@ -36,7 +36,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         productService.getById(favoriteDto.productId());
 
         Optional<Favorite> favorite = favoriteRepository
-                .findByUserIdAndProductId(favoriteDto.userId(), favoriteDto.productId());
+                .findByUser_UserIdAndProduct_ProductId(favoriteDto.userId(), favoriteDto.productId());
 
         if (favorite.isPresent()) {
             return;
@@ -46,6 +46,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public void removeFromFavorites(FavoriteDto favoriteDto) {
-        favoriteRepository.deleteByUserIdAndProductId(favoriteDto.userId(), favoriteDto.productId());
+        favoriteRepository.deleteByUser_UserIdAndProduct_ProductId(favoriteDto.userId(), favoriteDto.productId());
+
     }
 }

@@ -3,10 +3,18 @@ package com.homegarden.store.backend.converter;
 import com.homegarden.store.backend.dto.CreateProductDto;
 import com.homegarden.store.backend.dto.ProductDto;
 import com.homegarden.store.backend.entity.Product;
+import com.homegarden.store.backend.entity.Category;
+import com.homegarden.store.backend.service.CategoryService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductConverter implements Converter<Product, CreateProductDto, ProductDto> {
+
+    private final CategoryService categoryService;
+
+    public ProductConverter(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @Override
     public Product toEntity(CreateProductDto createProductDto) {
@@ -14,7 +22,9 @@ public class ProductConverter implements Converter<Product, CreateProductDto, Pr
         product.setName(createProductDto.getName());
         product.setDescription(createProductDto.getDescription());
         product.setPrice(createProductDto.getPrice());
-        product.setCategoryId(Long.valueOf(createProductDto.getCategoryId()));
+        Category category = categoryService.getById(createProductDto.getCategoryId());
+        product.setCategory(category);
+
         return product;
     }
 
@@ -25,7 +35,7 @@ public class ProductConverter implements Converter<Product, CreateProductDto, Pr
         dto.setName(product.getName());
         dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
-        dto.setCategoryId(String.valueOf(product.getCategoryId()));
+        dto.setCategoryId(product.getCategory().getCategoryId());
         dto.setImageUrl(product.getImageUrl());
         dto.setDiscountPrice(product.getDiscountPrice());
         dto.setCreatedAt(product.getCreatedAt());

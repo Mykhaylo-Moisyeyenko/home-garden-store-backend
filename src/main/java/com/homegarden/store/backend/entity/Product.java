@@ -1,5 +1,6 @@
 package com.homegarden.store.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,10 +20,17 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long productId;
+
     private String name;
     private String description;
     private Double price;
-    private Long categoryId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    @ToString.Exclude
+    @JsonBackReference
+    private Category category;
+
     private String imageUrl;
     private Double discountPrice;
     private Timestamp createdAt;
