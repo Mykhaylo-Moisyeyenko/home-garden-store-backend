@@ -4,28 +4,25 @@ import com.homegarden.store.backend.model.dto.CreateProductDto;
 import com.homegarden.store.backend.model.dto.ProductDto;
 import com.homegarden.store.backend.model.entity.Category;
 import com.homegarden.store.backend.model.entity.Product;
-import com.homegarden.store.backend.repository.CategoryRepository;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import org.springframework.context.annotation.Primary;
+import com.homegarden.store.backend.service.CategoryService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductConverter implements Converter<Product, CreateProductDto, ProductDto> {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
-    public ProductConverter(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    public ProductConverter(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
+
     @Override
     public Product toEntity(CreateProductDto createProductDto) {
         Product product = new Product();
         product.setName(createProductDto.getName());
         product.setDescription(createProductDto.getDescription());
         product.setPrice(createProductDto.getPrice());
-        Category category = categoryRepository.findById(Long.valueOf(createProductDto.getCategoryId()))
-                .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + createProductDto.getCategoryId()));
+        Category category = categoryService.getById(createProductDto.getCategoryId());
         product.setCategory(category);
 
         return product;
@@ -38,7 +35,7 @@ public class ProductConverter implements Converter<Product, CreateProductDto, Pr
         dto.setName(product.getName());
         dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
-        dto.setCategoryId(Long.valueOf(product.getCategory().getCategoryId()));
+        dto.setCategoryId(product.getCategory().getCategoryId());
         dto.setImageUrl(product.getImageUrl());
         dto.setDiscountPrice(product.getDiscountPrice());
         dto.setCreatedAt(product.getCreatedAt());

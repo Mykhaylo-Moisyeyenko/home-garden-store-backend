@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.homegarden.store.backend.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.List;
 
 @Entity
@@ -24,12 +25,16 @@ public class User {
     private String name;
     private String email;
     private String passwordHash;
-    private Role role;
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.ROLE_USER;
+
     private String phoneNumber;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JsonManagedReference
-    private Favorite favorites;
+    private List<Favorite> favorites;
 }
