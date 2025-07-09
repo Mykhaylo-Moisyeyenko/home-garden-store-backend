@@ -1,9 +1,9 @@
 package com.homegarden.store.backend.controller;
 
+import com.homegarden.store.backend.converter.Converter;
 import com.homegarden.store.backend.dto.FavoriteDto;
-import com.homegarden.store.backend.exception.UserNotFoundException;
+import com.homegarden.store.backend.entity.Favorite;
 import com.homegarden.store.backend.service.FavoriteService;
-import com.homegarden.store.backend.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/favorites")
@@ -21,26 +22,28 @@ public class FavoriteController {
 
     private final FavoriteService favoriteService;
 
-    private final UserService userService;
+    private final Converter<Favorite, FavoriteDto, FavoriteDto> converter;
 
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public List<FavoriteDto> getAll(@PathVariable @Min(1) Long userId) {
-        if (!userService.existsById(userId)) {
-            throw new UserNotFoundException("User with id " + userId + " doesn't exists");
-        }
-        return favoriteService.getAll(userId);
+        return favoriteService.getAll(userId)
+                .stream()
+                .map(converter::toDto)
+                .collect(Collectors.toList());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addToFavorites(@RequestBody @Valid FavoriteDto favoriteDto) {
-        favoriteService.addToFavorites(favoriteDto);
+        Favorite entity = converter.toEntity(favoriteDto);
+        favoriteService.addToFavorites(entity);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeFromFavorites(@RequestBody @Valid FavoriteDto favoriteDto) {
-        favoriteService.removeFromFavorites(favoriteDto);
+        Favorite entity = converter.toEntity(favoriteDto);
+        favoriteService.removeFromFavorites(entity);
     }
 }
