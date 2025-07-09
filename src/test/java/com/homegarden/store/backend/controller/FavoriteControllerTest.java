@@ -1,9 +1,9 @@
 package com.homegarden.store.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.homegarden.store.backend.model.dto.FavoriteDto;
-import com.homegarden.store.backend.model.entity.Favorite;
-import com.homegarden.store.backend.model.entity.User;
+import com.homegarden.store.backend.dto.FavoriteDto;
+import com.homegarden.store.backend.entity.Favorite;
+import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.service.FavoriteService;
 import com.homegarden.store.backend.service.ProductService;
 import com.homegarden.store.backend.service.UserService;
@@ -12,13 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,14 +33,11 @@ class FavoriteControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private FavoriteService favoriteService;
 
-    @MockBean
+    @MockitoBean
     private UserService userService;
-
-    @MockBean
-    private ProductService productService;
 
     @Test
     @DisplayName("GET /v1/favorites/{userId} should return favorite list")
@@ -71,6 +66,7 @@ class FavoriteControllerTest {
                 .andExpect(jsonPath("$[0].userId").value(1L))
                 .andExpect(jsonPath("$[0].productId").value(200L));
     }
+
     @Test
     @DisplayName("POST /v1/favorites should add product to favorites")
     void shouldAddToFavorites() throws Exception {

@@ -1,5 +1,6 @@
 package com.homegarden.store.backend.model.dto;
 
+import com.homegarden.store.backend.dto.FavoriteDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

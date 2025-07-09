@@ -1,4 +1,4 @@
-package com.homegarden.store.backend.model.entity;
+package com.homegarden.store.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -11,8 +11,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder
 public class Category {
 
     @Id

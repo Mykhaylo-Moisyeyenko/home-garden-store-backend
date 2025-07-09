@@ -1,4 +1,4 @@
-package com.homegarden.store.backend.model.entity;
+package com.homegarden.store.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;

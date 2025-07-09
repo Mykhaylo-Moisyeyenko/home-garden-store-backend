@@ -1,6 +1,6 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.model.entity.Category;
+import com.homegarden.store.backend.entity.Category;
 import com.homegarden.store.backend.repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

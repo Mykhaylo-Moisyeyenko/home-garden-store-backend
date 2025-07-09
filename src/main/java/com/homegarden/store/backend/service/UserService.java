@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.model.dto.UpdateUserRequestDTO;
-import com.homegarden.store.backend.model.entity.User;
+import com.homegarden.store.backend.dto.UpdateUserRequestDTO;
+import com.homegarden.store.backend.entity.User;
 
 import java.util.List;
 

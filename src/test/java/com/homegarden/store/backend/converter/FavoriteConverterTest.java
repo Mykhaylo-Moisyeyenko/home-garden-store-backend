@@ -1,9 +1,9 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.model.dto.FavoriteDto;
-import com.homegarden.store.backend.model.entity.Favorite;
-import com.homegarden.store.backend.model.entity.Product;
-import com.homegarden.store.backend.model.entity.User;
+import com.homegarden.store.backend.dto.FavoriteDto;
+import com.homegarden.store.backend.entity.Favorite;
+import com.homegarden.store.backend.entity.Product;
+import com.homegarden.store.backend.entity.User;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,4 +1,4 @@
-package com.homegarden.store.backend.model.dto;
+package com.homegarden.store.backend.dto;
 
 import lombok.*;
 import java.sql.Timestamp;

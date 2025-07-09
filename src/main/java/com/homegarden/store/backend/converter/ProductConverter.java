@@ -1,9 +1,9 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.model.dto.CreateProductDto;
-import com.homegarden.store.backend.model.dto.ProductDto;
-import com.homegarden.store.backend.model.entity.Category;
-import com.homegarden.store.backend.model.entity.Product;
+import com.homegarden.store.backend.dto.CreateProductDto;
+import com.homegarden.store.backend.dto.ProductDto;
+import com.homegarden.store.backend.entity.Product;
+import com.homegarden.store.backend.entity.Category;
 import com.homegarden.store.backend.service.CategoryService;
 import org.springframework.stereotype.Component;
 

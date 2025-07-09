@@ -2,10 +2,10 @@ package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.exception.ProductNotFoundException;
 import com.homegarden.store.backend.exception.UserNotFoundException;
-import com.homegarden.store.backend.model.dto.FavoriteDto;
-import com.homegarden.store.backend.model.entity.Favorite;
-import com.homegarden.store.backend.model.entity.Product;
-import com.homegarden.store.backend.model.entity.User;
+import com.homegarden.store.backend.dto.FavoriteDto;
+import com.homegarden.store.backend.entity.Favorite;
+import com.homegarden.store.backend.entity.Product;
+import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.repository.FavoriteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
