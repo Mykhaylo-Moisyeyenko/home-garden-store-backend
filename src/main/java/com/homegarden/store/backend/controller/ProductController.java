@@ -31,7 +31,7 @@ public class ProductController {
     public ResponseEntity<ProductDto> create(@RequestBody @Valid CreateProductDto productDto) {
         Product product = productConverter.toEntity(productDto);
         Product created = productService.create(product);
-        return ResponseEntity.ok(productConverter.toDto(created));
+        return ResponseEntity.status(201).body(productConverter.toDto(created));
     }
 
     @GetMapping
