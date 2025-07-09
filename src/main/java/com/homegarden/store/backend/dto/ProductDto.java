@@ -1,4 +1,4 @@
-package com.homegarden.store.backend.model.dto;
+package com.homegarden.store.backend.dto;
 
 import lombok.*;
 import java.sql.Timestamp;
@@ -14,7 +14,7 @@ public class ProductDto {
     private String name;
     private String description;
     private Double price;
-    private String categoryId;
+    private Long categoryId;
     private String imageUrl;
     private Double discountPrice;
     private Timestamp createdAt;

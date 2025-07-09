@@ -1,20 +1,20 @@
-package com.homegarden.store.backend.model.entity;
+package com.homegarden.store.backend.entity;
 
-import com.homegarden.store.backend.model.enums.Role;
+import com.homegarden.store.backend.enums.Role;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+
+import java.util.List;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
+@Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-
 public class User {
 
     @Id
@@ -33,4 +33,10 @@ public class User {
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @JsonManagedReference
+    private List<Favorite> favorites;
 }

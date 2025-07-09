@@ -1,6 +1,6 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.model.dto.FavoriteDto;
+import com.homegarden.store.backend.dto.FavoriteDto;
 import jakarta.validation.Valid;
 
 import java.util.List;

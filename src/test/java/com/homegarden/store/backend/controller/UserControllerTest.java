@@ -2,12 +2,11 @@ package com.homegarden.store.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homegarden.store.backend.converter.UserConverter;
-import com.homegarden.store.backend.exception.UserAlreadyExistsException;
 import com.homegarden.store.backend.exception.UserNotFoundException;
-import com.homegarden.store.backend.model.dto.CreateUserRequestDTO;
-import com.homegarden.store.backend.model.dto.UserResponseDTO;
-import com.homegarden.store.backend.model.entity.User;
-import com.homegarden.store.backend.model.enums.Role;
+import com.homegarden.store.backend.dto.CreateUserRequestDTO;
+import com.homegarden.store.backend.dto.UserResponseDTO;
+import com.homegarden.store.backend.entity.User;
+import com.homegarden.store.backend.enums.Role;
 import com.homegarden.store.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
