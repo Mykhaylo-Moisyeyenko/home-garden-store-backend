@@ -1,24 +1,22 @@
-package com.homegarden.store.backend.model.entity;
+package com.homegarden.store.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "favorites")
+@Table(name = "categories")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Favorite {
+@Builder
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long favoriteId;
+    private Long categoryId;
 
-    Long userId;
-
-    Long productId;
+    private String name;
 }

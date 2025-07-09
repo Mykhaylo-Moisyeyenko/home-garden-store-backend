@@ -1,6 +1,6 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.model.entity.Product;
+import com.homegarden.store.backend.entity.Product;
 
 import java.util.List;
 

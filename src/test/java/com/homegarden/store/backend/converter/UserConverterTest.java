@@ -1,9 +1,9 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.model.dto.CreateUserRequestDTO;
-import com.homegarden.store.backend.model.dto.UserResponseDTO;
-import com.homegarden.store.backend.model.entity.User;
-import com.homegarden.store.backend.model.enums.Role;
+import com.homegarden.store.backend.dto.CreateUserRequestDTO;
+import com.homegarden.store.backend.dto.UserResponseDTO;
+import com.homegarden.store.backend.entity.User;
+import com.homegarden.store.backend.enums.Role;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

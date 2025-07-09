@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.exception.CategoryNotFoundException;
-import com.homegarden.store.backend.model.entity.Category;
+import com.homegarden.store.backend.entity.Category;
 import com.homegarden.store.backend.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

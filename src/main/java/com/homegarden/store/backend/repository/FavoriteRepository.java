@@ -1,6 +1,6 @@
 package com.homegarden.store.backend.repository;
 
-import com.homegarden.store.backend.model.entity.Favorite;
+import com.homegarden.store.backend.entity.Favorite;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

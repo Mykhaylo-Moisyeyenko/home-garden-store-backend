@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.exception.ProductNotFoundException;
-import com.homegarden.store.backend.model.entity.Product;
+import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.repository.ProductRepository;
 import com.homegarden.store.backend.utils.ProductFilterSpecification;
 import lombok.RequiredArgsConstructor;

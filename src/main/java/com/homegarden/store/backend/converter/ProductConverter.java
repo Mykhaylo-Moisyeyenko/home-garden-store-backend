@@ -1,11 +1,8 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.model.dto.CreateProductDto;
-import com.homegarden.store.backend.model.dto.ProductDto;
-import com.homegarden.store.backend.model.entity.Product;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import org.springframework.context.annotation.Primary;
+import com.homegarden.store.backend.dto.CreateProductDto;
+import com.homegarden.store.backend.dto.ProductDto;
+import com.homegarden.store.backend.entity.Product;
 import org.springframework.stereotype.Component;
 
 @Component

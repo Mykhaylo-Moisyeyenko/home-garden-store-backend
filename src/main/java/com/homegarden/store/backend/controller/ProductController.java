@@ -1,10 +1,9 @@
 package com.homegarden.store.backend.controller;
 
-import com.homegarden.store.backend.converter.Converter;
 import com.homegarden.store.backend.converter.ProductConverter;
-import com.homegarden.store.backend.model.dto.CreateProductDto;
-import com.homegarden.store.backend.model.dto.ProductDto;
-import com.homegarden.store.backend.model.entity.Product;
+import com.homegarden.store.backend.dto.CreateProductDto;
+import com.homegarden.store.backend.dto.ProductDto;
+import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -12,7 +11,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.controller;
 
+import com.homegarden.store.backend.dto.FavoriteDto;
 import com.homegarden.store.backend.exception.UserNotFoundException;
-import com.homegarden.store.backend.model.dto.FavoriteDto;
 import com.homegarden.store.backend.service.FavoriteService;
 import com.homegarden.store.backend.service.UserService;
 import jakarta.validation.Valid;
@@ -26,7 +26,7 @@ public class FavoriteController {
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public List<FavoriteDto> getAll(@PathVariable @Min(1) Long userId) {
-        if(!userService.existsById(userId)) {
+        if (!userService.existsById(userId)) {
             throw new UserNotFoundException("User with id " + userId + " doesn't exists");
         }
         return favoriteService.getAll(userId);
@@ -34,13 +34,13 @@ public class FavoriteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addToFavorites(@RequestBody @Valid FavoriteDto favoriteDto){
+    public void addToFavorites(@RequestBody @Valid FavoriteDto favoriteDto) {
         favoriteService.addToFavorites(favoriteDto);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeFromFavorites(@RequestBody @Valid FavoriteDto favoriteDto){
+    public void removeFromFavorites(@RequestBody @Valid FavoriteDto favoriteDto) {
         favoriteService.removeFromFavorites(favoriteDto);
     }
 }
