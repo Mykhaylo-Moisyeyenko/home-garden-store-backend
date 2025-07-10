@@ -1,6 +1,8 @@
 package com.homegarden.store.backend.repository;
 
 import com.homegarden.store.backend.entity.Favorite;
+import com.homegarden.store.backend.entity.Product;
+import com.homegarden.store.backend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +18,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     void deleteByUser_UserIdAndProduct_ProductId(Long userId, Long productId);
 
-    Optional<Favorite> findByProduct_ProductId(Long productId);
+    List<Favorite> findAllByUser_UserId(Long userUserId);
+
+    boolean existsByUser_AndProduct(User user, Product product);
 }
