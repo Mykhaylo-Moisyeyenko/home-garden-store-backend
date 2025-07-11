@@ -22,20 +22,19 @@ public class CartItemServiceImpl implements CartItemService {
     private final ProductRepository productRepository;
 
     @Override
-    public CartItem create(CreateCartItemRequestDTO dto) {
-        Cart cart = cartRepository.findById(dto.cartId())
+    public CartItem create(CartItem item) {
+        Long cartId = item.getCart().getCartId();
+        Long productId = item.getProduct().getProductId();
+
+        Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
-        Product product = productRepository.findById(dto.productId())
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        CartItem item = CartItem.builder()
-                .cart(cart)
-                .product(product)
-                .quantity(dto.quantity())
-                .price(BigDecimal.valueOf(product.getPrice()))
-
-                .build();
+        item.setCart(cart);
+        item.setProduct(product);
+        item.setPrice(BigDecimal.valueOf(product.getPrice()));
 
         return cartItemRepository.save(item);
     }
