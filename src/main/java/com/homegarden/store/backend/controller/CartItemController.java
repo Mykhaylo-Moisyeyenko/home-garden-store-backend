@@ -33,8 +33,9 @@ public class CartItemController {
 
     @PostMapping
     public ResponseEntity<CartItemResponseDTO> create(@RequestBody @Valid CreateCartItemRequestDTO dto) {
-        CartItem item = cartItemService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(converter.toDto(item));
+        CartItem entity = converter.toEntity(dto);
+        CartItem created = cartItemService.create(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(converter.toDto(created));
     }
 
     @GetMapping("/{id}")
