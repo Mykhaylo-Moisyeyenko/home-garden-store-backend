@@ -6,7 +6,7 @@ import com.homegarden.store.backend.model.entity.CartItem;
 import java.util.List;
 
 public interface CartItemService {
-    CartItem create(CreateCartItemRequestDTO dto);
+    CartItem create(CartItem cartItem);
     CartItem updateQuantity(Long id, Integer quantity);
     CartItem getById(Long id);
     List<CartItem> getAll();
