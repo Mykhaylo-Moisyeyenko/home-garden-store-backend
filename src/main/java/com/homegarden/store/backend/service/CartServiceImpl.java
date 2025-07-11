@@ -16,9 +16,10 @@ public class CartServiceImpl implements CartService {
     private final UserService userService;
 
     @Override
-    public Cart create(CreateCartRequestDTO dto) {
-        User user = userService.getById(dto.userId());
-        Cart cart = Cart.builder().user(user).build();
+    public Cart create(Cart cart) {
+        Long userId = cart.getUser().getUserId();
+        User user = userService.getById(userId);
+        cart.setUser(user);
         return cartRepository.save(cart);
     }
 
