@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 public interface CartService {
-    Cart create(@Valid CreateCartRequestDTO userId);
+    Cart create(Cart cart);
     Cart getById(Long id);
     List<Cart> getAll();
     void delete(Long id);
