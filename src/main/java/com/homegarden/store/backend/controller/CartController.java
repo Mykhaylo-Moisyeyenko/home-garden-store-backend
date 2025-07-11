@@ -18,11 +18,12 @@ import java.util.List;
 @RequestMapping("/v1/carts")
 public class CartController {
     private final CartService cartService;
-    private final CartConverter cartConverter;
+    private final Converter<Cart, CreateCartRequestDTO, CartResponseDTO> cartConverter;
 
     @PostMapping
     public ResponseEntity<CartResponseDTO> create(@RequestBody @Valid CreateCartRequestDTO dto) {
-        Cart created = cartService.create(dto);
+        Cart cart = cartConverter.toEntity(dto);
+        Cart created = cartService.create(cart);
         return ResponseEntity.status(HttpStatus.CREATED).body(cartConverter.toDto(created));
     }
 
