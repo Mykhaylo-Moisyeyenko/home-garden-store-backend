@@ -17,7 +17,11 @@ public class ProductConverter implements Converter<Product, CreateProductDto, Pr
         product.setName(createProductDto.getName());
         product.setDescription(createProductDto.getDescription());
         product.setPrice(createProductDto.getPrice());
-        product.setCategoryId(Long.valueOf(createProductDto.getCategoryId()));
+
+        if (createProductDto.getCategoryId() != null) {
+            product.setCategoryId(createProductDto.getCategoryId());
+        }
+
         return product;
     }
 

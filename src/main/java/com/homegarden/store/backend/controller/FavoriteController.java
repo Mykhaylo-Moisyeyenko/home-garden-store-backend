@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,23 +25,20 @@ public class FavoriteController {
     private final UserService userService;
 
     @GetMapping("/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<FavoriteDto> getAll(@PathVariable @Min(1) Long userId) {
-        if(!userService.existsById(userId)) {
-            throw new UserNotFoundException("User with id " + userId + " doesn't exists");
-        }
-        return favoriteService.getAll(userId);
+    public ResponseEntity<List<FavoriteDto>> getAll(@PathVariable Long userId) {
+        List<FavoriteDto> favorites = favoriteService.getAll(userId);
+        return ResponseEntity.ok(favorites);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void addToFavorites(@RequestBody @Valid FavoriteDto favoriteDto){
+    public ResponseEntity<Void> addToFavorites(@RequestBody @Valid FavoriteDto favoriteDto) {
         favoriteService.addToFavorites(favoriteDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeFromFavorites(@RequestBody @Valid FavoriteDto favoriteDto){
+    public ResponseEntity<Void> removeFromFavorites(@RequestBody @Valid FavoriteDto favoriteDto) {
         favoriteService.removeFromFavorites(favoriteDto);
+        return ResponseEntity.noContent().build();
     }
 }

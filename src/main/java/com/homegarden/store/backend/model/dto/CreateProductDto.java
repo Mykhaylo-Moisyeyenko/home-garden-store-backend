@@ -25,6 +25,6 @@ public class CreateProductDto {
     private Double price;
 
     @NotBlank(message = "Category Id can't be empty")
-    private String categoryId;
+    private Long categoryId;
     private String imageUrl;
 }

@@ -16,11 +16,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category create(Category category) {
-        try {
-            return categoryRepository.save(category);
-        } catch (Exception e) {
-            throw new RuntimeException("Error occurred while creating category", e);
+        if (category == null) {
+            throw new IllegalArgumentException("Category must not be null");
         }
+        return categoryRepository.save(category);
     }
 
     @Override
