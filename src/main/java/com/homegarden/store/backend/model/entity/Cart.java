@@ -3,6 +3,7 @@ package com.homegarden.store.backend.model.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Entity
 @Table(name = "carts")
@@ -19,8 +20,12 @@ public class Cart {
     @EqualsAndHashCode.Include
     private Long cartId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "userId")
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<CartItem> items;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "userId", unique = true)
     @ToString.Exclude
     @JsonBackReference
     private User user;
