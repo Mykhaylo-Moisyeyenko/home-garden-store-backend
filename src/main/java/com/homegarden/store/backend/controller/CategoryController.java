@@ -1,5 +1,6 @@
 package com.homegarden.store.backend.controller;
-import com.homegarden.store.backend.converter.CategoryConverter;
+
+import com.homegarden.store.backend.converter.Converter;
 import com.homegarden.store.backend.dto.CategoryDto;
 import com.homegarden.store.backend.entity.Category;
 import com.homegarden.store.backend.service.CategoryService;
@@ -19,15 +20,14 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    private final CategoryConverter converter;
+    private final Converter<Category, CategoryDto, CategoryDto> converter;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CategoryDto create(@RequestBody @Valid CategoryDto dto) {
+    public ResponseEntity<CategoryDto> create(@RequestBody @Valid CategoryDto dto) {
         Category entity = converter.toEntity(dto);
         Category category = categoryService.create(entity);
         CategoryDto response = converter.toDto(category);
-        return response;
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
@@ -46,9 +46,9 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         categoryService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
