@@ -1,8 +1,8 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.model.dto.CreateCartRequestDTO;
-import com.homegarden.store.backend.model.entity.Cart;
-import com.homegarden.store.backend.model.entity.User;
+import com.homegarden.store.backend.dto.CreateCartRequestDTO;
+import com.homegarden.store.backend.entity.Cart;
+import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart getById(Long id) {
         return cartRepository.findById(id).orElseThrow(() -> new RuntimeException("Cart not found"));
+        //здесь нужно выбросить пользовательское исключение CartNotFoundException
     }
 
     @Override
