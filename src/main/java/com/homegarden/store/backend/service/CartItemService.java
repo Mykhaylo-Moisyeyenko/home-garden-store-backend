@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.model.dto.CreateCartItemRequestDTO;
-import com.homegarden.store.backend.model.entity.CartItem;
+import com.homegarden.store.backend.dto.CreateCartItemRequestDTO;
+import com.homegarden.store.backend.entity.CartItem;
 
 import java.util.List;
 
