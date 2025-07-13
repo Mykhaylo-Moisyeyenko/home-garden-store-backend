@@ -1,5 +1,4 @@
-package com.homegarden.store.backend.model.dto;
+package com.homegarden.store.backend.dto;
 
 public record CartResponseDTO(Long cartId, Long userId) {
 }
-

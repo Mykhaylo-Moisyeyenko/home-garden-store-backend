@@ -1,15 +1,14 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.model.dto.FavoriteDto;
-import jakarta.validation.Valid;
+import com.homegarden.store.backend.entity.Favorite;
 
 import java.util.List;
 
 public interface FavoriteService {
 
-    List<FavoriteDto> getAll(Long userId);
+    List<Favorite> getAll(Long userId);
 
-    void addToFavorites(FavoriteDto favoriteDto);
+    void addToFavorites(Favorite favorite);
 
-    void removeFromFavorites(@Valid FavoriteDto favoriteDto);
+    void removeFromFavorites(Favorite favorite);
 }

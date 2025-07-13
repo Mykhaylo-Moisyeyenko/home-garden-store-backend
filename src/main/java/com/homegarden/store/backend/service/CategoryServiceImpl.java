@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.exception.CategoryNotFoundException;
-import com.homegarden.store.backend.model.entity.Category;
+import com.homegarden.store.backend.entity.Category;
 import com.homegarden.store.backend.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category create(Category category) {
-        if (category == null) {
-            throw new IllegalArgumentException("Category must not be null");
-        }
-        return categoryRepository.save(category);
+            return categoryRepository.save(category);
     }
 
     @Override
@@ -35,17 +32,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category update(Long categoryId, String name) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException("Category with id " + categoryId + " not found"));
+        Category category = getById(categoryId);
         category.setName(name);
         return categoryRepository.save(category);
-
     }
 
     @Override
     public void delete(Long id) {
-        Category category = getById(id);
-        categoryRepository.delete(category);
+        categoryRepository.delete(getById(id));
     }
 }
-

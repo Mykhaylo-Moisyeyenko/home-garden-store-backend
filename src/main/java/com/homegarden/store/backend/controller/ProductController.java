@@ -1,14 +1,16 @@
 package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.converter.Converter;
-import com.homegarden.store.backend.converter.ProductConverter;
-import com.homegarden.store.backend.model.dto.CreateProductDto;
-import com.homegarden.store.backend.model.dto.ProductDto;
-import com.homegarden.store.backend.model.entity.Product;
+import com.homegarden.store.backend.dto.CreateProductDto;
+import com.homegarden.store.backend.dto.ProductDto;
+import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.service.ProductService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,19 +25,25 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductConverter productConverter;
+    private final Converter<Product, CreateProductDto, ProductDto> converter;
 
     @PostMapping
     public ResponseEntity<ProductDto> create(@RequestBody @Valid CreateProductDto productDto) {
-        Product product = productConverter.toEntity(productDto);
+        Product product = converter.toEntity(productDto);
         Product created = productService.create(product);
-        return ResponseEntity.ok(productConverter.toDto(created));
+        return ResponseEntity.status(201).body(converter.toDto(created));
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getAll() {
-        List<ProductDto> dtos = productService.getAll().stream()
-                .map(productConverter::toDto)
+    public ResponseEntity<List<ProductDto>> getAll(
+            @RequestParam(required = false) @Min(1) Long categoryId,
+            @RequestParam(required = false) @PositiveOrZero Double minPrice,
+            @RequestParam(required = false) @Positive Double maxPrice,
+            @RequestParam(required = false) Boolean discount,
+            @RequestParam(required = false) @Pattern(regexp = "ASC|DESC") String sort
+    ) {
+        List<ProductDto> dtos = productService.getAll(categoryId, minPrice, maxPrice, discount, sort).stream()
+                .map(converter::toDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
@@ -43,7 +51,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getById(@PathVariable Long id) {
         Product product = productService.getById(id);
-        return ResponseEntity.ok(productConverter.toDto(product));
+        return ResponseEntity.ok(converter.toDto(product));
     }
 
     @DeleteMapping("/{id}")
@@ -56,9 +64,9 @@ public class ProductController {
     public ResponseEntity<ProductDto> updateProduct(
             @PathVariable("id") Long id,
             @RequestBody @Valid CreateProductDto productDto) {
-        Product productToUpdate = productConverter.toEntity(productDto);
+        Product productToUpdate = converter.toEntity(productDto);
         productToUpdate.setProductId(id); // ✅ Теперь должно работать, если productId в Product — Long
         Product updated = productService.update(productToUpdate);
-        return ResponseEntity.ok(productConverter.toDto(updated));
+        return ResponseEntity.ok(converter.toDto(updated));
     }
 }

@@ -59,8 +59,8 @@
     <changeSet id="insert-orders" author="Sofia" runAlways="true">
         <sql>
             INSERT INTO orders (user_id, delivery_address, contact_phone, delivery_method, status)
-            VALUES (1, 'Berlin, Panorama str. 1A','+49-123-456789','Courier', 'STATUS_CREATED'),
-                   (4, 'Hamburg, Platz d.Deutschen Einheit 4','+49-555-888999', 'Pickup', 'STATUS_DELIVERED');
+            VALUES (1, 'Berlin, Panorama str. 1A','+49-123-456789','Courier', 'CREATED'),
+                   (4, 'Hamburg, Platz d.Deutschen Einheit 4','+49-555-888999', 'Pickup', 'DELIVERED');
         </sql>
     </changeSet>
 

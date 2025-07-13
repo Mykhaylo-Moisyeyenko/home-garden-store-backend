@@ -1,4 +1,4 @@
-package com.homegarden.store.backend.model.dto;
+package com.homegarden.store.backend.dto;
 
 public record CreateCartItemRequestDTO(
         Long cartId,

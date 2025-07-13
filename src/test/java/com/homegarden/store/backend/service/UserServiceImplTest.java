@@ -1,8 +1,8 @@
 package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.exception.UserNotFoundException;
-import com.homegarden.store.backend.model.entity.User;
-import com.homegarden.store.backend.model.enums.Role;
+import com.homegarden.store.backend.entity.User;
+import com.homegarden.store.backend.enums.Role;
 import com.homegarden.store.backend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

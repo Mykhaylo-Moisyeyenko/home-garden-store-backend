@@ -1,15 +1,13 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.converter.FavoriteConverter;
-import com.homegarden.store.backend.model.dto.FavoriteDto;
-import com.homegarden.store.backend.model.entity.Favorite;
+import com.homegarden.store.backend.entity.Favorite;
+import com.homegarden.store.backend.exception.ProductNotFoundException;
+import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.repository.FavoriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,30 +20,30 @@ public class FavoriteServiceImpl implements FavoriteService {
     private final UserService userService;
 
     @Override
-    public List<FavoriteDto> getAll(Long userId) {
-        List<Favorite> favorites = favoriteRepository.findByUserId(userId);
-        List<FavoriteDto> favoriteDtos = favorites.stream()
-                .map(FavoriteConverter::toDto)
-                .collect(Collectors.toList());
-        return favoriteDtos;
-    }
-
-    @Override
-    public void addToFavorites(FavoriteDto favoriteDto) {
-        userService.getById(favoriteDto.userId());
-        productService.getById(favoriteDto.productId());
-
-        Optional<Favorite> favorite = favoriteRepository
-                .findByUserIdAndProductId(favoriteDto.userId(), favoriteDto.productId());
-
-        if (favorite.isPresent()) {
-            return;
+    public List<Favorite> getAll(Long userId) {
+        if (!userService.existsById(userId)) {
+            throw new UserNotFoundException("User with id " + userId + " doesn't exists");
         }
-        favoriteRepository.save(FavoriteConverter.toEntity(favoriteDto));
+        return favoriteRepository.findAllByUser_UserId(userId);
     }
 
     @Override
-    public void removeFromFavorites(FavoriteDto favoriteDto) {
-        favoriteRepository.deleteByUserIdAndProductId(favoriteDto.userId(), favoriteDto.productId());
+    public void addToFavorites(Favorite favorite) {
+        if (!userService.existsById(favorite.getUser().getUserId())) {
+            throw new UserNotFoundException("User not found");
+        }
+        if (!productService.existsById(favorite.getProduct().getProductId())) {
+            throw new ProductNotFoundException("Product not found");
+        }
+
+        if (!favoriteRepository
+                .existsByUser_AndProduct(favorite.getUser(), favorite.getProduct())) {
+            favoriteRepository.save(favorite);
+        }
+    }
+
+    @Override
+    public void removeFromFavorites(Favorite favorite) {
+        favoriteRepository.delete(favorite);
     }
 }
