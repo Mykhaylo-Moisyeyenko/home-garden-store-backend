@@ -1,9 +1,9 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.model.dto.CartResponseDTO;
-import com.homegarden.store.backend.model.dto.CreateCartRequestDTO;
-import com.homegarden.store.backend.model.entity.Cart;
-import com.homegarden.store.backend.model.entity.User;
+import com.homegarden.store.backend.dto.CartResponseDTO;
+import com.homegarden.store.backend.dto.CreateCartRequestDTO;
+import com.homegarden.store.backend.entity.Cart;
+import com.homegarden.store.backend.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,5 +19,3 @@ public class CartConverter implements Converter<Cart, CreateCartRequestDTO, Cart
         return new CartResponseDTO(cart.getCartId(), cart.getUser().getUserId());
     }
 }
-
-
