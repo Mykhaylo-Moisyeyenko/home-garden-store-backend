@@ -8,12 +8,13 @@ import com.homegarden.store.backend.dto.ProductDto;
 import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.sql.Timestamp;
@@ -31,14 +32,14 @@ class ProductControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private ProductService productService;
-
-    @MockBean
-    private ProductConverter productConverter;
-
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private ProductService productService;
+
+    @MockitoBean
+    private ProductConverter productConverter;
 
     private Timestamp testTimestamp;
 
@@ -157,16 +158,18 @@ class ProductControllerTest {
     }
 
     @Test
-    void getProductById_WhenProductExists_ShouldReturnProduct() throws Exception {
-        Long productId = 1L;
+    @DisplayName("GET /v1/products/{id} should return product by ID")
+    void getProductById_ShouldReturnProduct() throws Exception {
+        Product product = Product.builder().productId(1L).name("Onion").description("Red").price(29.99).build();
+        ProductDto dto = ProductDto.builder().productId(1L).name("Onion").description("Red").price(29.99).build();
 
-        when(productService.getById(productId)).thenReturn(product1);
-        when(productConverter.toDto(product1)).thenReturn(productDto1);
+        when(productService.getById(1L)).thenReturn(product);
+        when(productConverter.toDto(product)).thenReturn(dto);
 
         mockMvc.perform(get("/v1/products/{id}", productId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.productId").value(productId));
-
+                .andExpect(jsonPath("$.productId").value(1L))
+                .andExpect(jsonPath("$.name").value("Onion"));
         verify(productService).getById(productId);
         verify(productConverter).toDto(product1);
     }
@@ -196,6 +199,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("PUT /v1/products/{id} should update product")
     void updateProduct_ShouldReturnUpdatedProduct() throws Exception {
         when(productConverter.toEntity(any(CreateProductDto.class))).thenReturn(productToUpdate);
         when(productService.update(any(Product.class))).thenReturn(updatedProduct);

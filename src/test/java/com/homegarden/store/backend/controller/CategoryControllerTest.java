@@ -34,9 +34,9 @@ class CategoryControllerTest {
     @MockitoBean
     private CategoryConverter categoryConverterTest;
 
-    Category category1 = new Category(1L, "tools");
+    Category category1 = new Category(1L, "tools", null);
 
-    Category category2 = new Category(2L, "seeds");
+    Category category2 = new Category(2L, "seeds", null);
 
     List<Category> categoryList = List.of(category1, category2);
 
@@ -105,7 +105,7 @@ class CategoryControllerTest {
 
     @Test
     void updateCategoryTest() throws Exception {
-        Category updatedCategory = new Category(1L,"flowers");
+        Category updatedCategory = new Category(1L, "flowers", null);
         CategoryDto updatedCategoryDto = new CategoryDto(1L,"flowers");
 
         when(categoryServiceTest.update(category1.getCategoryId(),"flowers")).thenReturn(updatedCategory);
