@@ -20,18 +20,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order findById(long id) {
+    public Order getById(long id) {
         return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
     }
 
     @Override
-    public List<Order> findAll() {
+    public List<Order> getAll() {
         return orderRepository.findAll();
-    }
-
-    @Override
-    public void delete(long id) {
-        orderRepository.deleteById(id);
     }
 
     @Override

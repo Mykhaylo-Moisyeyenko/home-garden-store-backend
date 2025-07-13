@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -19,23 +20,27 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long productId;
+    private Long orderId;
 
-    //private Long user_id          int          not null references users (user_id),
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private LocalDateTime createdAt;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<OrderItem> items;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     private String deliveryAddress;
 
     private String contactPhone;
 
-    private Status status;
+    private String deliveryMethod;
 
-    //    delivery_method  varchar(100) not null,
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.CREATED;
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-        this.status = Status.CREATED;
-    }
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }

@@ -34,7 +34,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> create(@RequestBody @Valid CreateUserRequestDTO userRequestDTO) {
         if(userService.existsByEmail(userRequestDTO.email())){
             throw new UserAlreadyExistsException("User with email " + userRequestDTO.email() + " already exists");
