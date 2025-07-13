@@ -1,6 +1,6 @@
-package com.homegarden.store.backend.model.dto;
+package com.homegarden.store.backend.dto;
 
-import java.math.BigDecimal;
+//import java.math.BigDecimal;
 
 public record CartItemResponseDTO(
         Long id,
@@ -8,6 +8,6 @@ public record CartItemResponseDTO(
         Long productId,
         String productName,
         Integer quantity,
-        BigDecimal price)
-{}
-
+        //В тех.задании нет цен в CartItem. Какое обоснование - для чего здесь цена?
+        //BigDecimal price){
+}
