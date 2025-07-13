@@ -1,12 +1,14 @@
 package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.converter.Converter;
-import com.homegarden.store.backend.model.dto.CartItemResponseDTO;
-import com.homegarden.store.backend.model.dto.CreateCartItemRequestDTO;
-import com.homegarden.store.backend.model.dto.UpdateCartItemRequestDTO;
-import com.homegarden.store.backend.model.entity.CartItem;
+import com.homegarden.store.backend.dto.CartItemResponseDTO;
+import com.homegarden.store.backend.dto.CreateCartItemRequestDTO;
+import com.homegarden.store.backend.dto.UpdateCartItemRequestDTO;
+import com.homegarden.store.backend.entity.CartItem;
 import com.homegarden.store.backend.service.CartItemService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,7 @@ public class CartItemController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CartItemResponseDTO> updateQuantity(
-            @PathVariable Long id,
+            @PathVariable @NotNull @Min(1) Long id,
             @RequestBody @Valid UpdateCartItemRequestDTO dto) {
         CartItem updated = cartItemService.updateQuantity(id, dto.quantity());
         return ResponseEntity.ok(converter.toDto(updated));
@@ -39,7 +41,7 @@ public class CartItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CartItemResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<CartItemResponseDTO> getById(@PathVariable @NotNull @Min(1) Long id) {
         return ResponseEntity.ok(converter.toDto(cartItemService.getById(id)));
     }
 
@@ -47,13 +49,12 @@ public class CartItemController {
     public List<CartItemResponseDTO> getAll() {
         return cartItemService.getAll().stream()
                 .map(converter::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable @NotNull @Min(1) Long id) {
         cartItemService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
-
