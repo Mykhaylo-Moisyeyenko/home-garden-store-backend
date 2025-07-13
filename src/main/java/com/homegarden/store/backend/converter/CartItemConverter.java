@@ -1,10 +1,10 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.model.dto.CartItemResponseDTO;
-import com.homegarden.store.backend.model.dto.CreateCartItemRequestDTO;
-import com.homegarden.store.backend.model.entity.Cart;
-import com.homegarden.store.backend.model.entity.CartItem;
-import com.homegarden.store.backend.model.entity.Product;
+import com.homegarden.store.backend.dto.CartItemResponseDTO;
+import com.homegarden.store.backend.dto.CreateCartItemRequestDTO;
+import com.homegarden.store.backend.entity.Cart;
+import com.homegarden.store.backend.entity.CartItem;
+import com.homegarden.store.backend.entity.Product;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,9 +32,8 @@ public class CartItemConverter implements Converter<CartItem, CreateCartItemRequ
                 item.getCart().getCartId(),
                 item.getProduct().getProductId(),
                 item.getProduct().getName(),
-                item.getQuantity(),
-                item.getPrice()
-        );
+                item.getQuantity());
+                //В тех.задании нет цен в CartItem. Какое обоснование - для чего здесь цена?
+                //item.getPrice());
     }
 }
-
