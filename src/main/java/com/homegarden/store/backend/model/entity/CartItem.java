@@ -1,9 +1,9 @@
-package com.homegarden.store.backend.model.entity;
+package com.homegarden.store.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
+//import java.math.BigDecimal;
 
 @Entity
 @Table(name = "cart_items")
@@ -20,14 +20,20 @@ public class CartItem {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id)
+    @JsonBackReference
+    private Cart cart;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false, unique = true)
+    @JsonBackReference
     private Product product;
 
     @Column(nullable = false)
     private Integer quantity;
-
-    @Column(nullable = false)
-    private BigDecimal price;
+    
+    // У нас в тех.задании в CartItem нет такого поля. И в БД тоже.
+    //@Column(nullable = false)
+    //private BigDecimal price;
 }
-
