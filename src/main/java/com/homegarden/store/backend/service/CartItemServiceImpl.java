@@ -1,12 +1,10 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.model.dto.CreateCartItemRequestDTO;
-import com.homegarden.store.backend.model.entity.Cart;
-import com.homegarden.store.backend.model.entity.CartItem;
-import com.homegarden.store.backend.model.entity.Product;
+import com.homegarden.store.backend.dto.CreateCartItemRequestDTO;
+import com.homegarden.store.backend.entity.Cart;
+import com.homegarden.store.backend.entity.CartItem;
+import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.repository.CartItemRepository;
-import com.homegarden.store.backend.repository.CartRepository;
-import com.homegarden.store.backend.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,31 +16,31 @@ import java.util.List;
 public class CartItemServiceImpl implements CartItemService {
 
     private final CartItemRepository cartItemRepository;
-    private final CartRepository cartRepository;
-    private final ProductRepository productRepository;
+    private final CartService cartService;
+    private final ProductService productService;
 
     @Override
     public CartItem create(CartItem item) {
         Long cartId = item.getCart().getCartId();
         Long productId = item.getProduct().getProductId();
 
-        Cart cart = cartRepository.findById(cartId)
+        Cart cart = cartService.getById(cartId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
+//здесь нужно выбросить пользовательское исключение CartNotFoundException
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+        Product product = productService.getById(productId);
 
         item.setCart(cart);
         item.setProduct(product);
-        item.setPrice(BigDecimal.valueOf(product.getPrice()));
+        //item.setPrice(BigDecimal.valueOf(product.getPrice()));
 
         return cartItemRepository.save(item);
     }
 
     @Override
     public CartItem updateQuantity(Long id, Integer quantity) {
-        CartItem item = cartItemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+        CartItem item = findById(id);
+
         item.setQuantity(quantity);
         return cartItemRepository.save(item);
     }
@@ -51,6 +49,7 @@ public class CartItemServiceImpl implements CartItemService {
     public CartItem getById(Long id) {
         return cartItemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));
+//здесь нужно выбросить пользовательское исключение CartItemNotFoundException
     }
 
     @Override
@@ -60,6 +59,7 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public void delete(Long id) {
+        CartItem item = getById(id);
         cartItemRepository.deleteById(id);
     }
 }
