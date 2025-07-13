@@ -6,6 +6,8 @@ import com.homegarden.store.backend.dto.CreateCartRequestDTO;
 import com.homegarden.store.backend.entity.Cart;
 import com.homegarden.store.backend.service.CartService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +29,8 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.CREATED).body(cartConverter.toDto(created));
     }
 
-
     @GetMapping("/{id}")
-    public ResponseEntity<CartResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<CartResponseDTO> getById(@PathVariable @NotNull @Min(1) Long id) {
         return ResponseEntity.ok(cartConverter.toDto(cartService.getById(id)));
     }
 
@@ -39,7 +40,7 @@ public class CartController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable @NotNull @Min(1) Long id) {
         cartService.delete(id);
         return ResponseEntity.noContent().build();
     }
