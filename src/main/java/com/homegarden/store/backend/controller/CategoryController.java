@@ -55,8 +55,8 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> updateCategory(
             @PathVariable("id") Long id,
             @RequestBody @Valid CategoryDto dto) {
-         Category updated = categoryService.update(id,dto.name());
-         CategoryDto response = converter.toDto(updated);
+        Category updated = categoryService.update(id, dto.name());
+        CategoryDto response = converter.toDto(updated);
         return ResponseEntity.ok(response);
     }
 }
