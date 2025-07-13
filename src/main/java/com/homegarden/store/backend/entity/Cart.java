@@ -25,7 +25,7 @@ public class Cart {
     private List<CartItem> items;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_Id", unique = true)
+    @JoinColumn(name = "user_id", unique = true)
     @ToString.Exclude
     @JsonBackReference
     private User user;

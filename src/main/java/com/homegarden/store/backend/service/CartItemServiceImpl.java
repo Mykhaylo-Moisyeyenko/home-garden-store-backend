@@ -24,8 +24,7 @@ public class CartItemServiceImpl implements CartItemService {
         Long cartId = item.getCart().getCartId();
         Long productId = item.getProduct().getProductId();
 
-        Cart cart = cartService.getById(cartId)
-                .orElseThrow(() -> new RuntimeException("Cart not found"));
+        Cart cart = cartService.getById(cartId);
 //здесь нужно выбросить пользовательское исключение CartNotFoundException
 
         Product product = productService.getById(productId);
@@ -39,7 +38,7 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public CartItem updateQuantity(Long id, Integer quantity) {
-        CartItem item = findById(id);
+        CartItem item = getById(id);
 
         item.setQuantity(quantity);
         return cartItemRepository.save(item);
