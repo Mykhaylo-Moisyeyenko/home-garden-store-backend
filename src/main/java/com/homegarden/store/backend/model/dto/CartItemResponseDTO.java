@@ -7,7 +7,7 @@ public record CartItemResponseDTO(
         Long cartId,
         Long productId,
         String productName,
-        Integer quantity,
+        Integer quantity){
         //В тех.задании нет цен в CartItem. Какое обоснование - для чего здесь цена?
         //BigDecimal price){
 }
