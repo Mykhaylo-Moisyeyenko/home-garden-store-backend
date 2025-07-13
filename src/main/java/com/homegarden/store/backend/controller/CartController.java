@@ -1,9 +1,9 @@
 package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.converter.CartConverter;
-import com.homegarden.store.backend.model.dto.CartResponseDTO;
-import com.homegarden.store.backend.model.dto.CreateCartRequestDTO;
-import com.homegarden.store.backend.model.entity.Cart;
+import com.homegarden.store.backend.dto.CartResponseDTO;
+import com.homegarden.store.backend.dto.CreateCartRequestDTO;
+import com.homegarden.store.backend.entity.Cart;
 import com.homegarden.store.backend.service.CartService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
