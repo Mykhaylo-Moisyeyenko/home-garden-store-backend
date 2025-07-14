@@ -6,13 +6,13 @@ import com.homegarden.store.backend.dto.OrderResponseDTO;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.service.OrderService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,12 +34,12 @@ public class OrderController {
     public ResponseEntity<List<OrderResponseDTO>> getAll() {
         List<OrderResponseDTO> response = orderService.getAll().stream()
                 .map(converter::toDto)
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/orders/{orderId}")
-    public ResponseEntity<OrderResponseDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<OrderResponseDTO> getById(@PathVariable @Valid @Min(1) Long id) {
         Order order = orderService.getById(id);
         OrderResponseDTO response = converter.toDto(order);
         return ResponseEntity.ok(response);

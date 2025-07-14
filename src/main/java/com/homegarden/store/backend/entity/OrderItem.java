@@ -22,7 +22,7 @@ public class OrderItem {
     private Long orderItemId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id")
+    @JoinColumn(name = "order_id")
     @JsonBackReference
     private Order order;
 
@@ -34,5 +34,5 @@ public class OrderItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    private BigDecimal unitPrice;
+    private BigDecimal priceAtPurchase;
 }
