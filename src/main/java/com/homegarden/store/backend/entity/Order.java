@@ -1,0 +1,46 @@
+package com.homegarden.store.backend.entity;
+
+import com.homegarden.store.backend.enums.Status;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Table(name = "orders")
+@Getter
+@Setter
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class Order {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    private Long orderId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<OrderItem> items;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    private String deliveryAddress;
+
+    private String contactPhone;
+
+    private String deliveryMethod;
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.CREATED;
+
+    private LocalDateTime updatedAt = LocalDateTime.now();
+}
