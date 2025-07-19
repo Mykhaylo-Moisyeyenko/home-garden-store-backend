@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
@@ -23,7 +24,7 @@ public class Product {
 
     private String name;
     private String description;
-    private Double price;
+    private BigDecimal price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
@@ -32,7 +33,7 @@ public class Product {
     private Category category;
 
     private String imageUrl;
-    private Double discountPrice;
+    private BigDecimal discountPrice;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 }

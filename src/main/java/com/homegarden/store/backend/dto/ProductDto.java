@@ -1,6 +1,8 @@
 package com.homegarden.store.backend.dto;
 
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Getter
@@ -13,10 +15,10 @@ public class ProductDto {
     private Long productId;
     private String name;
     private String description;
-    private Double price;
+    private BigDecimal price;
     private Long categoryId;
     private String imageUrl;
-    private Double discountPrice;
+    private BigDecimal discountPrice;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 }
