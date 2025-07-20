@@ -20,8 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/v1/orders")
 public class OrderController {
-    private final OrderService orderService;
 
+    private final OrderService orderService;
     private final Converter<Order, CreateOrderRequestDTO, OrderResponseDTO> converter;
 
     @PostMapping

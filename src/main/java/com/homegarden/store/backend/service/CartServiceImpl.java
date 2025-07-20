@@ -1,6 +1,5 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.dto.CreateCartRequestDTO;
 import com.homegarden.store.backend.entity.Cart;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.repository.CartRepository;
@@ -12,6 +11,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
+
     private final CartRepository cartRepository;
     private final UserService userService;
 

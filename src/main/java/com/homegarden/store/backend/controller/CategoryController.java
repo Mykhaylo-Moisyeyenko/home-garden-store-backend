@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 public class CategoryController {
 
     private final CategoryService categoryService;
-
     private final Converter<Category, CategoryDto, CategoryDto> converter;
 
     @PostMapping

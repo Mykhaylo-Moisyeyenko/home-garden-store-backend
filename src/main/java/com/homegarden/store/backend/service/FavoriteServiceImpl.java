@@ -14,9 +14,7 @@ import java.util.List;
 public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
-
     private final ProductService productService;
-
     private final UserService userService;
 
     @Override
