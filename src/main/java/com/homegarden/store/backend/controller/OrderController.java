@@ -8,6 +8,7 @@ import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.service.OrderService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class OrderController {
     private final Converter<Order, CreateOrderRequestDTO, OrderResponseDTO> converter;
 
     @PostMapping
-    public ResponseEntity<OrderResponseDTO> create(@RequestBody @Valid CreateOrderRequestDTO orderRequestDTO) {
+    public ResponseEntity<OrderResponseDTO> create(@RequestBody @NotNull @Valid CreateOrderRequestDTO orderRequestDTO) {
         Order entity = converter.toEntity(orderRequestDTO);
         Order order = orderService.create(entity);
         OrderResponseDTO response = converter.toDto(order);

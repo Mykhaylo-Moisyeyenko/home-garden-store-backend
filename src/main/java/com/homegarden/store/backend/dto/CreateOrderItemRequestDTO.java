@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Positive;
 
 public record CreateOrderItemRequestDTO (
 
-    @NotNull(message = "productId name can't be empty")
+    @NotNull(message = "productId can't be empty")
     @Positive(message = "productId must be more than 0")
     Long productId,
 
