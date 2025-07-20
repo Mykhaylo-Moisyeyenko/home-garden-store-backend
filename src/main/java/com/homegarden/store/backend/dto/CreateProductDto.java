@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,7 +22,7 @@ public class CreateProductDto {
 
     @NotNull(message = "Price cannot be null")
     @PositiveOrZero(message = "Price cannot be negative")
-    private Double price;
+    private BigDecimal price;
 
     @NotNull(message = "Category Id can't be empty")
     @Positive(message = "Category Id must be more than 0")

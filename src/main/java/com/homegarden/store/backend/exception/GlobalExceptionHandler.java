@@ -34,10 +34,10 @@ public class GlobalExceptionHandler {
         return "HTTP body fields not valid: " + message;
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public String handleConflict(UserAlreadyExistsException ex) {
-        return ex.getMessage();
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(value = {UserAlreadyExistsException.class, OrderUnableToCancelException.class})
+    public String handleConflict(Exception exception) {
+        return exception.getMessage();
     }
 
     @ResponseStatus(HttpStatus.CREATED)

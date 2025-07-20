@@ -19,7 +19,8 @@
             INSERT INTO categories (name)
             VALUES ('Tools'),
                    ('Digging'),
-                   ('Watering');
+                   ('Watering'),
+                   ('Pillows');
         </sql>
     </changeSet>
 
@@ -28,7 +29,17 @@
             INSERT INTO products (name, description, price, category_id, image_url, discount_price)
             VALUES ('Garden Rake', 'Lightweight aluminum rake', 14.99, 1, 'https://example.com/images/rake.jpg', NULL),
                    ('Shovel', 'Steel digging shovel', 24.50, 2, 'https://example.com/images/shovel.jpg', 19.99),
-                   ('Watering Hose', 'Flexible hose for garden watering', 29.90, 3, NULL, NULL);
+                   ('Watering Hose', 'Flexible hose for garden watering', 29.90, 3, NULL, NULL),
+                   ('Pillow1', 'black pillow', 11.00, 4, 'https://example.com/images/pillow1.jpg', 9.99),
+                   ('Pillow2', 'white pillow', 24.50, 4, 'https://example.com/images/pillow2.jpg', 19.99),
+                   ('Pillow3', 'yellow pillow', 24.50, 4, 'https://example.com/images/pillow3.jpg', 19.99),
+                   ('Pillow4', 'red pillow', 24.50, 4, 'https://example.com/images/pillow4.jpg', 19.99),
+                   ('Pillow4', 'green pillow', 24.50, 4, 'https://example.com/images/pillow4.jpg', 19.99),
+                   ('Pillow5', 'big pillow', 24.50, 4, 'https://example.com/images/pillow4.jpg', 19.99),
+                   ('Pillow6', 'small pillow', 24.50, 4, 'https://example.com/images/pillow4.jpg', 19.99),
+                   ('Pillow7', 'middle pillow', 24.50, 4, 'https://example.com/images/pillow4.jpg', 19.99),
+                   ('Pillow8', 'pink pillow', 24.50, 4, 'https://example.com/images/pillow4.jpg', 19.99),
+                   ('Pillow9', 'brown pillow', 24.50, 4, 'https://example.com/images/pillow4.jpg', 19.99);
         </sql>
     </changeSet>
 
@@ -60,7 +71,24 @@
         <sql>
             INSERT INTO orders (user_id, delivery_address, contact_phone, delivery_method, status)
             VALUES (1, 'Berlin, Panorama str. 1A','+49-123-456789','Courier', 'CREATED'),
-                   (4, 'Hamburg, Platz d.Deutschen Einheit 4','+49-555-888999', 'Pickup', 'DELIVERED');
+                   (4, 'Hamburg, Platz d.Deutschen Einheit 4','+49-555-888999', 'Pickup', 'DELIVERED'),
+                   (2, 'Bremen','+49-555-888999', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover','+49-555-111111', 'Pickup', 'CANCELLED'),
+                   (1, 'Berlin','+49-555-222222', 'Pickup', 'CANCELLED'),
+                   (2, 'Bremen','+49-555-333333', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (4, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (1, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (2, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (1, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (2, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (4, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (2, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED');
         </sql>
     </changeSet>
 
@@ -69,7 +97,26 @@
             INSERT INTO order_items (order_id, product_id, quantity, price_at_purchase)
             VALUES (1, 2, 1, 19.99), -- Anna ordered 1 shovel
                    (1, 3, 2, 29.90), -- Anna ordered 2 hoses
-                   (2, 1, 1, 14.99); -- John ordered 1 rake
+                   (2, 3, 2, 29.90),
+                   (3, 4, 2, 29.90),
+                   (4, 5, 2, 29.90),
+                   (5, 6, 2, 29.90),
+                   (6, 3, 2, 29.90),
+                   (7, 4, 2, 29.90),
+                   (8, 3, 2, 29.90),
+                   (9, 6, 2, 29.90),
+                   (10, 5, 44, 29.90),
+                   (9, 7, 11, 29.90),
+                   (9, 10, 2, 29.90),
+                   (19, 12, 2, 29.90),
+                   (18, 3, 2, 29.90),
+                   (17, 11, 2, 29.90),
+                   (15, 3, 2, 29.90),
+                   (16, 10, 2, 29.90),
+                   (14, 5, 2, 29.90),
+                   (13, 3, 2, 29.90),
+                   (12, 5, 2, 29.90),
+                   (11, 9, 1, 14.99);
         </sql>
     </changeSet>
 </databaseChangeLog>

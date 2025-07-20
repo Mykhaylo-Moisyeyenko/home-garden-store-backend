@@ -1,6 +1,29 @@
 package com.homegarden.store.backend.dto;
 
 import com.homegarden.store.backend.enums.Status;
+import lombok.Builder;
 
-public record OrderResponseDTO(Status status) {
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Builder
+public record OrderResponseDTO(
+
+        Long orderId,
+
+        Long userId,
+
+        List<OrderItemResponseDTO> items,
+
+        LocalDateTime createdAt,
+
+        String deliveryAddress,
+
+        String contactPhone,
+
+        String deliveryMethod,
+
+        Status status,
+
+        LocalDateTime updatedAt) {
 }
