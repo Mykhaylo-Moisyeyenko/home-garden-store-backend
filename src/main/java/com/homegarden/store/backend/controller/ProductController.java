@@ -12,16 +12,16 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/products")
 @RequiredArgsConstructor
-@Validated
 public class ProductController {
 
     private final ProductService productService;
@@ -30,6 +30,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductDto> create(@RequestBody @Valid CreateProductDto productDto) {
         Product product = converter.toEntity(productDto);
+        product.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
         Product created = productService.create(product);
         return ResponseEntity.status(201).body(converter.toDto(created));
     }
@@ -49,13 +50,13 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getById(@PathVariable Long id) {
+    public ResponseEntity<ProductDto> getById(@PathVariable @Min(1) Long id) {
         Product product = productService.getById(id);
         return ResponseEntity.ok(converter.toDto(product));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable @Min(1) Long id) {
         productService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -65,7 +66,8 @@ public class ProductController {
             @PathVariable("id") Long id,
             @RequestBody @Valid CreateProductDto productDto) {
         Product productToUpdate = converter.toEntity(productDto);
-        productToUpdate.setProductId(id); // ✅ Теперь должно работать, если productId в Product — Long
+        productToUpdate.setProductId(id);
+        productToUpdate.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
         Product updated = productService.update(productToUpdate);
         return ResponseEntity.ok(converter.toDto(updated));
     }

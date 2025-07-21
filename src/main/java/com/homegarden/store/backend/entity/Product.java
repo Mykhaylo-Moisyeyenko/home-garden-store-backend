@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class Product {
 
     @Id

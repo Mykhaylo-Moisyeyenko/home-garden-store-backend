@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class OrderItem {
 
     @Id
@@ -24,11 +25,13 @@ public class OrderItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     @JsonBackReference
+    @ToString.Exclude
     private Order order;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false, unique = true)
     @JsonBackReference
+    @ToString.Exclude
     private Product product;
 
     @Column(nullable = false)

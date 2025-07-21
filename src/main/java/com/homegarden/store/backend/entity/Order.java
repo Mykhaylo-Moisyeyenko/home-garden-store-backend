@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,6 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class Order {
 
     @Id
@@ -27,9 +29,10 @@ public class Order {
     @ToString.Exclude
     private User user;
 
+    @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<OrderItem> items;
+    private List<OrderItem> items = new ArrayList<>();
 
     private LocalDateTime createdAt = LocalDateTime.now();
 

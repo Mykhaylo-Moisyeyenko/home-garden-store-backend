@@ -24,4 +24,6 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
                                     limit 10 
             """)
     List<Object[]> findTopCancelledProducts();
+
+    boolean existsByProductProductId(Long productId);
 }

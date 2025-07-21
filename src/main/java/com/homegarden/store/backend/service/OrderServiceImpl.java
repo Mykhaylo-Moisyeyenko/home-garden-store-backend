@@ -47,13 +47,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void cancelOrder(Long orderId) {
-        Order order = getById(orderId);
+    public void cancelOrder(Long id) {
+        Order order = getById(id);
         if (order.getStatus().equals(CREATED) || order.getStatus().equals(AWAITING_PAYMENT)) {
             order.setStatus(CANCELLED);
             orderRepository.save(order);
         } else  {
-            throw new OrderUnableToCancelException("Order with id " + orderId + " can't be cancelled");
+            throw new OrderUnableToCancelException("Order with id " + id + " can't be cancelled");
         }
     }
 
@@ -67,5 +67,10 @@ public class OrderServiceImpl implements OrderService {
                         (Long) obj[2]
                 ))
                 .toList();
+    }
+
+    @Override
+    public boolean isProductUsedInOrders(Long productId) {
+        return orderItemRepository.existsByProductProductId(productId);
     }
 }

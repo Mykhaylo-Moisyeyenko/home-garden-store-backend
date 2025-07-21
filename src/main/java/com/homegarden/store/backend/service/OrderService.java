@@ -14,9 +14,11 @@ public interface OrderService {
 
     void update(Order order);
 
-    void cancelOrder(Long Id);
+    void cancelOrder(Long id);
 
-    List<Order> getAllOrdersByUserId(Long Id);
+    List<Order> getAllOrdersByUserId(Long userId);
 
     List<TopCancelledProductDTO> getTopCancelledProducts();
+
+    boolean isProductUsedInOrders(Long productId);
 }

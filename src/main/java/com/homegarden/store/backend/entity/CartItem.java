@@ -14,6 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class CartItem {
 
     @Id
@@ -24,11 +25,13 @@ public class CartItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     @JsonBackReference
+    @ToString.Exclude
     private Cart cart;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false, unique = true)
     @JsonBackReference
+    @ToString.Exclude
     private Product product;
 
     @Column(nullable = false)

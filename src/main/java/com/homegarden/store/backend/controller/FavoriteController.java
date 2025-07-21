@@ -9,7 +9,6 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,11 +17,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/v1/favorites")
 @RequiredArgsConstructor
-@Validated
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
-
     private final Converter<Favorite, FavoriteDto, FavoriteDto> converter;
 
     @GetMapping("/{userId}")

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class User {
 
     @Id
@@ -34,9 +36,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @JsonManagedReference
-    private List<Favorite> favorites;
+    private List<Favorite> favorites = new ArrayList<>();
 }
