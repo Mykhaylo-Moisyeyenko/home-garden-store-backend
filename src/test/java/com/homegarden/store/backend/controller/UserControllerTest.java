@@ -111,7 +111,7 @@ class UserControllerTest {
     void createTest() throws Exception {
         CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO(
                 "Misha", "misha@gmail.com", "+11111111111", "password6546198");
-        when(userService.existsByEmail(createUserRequestDTO.email())).thenReturn(false);
+        when(userService.getByEmail(createUserRequestDTO.email())).thenReturn(false);
         when(converter.toEntity(createUserRequestDTO)).thenReturn(user1);
         when(userService.create(user1)).thenReturn(user1);
         when(converter.toDto(user1)).thenReturn(userResponseDTO1);
@@ -133,7 +133,7 @@ class UserControllerTest {
     void createTest_shouldFail_whenUserExists() throws Exception {
         CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO(
                 "Misha", "misha@gmail.com", "+11111111111", "password6546198");
-        when(userService.existsByEmail(createUserRequestDTO.email())).thenReturn(true);
+        when(userService.getByEmail(createUserRequestDTO.email())).thenReturn(true);
 
         mockMvc.perform(post("/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
