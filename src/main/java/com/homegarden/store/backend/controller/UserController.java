@@ -12,6 +12,7 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class UserController {
 
     private final UserService userService;
     private final Converter<User, CreateUserRequestDTO, UserResponseDTO> converter;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAll() {
@@ -35,10 +37,8 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> create(@RequestBody @Valid CreateUserRequestDTO userRequestDTO) {
-        if (userService.existsByEmail(userRequestDTO.email())) {
-            throw new UserAlreadyExistsException("User with email " + userRequestDTO.email() + " already exists");
-        }
         User entity = converter.toEntity(userRequestDTO);
+        entity.setPasswordHash(passwordEncoder.encode(userRequestDTO.password()));
         User user = userService.create(entity);
         UserResponseDTO response = converter.toDto(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

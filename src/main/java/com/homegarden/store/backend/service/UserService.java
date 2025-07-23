@@ -4,6 +4,7 @@ import com.homegarden.store.backend.dto.UpdateUserRequestDTO;
 import com.homegarden.store.backend.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -20,4 +21,6 @@ public interface UserService {
     boolean existsById(Long id);
 
     void delete(Long id);
+
+    User getByEmail(String email);
 }

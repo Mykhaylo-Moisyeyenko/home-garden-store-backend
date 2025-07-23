@@ -1,5 +1,6 @@
 package com.homegarden.store.backend.service;
 
+import com.homegarden.store.backend.exception.UserAlreadyExistsException;
 import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.dto.UpdateUserRequestDTO;
 import com.homegarden.store.backend.entity.User;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -21,8 +23,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(User User) {
-        return userRepository.save(User);
+    public User create(User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new UserAlreadyExistsException("User with email " + user.getEmail() + " already exists");
+        }
+        return userRepository.save(user);
     }
 
     @Override
@@ -49,4 +54,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean existsById(Long id) { return userRepository.existsById(id); }
+
+    @Override
+    public User getByEmail(String email){
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found")); }
 }
