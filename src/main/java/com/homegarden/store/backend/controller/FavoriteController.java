@@ -32,7 +32,7 @@ public class FavoriteController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addToFavorites(@RequestBody @Valid FavoriteDto favoriteDto) {
+    public ResponseEntity<Void> addToFavorites(@Valid @RequestBody FavoriteDto favoriteDto) {
         Favorite entity = converter.toEntity(favoriteDto);
         favoriteService.addToFavorites(entity);
         return ResponseEntity.status(HttpStatus.CREATED).build();

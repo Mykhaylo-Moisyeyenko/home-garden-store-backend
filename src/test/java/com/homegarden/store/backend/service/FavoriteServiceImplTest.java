@@ -1,107 +1,120 @@
-//package com.homegarden.store.backend.service;
-//
-//import com.homegarden.store.backend.exception.ProductNotFoundException;
-//import com.homegarden.store.backend.exception.UserNotFoundException;
-//import com.homegarden.store.backend.dto.FavoriteDto;
-//import com.homegarden.store.backend.entity.Favorite;
-//import com.homegarden.store.backend.entity.Product;
-//import com.homegarden.store.backend.entity.User;
-//import com.homegarden.store.backend.repository.FavoriteRepository;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//
-//import java.util.List;
-//import java.util.Optional;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertThrows;
-//import static org.mockito.Mockito.*;
-//
-//class FavoriteServiceImplTest {
-//
-//    private FavoriteRepository favoriteRepository;
-//    private ProductService productService;
-//    private UserService userService;
-//    private FavoriteServiceImpl favoriteService;
-//    FavoriteDto dto;
-//
-//    @BeforeEach
-//    void setUp() {
-//        favoriteRepository = mock(FavoriteRepository.class);
-//        productService = mock(ProductService.class);
-//        userService = mock(UserService.class);
-//        favoriteService = new FavoriteServiceImpl(favoriteRepository, productService, userService);
-//        dto = new FavoriteDto(1L, 101L);
-//    }
-//
-//    @Test
-//    void getAll_shouldReturnListOfDto() {
-//        Favorite entity = Favorite.builder()
-//                .user(User.builder().userId(1L).build())
-//                .product(Product.builder().productId(101L).build())
-//                .build();
-//
-//        when(favoriteRepository.findByUser_UserId(1L)).thenReturn(List.of(entity));
-//        List<FavoriteDto> result = favoriteService.getAll(1L);
-//
-//        assertEquals(1, result.size());
-//        assertEquals(101L, result.get(0).productId());
-//        verify(favoriteRepository).findByUser_UserId(1L);
-//    }
-//
-//    @Test
-//    void addToFavorites_shouldSaveIfNotExists() {
-//        when(userService.getById(1L)).thenReturn(User.builder().userId(1L).build());
-//        when(productService.getById(101L)).thenReturn(Product.builder().productId(101L).build());
-//        when(favoriteRepository.findByUser_UserIdAndProduct_ProductId(1L, 101L))
-//                .thenReturn(Optional.empty());
-//
-//
-//        favoriteService.addToFavorites(dto);
-//
-//        verify(favoriteRepository).save(any(Favorite.class));
-//    }
-//
-//    @Test
-//    void addToFavorites_shouldNotSave_IfUserNotExists() {
-//        when(userService.getById(1L)).thenThrow(new UserNotFoundException("User not found"));
-//
-//        assertThrows(UserNotFoundException.class, () -> favoriteService.addToFavorites(dto));
-//        verify(productService, never()).getById(anyLong());
-//        verify(favoriteRepository, never()).findByUser_UserIdAndProduct_ProductId(anyLong(), anyLong());
-//        verify(favoriteRepository, never()).save(any());
-//    }
-//
-//    @Test
-//    void addToFavorites_shouldNotSave_IfProductNotExists() {
-//        when(userService.getById(1L)).thenReturn(User.builder().userId(1L).build());
-//        when(productService.getById(101L)).thenThrow(new ProductNotFoundException("Product not found"));
-//
-//        assertThrows(ProductNotFoundException.class, () -> favoriteService.addToFavorites(dto));
-//        verify(favoriteRepository, never()).findByUser_UserIdAndProduct_ProductId(anyLong(), anyLong());
-//        verify(favoriteRepository, never()).save(any());
-//    }
-//
-//    @Test
-//    void addToFavorites_shouldNotSave_IfUserHasProductInFavorites() {
-//        when(userService.getById(1L)).thenReturn(User.builder().userId(1L).build());
-//        when(productService.getById(101L)).thenReturn(Product.builder().productId(101L).build());
-//        when(favoriteRepository.findByUser_UserIdAndProduct_ProductId(1L, 101L))
-//                .thenReturn(Optional.of(Favorite.builder()
-//                        .user(User.builder().userId(1L).build())
-//                        .product(Product.builder().productId(101L).build())
-//                        .build()));
-//
-//        favoriteService.addToFavorites(dto);
-//        verify(favoriteRepository, never()).save(any());
-//    }
-//
-//
-//    @Test
-//    void removeFromFavorites_shouldCallDelete() {
-//        favoriteService.removeFromFavorites(dto);
-//
-//        verify(favoriteRepository).deleteByUser_UserIdAndProduct_ProductId(1L, 101L);
-//
-//    }
-//}
+package com.homegarden.store.backend.service;
+
+import com.homegarden.store.backend.entity.Favorite;
+import com.homegarden.store.backend.entity.Product;
+import com.homegarden.store.backend.entity.User;
+import com.homegarden.store.backend.exception.ProductNotFoundException;
+import com.homegarden.store.backend.exception.UserNotFoundException;
+import com.homegarden.store.backend.repository.FavoriteRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class FavoriteServiceImplTest {
+
+    private FavoriteRepository favoriteRepository;
+    private ProductService productService;
+    private UserService userService;
+    private FavoriteServiceImpl favoriteService;
+
+    private final Long userId = 1L;
+    private final Long productId = 101L;
+
+    private Favorite favorite;
+
+    @BeforeEach
+    void setUp() {
+        favoriteRepository = mock(FavoriteRepository.class);
+        productService = mock(ProductService.class);
+        userService = mock(UserService.class);
+        favoriteService = new FavoriteServiceImpl(favoriteRepository, productService, userService);
+
+        favorite = Favorite.builder()
+                .user(User.builder().userId(userId).build())
+                .product(Product.builder().productId(productId).build())
+                .build();
+    }
+
+    @Test
+    @DisplayName("getAll: should return list of favorites when user exists")
+    void getAll_whenUserExists_shouldReturnFavorites() {
+        when(userService.existsById(userId)).thenReturn(true);
+        when(favoriteRepository.findAllByUser_UserId(userId)).thenReturn(List.of(favorite));
+
+        List<Favorite> result = favoriteService.getAll(userId);
+
+        assertEquals(1, result.size());
+        assertEquals(userId, result.get(0).getUser().getUserId());
+        assertEquals(productId, result.get(0).getProduct().getProductId());
+        verify(userService).existsById(userId);
+        verify(favoriteRepository).findAllByUser_UserId(userId);
+    }
+
+    @Test
+    @DisplayName("getAll: should throw exception when user does not exist")
+    void getAll_whenUserNotExists_shouldThrowException() {
+        when(userService.existsById(userId)).thenReturn(false);
+
+        assertThrows(UserNotFoundException.class, () -> favoriteService.getAll(userId));
+        verify(userService).existsById(userId);
+        verifyNoInteractions(favoriteRepository);
+    }
+
+    @Test
+    @DisplayName("addToFavorites: should save when not already exists")
+    void addToFavorites_whenValid_shouldSave() {
+        when(userService.existsById(userId)).thenReturn(true);
+        when(productService.existsById(productId)).thenReturn(true);
+        when(favoriteRepository.existsByUser_AndProduct(favorite.getUser(), favorite.getProduct()))
+                .thenReturn(false);
+
+        favoriteService.addToFavorites(favorite);
+
+        verify(favoriteRepository).save(favorite);
+    }
+
+    @Test
+    @DisplayName("addToFavorites: should not save if already exists")
+    void addToFavorites_whenAlreadyExists_shouldNotSave() {
+        when(userService.existsById(userId)).thenReturn(true);
+        when(productService.existsById(productId)).thenReturn(true);
+        when(favoriteRepository.existsByUser_AndProduct(favorite.getUser(), favorite.getProduct()))
+                .thenReturn(true);
+
+        favoriteService.addToFavorites(favorite);
+
+        verify(favoriteRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("addToFavorites: should throw if user not found")
+    void addToFavorites_whenUserNotFound_shouldThrow() {
+        when(userService.existsById(userId)).thenReturn(false);
+
+        assertThrows(UserNotFoundException.class, () -> favoriteService.addToFavorites(favorite));
+        verify(favoriteRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("addToFavorites: should throw if product not found")
+    void addToFavorites_whenProductNotFound_shouldThrow() {
+        when(userService.existsById(userId)).thenReturn(true);
+        when(productService.existsById(productId)).thenReturn(false);
+
+        assertThrows(ProductNotFoundException.class, () -> favoriteService.addToFavorites(favorite));
+        verify(favoriteRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("removeFromFavorites: should call delete")
+    void removeFromFavorites_shouldDelete() {
+        favoriteService.removeFromFavorites(favorite);
+
+        verify(favoriteRepository).delete(favorite);
+    }
+}
