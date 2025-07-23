@@ -4,13 +4,15 @@ import com.homegarden.store.backend.dto.CategoryDto;
 import com.homegarden.store.backend.entity.Category;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CategoryConverterTest {
 
     private CategoryConverter converter = new CategoryConverter();
 
-    Category category = new Category(1L, "tools");
+    Category category = new Category(1L, "tools", new ArrayList<>());
 
     CategoryDto categoryDto = new CategoryDto(1L, "tools");
 

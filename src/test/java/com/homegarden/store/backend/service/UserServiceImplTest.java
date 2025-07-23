@@ -46,7 +46,7 @@ class UserServiceImplTest {
 
         List<User> usersActual = userServiceImpl.getAll();
 
-        assertEquals(usersActual.size(), 1);
+        assertEquals(1, usersActual.size());
         assertEquals(user, usersActual.get(0));
         verify(userRepository).findAll();
     }
@@ -95,7 +95,7 @@ class UserServiceImplTest {
     void existsByEmail() {
         when(userRepository.existsByEmail("misha@gmail.com")).thenReturn(true);
 
-        boolean result = userServiceImpl.getByEmail("misha@gmail.com");
+        boolean result = userServiceImpl.existsByEmail("misha@gmail.com");
 
         assertTrue(result);
         verify(userRepository).existsByEmail("misha@gmail.com");
@@ -105,7 +105,7 @@ class UserServiceImplTest {
     void existsByEmailTest_shouldReturnFalse_WhenUserNotFound() {
         when(userRepository.existsByEmail("false@gmail.com")).thenReturn(false);
 
-        boolean result = userServiceImpl.getByEmail("false@gmail.com");
+        boolean result = userServiceImpl.existsByEmail("false@gmail.com");
 
         assertFalse(result);
         verify(userRepository).existsByEmail("false@gmail.com");

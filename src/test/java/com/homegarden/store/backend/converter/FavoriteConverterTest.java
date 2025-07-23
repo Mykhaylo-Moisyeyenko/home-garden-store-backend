@@ -14,7 +14,8 @@ class FavoriteConverterTest {
     void toEntity_shouldConvertCorrectly() {
         FavoriteDto dto = new FavoriteDto(1L, 200L);
 
-        Favorite entity = FavoriteConverter.toEntity(dto);
+        FavoriteConverter converter = new FavoriteConverter();
+        Favorite entity = converter.toEntity(dto);
 
         assertThat(entity.getUser().getUserId()).isEqualTo(1L);
         assertThat(entity.getProduct().getProductId()).isEqualTo(200L);
@@ -28,7 +29,8 @@ class FavoriteConverterTest {
                 .product(Product.builder().productId(200L).build())
                 .build();
 
-        FavoriteDto dto = FavoriteConverter.toDto(entity);
+        FavoriteConverter converter = new FavoriteConverter();
+        FavoriteDto dto = converter.toDto(entity);
 
         assertThat(dto.userId()).isEqualTo(1L);
         assertThat(dto.productId()).isEqualTo(200L);
