@@ -1,6 +1,4 @@
-
 --changeset mykhaylo:create-all-tables
-create type user_role as enum ('ROLE_USER', 'ROLE_ADMINISTRATOR');
 
 create table users
 (
@@ -9,7 +7,7 @@ create table users
     email         varchar(255) unique not null,
     phone_number  varchar(20)         not null,
     password_hash varchar(100)        not null,
-    role          user_role           not null
+    role          varchar(20)         not null
 );
 
 create table cart
