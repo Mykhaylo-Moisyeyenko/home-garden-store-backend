@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,8 +39,8 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductDto>> getAll(
             @RequestParam(required = false) @Min(1) Long categoryId,
-            @RequestParam(required = false) @PositiveOrZero Double minPrice,
-            @RequestParam(required = false) @Positive Double maxPrice,
+            @RequestParam(required = false) @PositiveOrZero BigDecimal minPrice,
+            @RequestParam(required = false) @Positive BigDecimal maxPrice,
             @RequestParam(required = false) Boolean discount,
             @RequestParam(required = false) @Pattern(regexp = "ASC|DESC") String sort
     ) {

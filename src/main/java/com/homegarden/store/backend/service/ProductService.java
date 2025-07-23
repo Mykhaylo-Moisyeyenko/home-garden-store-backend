@@ -2,6 +2,7 @@ package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.entity.Product;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductService {
@@ -10,8 +11,8 @@ public interface ProductService {
 
     List<Product> getAll(
             Long categoryId,
-            Double minPrice,
-            Double maxPrice,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
             Boolean discount,
             String sort);
 
