@@ -49,8 +49,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void updateTest() throws Exception {
-        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category1))
-                .thenReturn(Optional.of(category1));
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category1));
 
         Category category2 = new Category(1L, "trees", List.of());
         when(categoryRepository.save(category2)).thenReturn(category2);
