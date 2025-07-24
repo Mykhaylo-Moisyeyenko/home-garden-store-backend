@@ -1,7 +1,9 @@
 package com.homegarden.store.backend.service;
 
+import com.homegarden.store.backend.calculator.OrderStatusCalculator;
 import com.homegarden.store.backend.dto.TopCancelledProductDTO;
 import com.homegarden.store.backend.entity.Order;
+import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.exception.OrderNotFoundException;
 import com.homegarden.store.backend.exception.OrderUnableToCancelException;
 import com.homegarden.store.backend.repository.OrderItemRepository;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.homegarden.store.backend.enums.Status.*;
 
@@ -19,6 +22,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final OrderStatusCalculator orderStatusCalculator;
 
     @Override
     public Order create(Order order) {
@@ -36,14 +40,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void update(Order order) {
-
+    public void updateStatus(Order order) {
+        Optional<Status> newStatus = orderStatusCalculator.findNewStatus(order);
+        if (newStatus.isPresent()){
+            order.setStatus(newStatus.get());
+            orderRepository.save(order);
+        }
     }
 
     @Override
     public List<Order> getAllOrdersByUserId(Long userId) {
         getById(userId);
         return orderRepository.findAllByUserUserId(userId);
+    }
+
+    @Override
+    public List<Order> getAllOrdersByStatuses(List<Status> statuses) {
+        return orderRepository.findByStatusIn(statuses);
     }
 
     @Override

@@ -7,10 +7,10 @@
     <changeSet id="insert-users" author="Sofia" runAlways="true">
         <sql>
             INSERT INTO users (name, email, phone_number, password_hash, role)
-            VALUES ('Anna', 'anna@gmail.com', '+37412345676','password2', 'ROLE_ADMINISTRATOR'),
-                   ('Bob', 'bob@gmail.com', '+13427774568','password3', 'ROLE_USER'),
-                   ('Betty', 'betty@gmail.com', '+1009456888','password4', 'ROLE_USER'),
-                   ('John', 'john@gmail.com', '+1789098567','password5', 'ROLE_USER');
+            VALUES ('Anna', 'anna@gmail.com', '+37412345676', 'password2', 'ROLE_ADMINISTRATOR'),
+                   ('Bob', 'bob@gmail.com', '+13427774568', 'password3', 'ROLE_USER'),
+                   ('Betty', 'betty@gmail.com', '+1009456888', 'password4', 'ROLE_USER'),
+                   ('John', 'john@gmail.com', '+1789098567', 'password5', 'ROLE_USER');
         </sql>
     </changeSet>
 
@@ -70,25 +70,32 @@
     <changeSet id="insert-orders" author="Sofia" runAlways="true">
         <sql>
             INSERT INTO orders (user_id, delivery_address, contact_phone, delivery_method, status)
-            VALUES (1, 'Berlin, Panorama str. 1A','+49-123-456789','Courier', 'CREATED'),
-                   (4, 'Hamburg, Platz d.Deutschen Einheit 4','+49-555-888999', 'Pickup', 'DELIVERED'),
-                   (2, 'Bremen','+49-555-888999', 'Pickup', 'CANCELLED'),
-                   (3, 'Hannover','+49-555-111111', 'Pickup', 'CANCELLED'),
-                   (1, 'Berlin','+49-555-222222', 'Pickup', 'CANCELLED'),
-                   (2, 'Bremen','+49-555-333333', 'Pickup', 'CANCELLED'),
-                   (3, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
-                   (3, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
-                   (3, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
-                   (4, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
-                   (1, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
-                   (2, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
-                   (3, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
-                   (1, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
-                   (2, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
-                   (4, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
-                   (2, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
-                   (3, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED'),
-                   (3, 'Hannover','+49-555-444444', 'Pickup', 'CANCELLED');
+            VALUES (1, 'Berlin, Panorama str. 1A', '+49-123-456789', 'Courier', 'CREATED'),
+                   (4, 'Hamburg, Platz d.Deutschen Einheit 4', '+49-555-888999', 'Pickup', 'DELIVERED'),
+                   (2, 'Bremen', '+49-555-888999', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover', '+49-555-111111', 'Pickup', 'CANCELLED'),
+                   (1, 'Berlin', '+49-555-222222', 'Pickup', 'CANCELLED'),
+                   (2, 'Bremen', '+49-555-333333', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (4, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (1, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (2, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (1, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (2, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (4, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (2, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED'),
+                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED');
+        </sql>
+    </changeSet>
+    <changeSet id="insert-time" author="Sofia">
+        <sql>
+            UPDATE orders
+            SET updated_at = NOW(),
+                created_at = NOW();
         </sql>
     </changeSet>
 
