@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -26,8 +27,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getAll(
             Long categoryId,
-            Double minPrice,
-            Double maxPrice,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
             Boolean discount,
             String sort
     ) {
