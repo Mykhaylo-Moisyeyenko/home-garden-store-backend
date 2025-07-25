@@ -91,13 +91,6 @@
                    (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW());
         </sql>
     </changeSet>
-    <changeSet id="insert-time" author="Sofia">
-        <sql>
-            UPDATE orders
-            SET updated_at = NOW(),
-                created_at = NOW();
-        </sql>
-    </changeSet>
 
     <changeSet id="insert-order-items" author="Sofia" runAlways="true">
         <sql>
