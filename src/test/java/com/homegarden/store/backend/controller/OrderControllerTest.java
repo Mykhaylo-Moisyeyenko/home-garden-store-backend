@@ -2,6 +2,7 @@ package com.homegarden.store.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homegarden.store.backend.converter.Converter;
+import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
 import com.homegarden.store.backend.dto.OrderResponseDTO;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
@@ -37,7 +38,7 @@ class OrderControllerTest {
     private OrderService orderService;
 
     @MockBean
-    private Converter<Order, ?, OrderResponseDTO> converter;
+    private Converter<Order, CreateOrderRequestDTO, OrderResponseDTO> converter;
 
     private Order order;
     private OrderResponseDTO responseDTO;
