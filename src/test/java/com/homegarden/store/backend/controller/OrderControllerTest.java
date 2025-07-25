@@ -9,16 +9,12 @@ import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -28,7 +24,6 @@ import static org.hamcrest.Matchers.*;
 
 @WebMvcTest(OrderController.class)
 @AutoConfigureMockMvc(addFilters = false)
-
 class OrderControllerTest {
 
     @Autowired
@@ -45,8 +40,11 @@ class OrderControllerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        order = Order.builder().orderId(1L).status(Status.CREATED).build();
+        order = Order.builder()
+                .orderId(1L)
+                .status(Status.CREATED)
+                .build();
+
         responseDTO = OrderResponseDTO.builder()
                 .orderId(1L)
                 .status(Status.CREATED)
