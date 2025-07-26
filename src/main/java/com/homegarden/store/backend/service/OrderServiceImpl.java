@@ -23,6 +23,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final OrderStatusCalculator orderStatusCalculator;
+    private final UserService userService;
 
     @Override
     public Order create(Order order) {
@@ -50,7 +51,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getAllOrdersByUserId(Long userId) {
-        getById(userId);
+        if (!userService.existsById(userId)) {
+            throw new OrderNotFoundException("User with id " + userId + " not found");
+        }
         return orderRepository.findAllByUserUserId(userId);
     }
 
