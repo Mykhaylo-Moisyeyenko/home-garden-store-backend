@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 class OrderServiceImplTest {
@@ -31,6 +30,9 @@ class OrderServiceImplTest {
 
     @Mock
     private OrderStatusCalculator orderStatusCalculator;
+
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private OrderServiceImpl orderService;
@@ -87,11 +89,19 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void testGetAllOrdersByUserId() {
-        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+    void testGetAllOrdersByUserId_UserExists() {
+        when(userService.existsById(1L)).thenReturn(true);
         when(orderRepository.findAllByUserUserId(1L)).thenReturn(List.of(order));
         List<Order> result = orderService.getAllOrdersByUserId(1L);
         assertThat(result).containsExactly(order);
+    }
+
+    @Test
+    void testGetAllOrdersByUserId_UserNotFound() {
+        when(userService.existsById(1L)).thenReturn(false);
+
+        assertThatThrownBy(() -> orderService.getAllOrdersByUserId(1L))
+                .isInstanceOf(OrderNotFoundException.class);
     }
 
     @Test
