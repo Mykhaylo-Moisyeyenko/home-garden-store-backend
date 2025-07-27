@@ -7,15 +7,14 @@ import com.homegarden.store.backend.dto.UpdateCartItemRequestDTO;
 import com.homegarden.store.backend.entity.CartItem;
 import com.homegarden.store.backend.service.CartItemService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +28,7 @@ public class CartItemController {
     public ResponseEntity<CartItemResponseDTO> updateQuantity(
             @PathVariable @NotNull @Min(1) Long id,
             @RequestBody @Valid UpdateCartItemRequestDTO dto) {
+        cartItemService.getById(id);
         CartItem updated = cartItemService.updateQuantity(id, dto.quantity());
         return ResponseEntity.ok(converter.toDto(updated));
     }

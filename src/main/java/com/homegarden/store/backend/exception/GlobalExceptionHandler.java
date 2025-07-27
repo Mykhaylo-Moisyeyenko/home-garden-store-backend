@@ -14,7 +14,8 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = {UserNotFoundException.class, CategoryNotFoundException.class,
-            OrderNotFoundException.class, ProductNotFoundException.class})
+            OrderNotFoundException.class, ProductNotFoundException.class,
+            CartNotFoundException.class, CartItemNotFoundException.class})
     public String handleNotFoundException(Exception exception){
         return exception.getMessage();
     }
@@ -36,7 +37,7 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(value = {UserAlreadyExistsException.class, OrderUnableToCancelException.class,
-            ProductUsedInOrdersException.class})
+            ProductUsedInOrdersException.class, CartAlreadyExistsException.class})
     public String handleConflict(Exception exception) {
         return exception.getMessage();
     }
