@@ -28,7 +28,7 @@ public class CartItemConverter implements Converter<CartItem, CreateCartItemRequ
     @Override
     public CartItemResponseDTO toDto(CartItem item) {
         return new CartItemResponseDTO(
-                item.getId(),
+                item.getCartItemId(),
                 item.getCart().getCartId(),
                 item.getProduct().getProductId(),
                 item.getProduct().getName(),
