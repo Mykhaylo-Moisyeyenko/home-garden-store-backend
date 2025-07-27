@@ -8,7 +8,6 @@ import com.homegarden.store.backend.exception.OrderNotFoundException;
 import com.homegarden.store.backend.exception.OrderUnableToCancelException;
 import com.homegarden.store.backend.repository.OrderItemRepository;
 import com.homegarden.store.backend.repository.OrderRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
