@@ -2,10 +2,7 @@ package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.calculator.OrderStatusCalculator;
 import com.homegarden.store.backend.dto.TopCancelledProductDTO;
-import com.homegarden.store.backend.entity.Cart;
-import com.homegarden.store.backend.entity.CartItem;
 import com.homegarden.store.backend.entity.Order;
-import com.homegarden.store.backend.entity.OrderItem;
 import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.exception.OrderNotFoundException;
 import com.homegarden.store.backend.exception.OrderUnableToCancelException;
@@ -29,30 +26,9 @@ public class OrderServiceImpl implements OrderService {
     private final OrderStatusCalculator orderStatusCalculator;
     private final UserService userService;
 
-    private final CartService cartService;
-    private final CartItemService cartItemService;
-
     @Override
-    @Transactional
     public Order create(Order order) {
-        Cart cart = cartService.getByUserId(order.getUser().getUserId());
-        List<Long> allProductIds = cart.getItems()
-                .stream()
-                .map((cartItem) -> {
-                    return cartItem.getProduct().getProductId();
-                }).toList();
-        for (OrderItem orderItem : order.getItems()) {
-            Long productId = orderItem.getProduct().getProductId();
-            if (!allProductIds.contains(productId)) {
-                throw new IllegalArgumentException("Product id " + productId + " is not in the Cart");
-            }
-        }
-        Order savedOrder = orderRepository.save(order);
-        orderItemRepository.saveAll(order.getItems());
-        for (CartItem cartItem : cart.getItems()) {
-            cartItemService.delete(cartItem.getId());
-        }
-        return savedOrder;
+        return orderRepository.save(order);
     }
 
     @Override

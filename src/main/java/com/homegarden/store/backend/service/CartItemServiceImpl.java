@@ -5,6 +5,7 @@ import com.homegarden.store.backend.entity.CartItem;
 import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.exception.CartItemNotFoundException;
 import com.homegarden.store.backend.repository.CartItemRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
