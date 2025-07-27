@@ -8,7 +8,7 @@ public interface CartService {
     Cart create(Cart cart);
     Cart getById(Long id);
 
-    boolean existsByUserId(Long userId);
+    void existsByUserId(Long userId);
 
     List<Cart> getAll();
     void delete(Long id);

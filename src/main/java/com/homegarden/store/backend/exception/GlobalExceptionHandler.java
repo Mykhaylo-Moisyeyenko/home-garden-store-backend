@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(value = {UserAlreadyExistsException.class, OrderUnableToCancelException.class,
-            ProductUsedInOrdersException.class})
+            ProductUsedInOrdersException.class, CartAlreadyExistsException.class})
     public String handleConflict(Exception exception) {
         return exception.getMessage();
     }

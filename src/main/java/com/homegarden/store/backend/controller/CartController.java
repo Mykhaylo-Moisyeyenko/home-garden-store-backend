@@ -29,13 +29,11 @@ public class CartController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid CreateCartRequestDTO dto) {
         User user = userService.getById(dto.userId());
-        if(cartService.existsByUserId(dto.userId())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Cart already exists for this user");
-        }
-            Cart cart = cartConverter.toEntity(dto);
-            cart.setUser(user);
-            Cart created = cartService.create(cart);
-            return ResponseEntity.status(HttpStatus.CREATED).body(cartConverter.toDto(created));
+        cartService.existsByUserId(dto.userId());
+        Cart cart = cartConverter.toEntity(dto);
+        cart.setUser(user);
+        Cart created = cartService.create(cart);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartConverter.toDto(created));
     }
 
     @GetMapping("/{id}")
