@@ -46,10 +46,11 @@ public class CartItemController {
     }
 
     @GetMapping
-    public List<CartItemResponseDTO> getAll() {
-        return cartItemService.getAll().stream()
+    public ResponseEntity<List<CartItemResponseDTO>> getAll() {
+         List<CartItemResponseDTO> result = cartItemService.getAll().stream()
                 .map(converter::toDto)
                 .toList();
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{id}")
