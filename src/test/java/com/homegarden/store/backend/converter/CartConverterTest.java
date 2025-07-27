@@ -24,6 +24,7 @@ class CartConverterTest {
         Cart actual = cartConverter.toEntity(createCartRequestDTO);
 
         assertThat(actual).isNotNull();
+        assertThat(actual.getUser().getUserId()).isEqualTo(1L);
     }
 
     @Test
