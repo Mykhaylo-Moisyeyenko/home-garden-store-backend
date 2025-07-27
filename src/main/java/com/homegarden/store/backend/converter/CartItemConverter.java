@@ -33,7 +33,5 @@ public class CartItemConverter implements Converter<CartItem, CreateCartItemRequ
                 item.getProduct().getProductId(),
                 item.getProduct().getName(),
                 item.getQuantity());
-                //В тех.задании нет цен в CartItem. Какое обоснование - для чего здесь цена?
-                //item.getPrice());
     }
 }

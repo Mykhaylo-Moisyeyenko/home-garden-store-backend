@@ -1,14 +1,13 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.dto.CreateCartItemRequestDTO;
 import com.homegarden.store.backend.entity.Cart;
 import com.homegarden.store.backend.entity.CartItem;
 import com.homegarden.store.backend.entity.Product;
+import com.homegarden.store.backend.exception.CartItemNotFoundException;
 import com.homegarden.store.backend.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -25,13 +24,10 @@ public class CartItemServiceImpl implements CartItemService {
         Long productId = item.getProduct().getProductId();
 
         Cart cart = cartService.getById(cartId);
-//здесь нужно выбросить пользовательское исключение CartNotFoundException
-
         Product product = productService.getById(productId);
 
         item.setCart(cart);
         item.setProduct(product);
-        //item.setPrice(BigDecimal.valueOf(product.getPrice()));
 
         return cartItemRepository.save(item);
     }
@@ -47,8 +43,7 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     public CartItem getById(Long id) {
         return cartItemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cart item not found"));
-//здесь нужно выбросить пользовательское исключение CartItemNotFoundException
+                .orElseThrow(() -> new CartItemNotFoundException("Cart item not found"));
     }
 
     @Override
@@ -58,7 +53,7 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public void delete(Long id) {
-        CartItem item = getById(id);
+        getById(id);
         cartItemRepository.deleteById(id);
     }
 }

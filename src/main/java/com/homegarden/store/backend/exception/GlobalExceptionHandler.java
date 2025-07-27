@@ -14,7 +14,8 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = {UserNotFoundException.class, CategoryNotFoundException.class,
-            OrderNotFoundException.class, ProductNotFoundException.class})
+            OrderNotFoundException.class, ProductNotFoundException.class,
+            CartNotFoundException.class, CartItemNotFoundException.class})
     public String handleNotFoundException(Exception exception){
         return exception.getMessage();
     }
