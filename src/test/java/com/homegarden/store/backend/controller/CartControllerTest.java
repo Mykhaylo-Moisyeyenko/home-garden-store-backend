@@ -10,7 +10,6 @@ import com.homegarden.store.backend.exception.CartAlreadyExistsException;
 import com.homegarden.store.backend.exception.CartNotFoundException;
 import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.service.CartService;
-import com.homegarden.store.backend.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,9 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,25 +38,23 @@ class CartControllerTest {
     CartService cartServiceTest;
 
     @MockitoBean
-    UserService userServiceTest;
-
-    @MockitoBean
     CartConverter cartConverterTest;
 
     @Autowired
     ObjectMapper objectMapper = new ObjectMapper();
 
     CreateCartRequestDTO createCartRequestDTO = new CreateCartRequestDTO(1L);
+
     User user = User.builder().userId(1L).build();
+    Cart cartForCreate = Cart.builder().user(user).build();
+
     Cart cart = new Cart(1L, new ArrayList<>(), user);
     CartResponseDTO cartResponseDTO = new CartResponseDTO(1L, 1L);
 
     @Test
     void createTestWhenCartNotExist() throws Exception {
-        when(userServiceTest.getById(1L)).thenReturn(user);
-        when(cartConverterTest.toEntity(createCartRequestDTO)).thenReturn(cart);
-        cart.setUser(user);
-        when(cartServiceTest.create(cart)).thenReturn(cart);
+        when(cartConverterTest.toEntity(createCartRequestDTO)).thenReturn(cartForCreate);
+        when(cartServiceTest.create(cartForCreate)).thenReturn(cart);
         when(cartConverterTest.toDto(cart)).thenReturn(cartResponseDTO);
 
         mockMvc.perform(post("/v1/carts")
@@ -73,7 +68,8 @@ class CartControllerTest {
 
     @Test
     void createTestWhenUserNotExist() throws Exception {
-        doThrow(new UserNotFoundException("User not found")).when(userServiceTest).getById(1L);
+        when(cartConverterTest.toEntity(createCartRequestDTO)).thenReturn(cartForCreate);
+        doThrow(new UserNotFoundException("User not found")).when(cartServiceTest).create(cartForCreate);
 
         mockMvc.perform(post("/v1/carts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -84,9 +80,9 @@ class CartControllerTest {
 
     @Test
     void createTestWhenCartExists() throws Exception {
-        when(userServiceTest.getById(1L)).thenReturn(user);
+        when(cartConverterTest.toEntity(createCartRequestDTO)).thenReturn(cartForCreate);
         doThrow(new CartAlreadyExistsException("Cart already exists for this user"))
-                .when(cartServiceTest).existsByUserId(1L);
+                .when(cartServiceTest).create(cartForCreate);
 
         mockMvc.perform(post("/v1/carts")
                         .contentType(MediaType.APPLICATION_JSON)

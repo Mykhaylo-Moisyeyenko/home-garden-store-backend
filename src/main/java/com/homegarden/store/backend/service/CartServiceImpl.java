@@ -22,6 +22,9 @@ public class CartServiceImpl implements CartService {
     public Cart create(Cart cart) {
         Long userId = cart.getUser().getUserId();
         User user = userService.getById(userId);
+        if(cartRepository.existsCartByUser(user)) {
+            throw new CartAlreadyExistsException("Cart already exists for this user");
+        }
         cart.setUser(user);
         return cartRepository.save(cart);
     }
@@ -32,20 +35,13 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void existsByUserId(Long userId){
-        User user = userService.getById(userId);
-        if(cartRepository.existsCartByUser(user)) {
-            throw new CartAlreadyExistsException("Cart already exists for this user");
-        }
-    }
-
-    @Override
     public List<Cart> getAll() {
         return cartRepository.findAll();
     }
 
     @Override
     public void delete(Long id) {
+        getById(id);
         cartRepository.deleteById(id);
     }
 }
