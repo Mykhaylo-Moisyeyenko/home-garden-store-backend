@@ -47,4 +47,9 @@ public class GlobalExceptionHandler {
     public String handleConflict(FavoriteAlreadyExistsException ex) {
         return ex.getMessage();
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidOrderItemQuantityException.class)
+    public String handleInvalidOrderItemQuantityException(InvalidOrderItemQuantityException ex) {
+        return "Invalid order item quantity: " + ex.getMessage();}
 }

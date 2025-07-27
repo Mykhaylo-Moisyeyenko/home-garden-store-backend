@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void updateStatus(Order order) {
         Optional<Status> newStatus = orderStatusCalculator.findNewStatus(order);
-        if (newStatus.isPresent()){
+        if (newStatus.isPresent()) {
             order.setStatus(newStatus.get());
             orderRepository.save(order);
         }
@@ -68,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
         if (order.getStatus().equals(CREATED) || order.getStatus().equals(AWAITING_PAYMENT)) {
             order.setStatus(CANCELLED);
             orderRepository.save(order);
-        } else  {
+        } else {
             throw new OrderUnableToCancelException("Order with id " + id + " can't be cancelled");
         }
     }

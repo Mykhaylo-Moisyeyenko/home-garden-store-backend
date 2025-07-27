@@ -5,6 +5,7 @@ import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
 import com.homegarden.store.backend.dto.OrderResponseDTO;
 import com.homegarden.store.backend.dto.TopCancelledProductDTO;
 import com.homegarden.store.backend.entity.Order;
+import com.homegarden.store.backend.service.CartToOrderService;
 import com.homegarden.store.backend.service.OrderService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -22,12 +23,13 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final CartToOrderService cartToOrderService;
     private final Converter<Order, CreateOrderRequestDTO, OrderResponseDTO> converter;
 
     @PostMapping
     public ResponseEntity<OrderResponseDTO> create(@RequestBody @NotNull @Valid CreateOrderRequestDTO orderRequestDTO) {
         Order entity = converter.toEntity(orderRequestDTO);
-        Order order = orderService.create(entity);
+        Order order = cartToOrderService.create(entity);
         OrderResponseDTO response = converter.toDto(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

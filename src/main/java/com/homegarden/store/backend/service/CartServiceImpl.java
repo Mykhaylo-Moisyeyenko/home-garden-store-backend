@@ -2,7 +2,6 @@ package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.entity.Cart;
 import com.homegarden.store.backend.entity.User;
-
 import com.homegarden.store.backend.exception.CartAlreadyExistsException;
 import com.homegarden.store.backend.exception.CartNotFoundException;
 import com.homegarden.store.backend.repository.CartRepository;
@@ -43,5 +42,14 @@ public class CartServiceImpl implements CartService {
     public void delete(Long id) {
         getById(id);
         cartRepository.deleteById(id);
+    }
+
+    @Override
+    public Cart getByUserId(Long userId) {
+        List<Cart> cart = cartRepository.findByUser_UserId(userId);
+        if (cart.isEmpty()) {
+            throw new CartNotFoundException("Cart for User " + userId + " not found");
+        }
+        return cart.get(0);
     }
 }

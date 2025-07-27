@@ -9,4 +9,5 @@ public interface CartService {
     Cart getById(Long id);
     List<Cart> getAll();
     void delete(Long id);
+    Cart getByUserId(Long userId);
 }

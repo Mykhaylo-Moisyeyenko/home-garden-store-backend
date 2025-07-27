@@ -31,6 +31,7 @@ public class OrderConverter implements Converter<Order, CreateOrderRequestDTO, O
                 .contactPhone("")
                 .deliveryMethod(createOrderRequestDTO.deliveryMethod())
                 .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
 
         List<OrderItem> items = new ArrayList<>();
