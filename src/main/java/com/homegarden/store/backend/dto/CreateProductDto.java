@@ -25,5 +25,9 @@ public class CreateProductDto {
     @NotNull(message = "Category Id can't be empty")
     @Positive(message = "Category Id must be more than 0")
     private Long categoryId;
+
     private String imageUrl;
+
+    @PositiveOrZero(message = "Price cannot be negative")
+    private BigDecimal discountPrice;
 }
