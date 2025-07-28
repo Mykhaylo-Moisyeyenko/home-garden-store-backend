@@ -32,6 +32,7 @@ public class ProductController {
     public ResponseEntity<ProductDto> create(@RequestBody @Valid CreateProductDto productDto) {
         Product product = converter.toEntity(productDto);
         product.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        product.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
         Product created = productService.create(product);
         return ResponseEntity.status(201).body(converter.toDto(created));
     }

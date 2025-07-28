@@ -5,16 +5,14 @@ import com.homegarden.store.backend.dto.ProductDto;
 import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.entity.Category;
 import com.homegarden.store.backend.service.CategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class ProductConverter implements Converter<Product, CreateProductDto, ProductDto> {
 
     private final CategoryService categoryService;
-
-    public ProductConverter(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
 
     @Override
     public Product toEntity(CreateProductDto createProductDto) {
@@ -24,6 +22,8 @@ public class ProductConverter implements Converter<Product, CreateProductDto, Pr
         product.setPrice(createProductDto.getPrice());
         Category category = categoryService.getById(createProductDto.getCategoryId());
         product.setCategory(category);
+        product.setImageUrl(createProductDto.getImageUrl());
+        product.setDiscountPrice(createProductDto.getDiscountPrice());
 
         return product;
     }

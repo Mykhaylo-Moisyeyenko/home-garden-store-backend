@@ -95,6 +95,7 @@ class ProductControllerTest {
                 .price(new BigDecimal("999.99"))
                 .category(category)
                 .createdAt(testTimestamp)
+                .updatedAt(testTimestamp)
                 .build();
 
         expectedProductDto = ProductDto.builder()
@@ -104,6 +105,7 @@ class ProductControllerTest {
                 .price(new BigDecimal("999.99"))
                 .categoryId(1L)
                 .createdAt(testTimestamp)
+                .updatedAt(testTimestamp)
                 .build();
 
         product1 = Product.builder().productId(1L).name("P1").price(new BigDecimal("100.0")).build();
