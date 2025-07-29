@@ -34,6 +34,7 @@ public class Order {
     @ToString.Exclude
     private List<OrderItem> items = new ArrayList<>();
 
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
     private String deliveryAddress;
@@ -46,5 +47,6 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private Status status = Status.CREATED;
 
+    @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 }

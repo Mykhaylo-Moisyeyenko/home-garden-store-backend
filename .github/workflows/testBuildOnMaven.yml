@@ -19,6 +19,22 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:17
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: homegarden
+        # ждать, пока база поднимется
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
@@ -29,5 +45,9 @@ jobs:
         cache: maven
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-    - name: Run Spring Context Test (profile=test)
+    - name: Build & Test with PostgreSQL
+      env:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/homegarden
+        SPRING_DATASOURCE_USERNAME: postgres
+        SPRING_DATASOURCE_PASSWORD: postgres
       run: mvn clean install
