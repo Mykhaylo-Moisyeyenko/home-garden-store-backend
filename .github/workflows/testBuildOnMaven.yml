@@ -30,4 +30,4 @@ jobs:
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Run Spring Context Test (profile=test)
-      run: mvn clean install -Dmaven.test.skip=true
+      run: mvn clean install
