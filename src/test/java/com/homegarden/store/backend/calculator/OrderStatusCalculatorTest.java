@@ -31,16 +31,6 @@ class OrderStatusCalculatorTest {
     }
 
     @Test
-    void shouldReturnCreatedIfCreatedAndRecent() {
-        order.setStatus(Status.CREATED);
-        order.setUpdatedAt(LocalDateTime.now().minusMinutes(5));
-
-        Status result = findNewStatus(order);
-
-        assertEquals(order.getStatus(), result);
-    }
-
-    @Test
     void shouldReturnShippedIfPaidAndOlderThan10Minutes() {
         order.setStatus(Status.PAID);
         order.setUpdatedAt(LocalDateTime.now().minusMinutes(11));

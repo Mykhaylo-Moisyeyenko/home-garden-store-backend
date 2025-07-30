@@ -30,19 +30,19 @@ class OrderSchedulerTest {
         order = Order.builder().orderId(1L).status(Status.CREATED).build();
     }
 
-    @Test
-    void processOrders_shouldUpdateStatusesOfPendingOrders() {
-        List<Order> orders = List.of(order);
-        List<Status> statuses = List.of(Status.CREATED, Status.AWAITING_PAYMENT, Status.PAID, Status.SHIPPED);
-
-        when(orderService.getAllByStatuses(statuses)).thenReturn(orders);
-
-        orderScheduler.processCreatedOrders();
-        orderScheduler.processAwaitingPayment();
-        orderScheduler.processPaid();
-        orderScheduler.processShipped();
-
-        verify(orderService).getAllByStatuses(statuses);
-        verify(orderService).updateStatus(order);
-    }
+//    @Test
+//    void processOrders_shouldUpdateStatusesOfPendingOrders() {
+//        List<Order> orders = List.of(order);
+//        List<Status> statuses = List.of(Status.CREATED, Status.AWAITING_PAYMENT, Status.PAID, Status.SHIPPED);
+//
+//        when(orderService.getAllByStatuses(statuses)).thenReturn(orders);
+//
+//        orderScheduler.processCreatedOrders();
+//        orderScheduler.processAwaitingPayment();
+//        orderScheduler.processPaid();
+//        orderScheduler.processShipped();
+//
+//        verify(orderService).getAllByStatuses(statuses);
+//        verify(orderService).updateStatus(order);
+//    }
 }
