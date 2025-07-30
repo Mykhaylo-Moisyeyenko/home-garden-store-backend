@@ -5,7 +5,6 @@ import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
 import com.homegarden.store.backend.dto.OrderResponseDTO;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
-import com.homegarden.store.backend.service.CartToOrderService;
 import com.homegarden.store.backend.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 class OrderControllerTest {
 
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -37,9 +37,6 @@ class OrderControllerTest {
 
     @MockitoBean
     private Converter<Order, CreateOrderRequestDTO, OrderResponseDTO> converter;
-
-    @MockitoBean
-    private CartToOrderService cartToOrderService;
 
     private Order order;
     private OrderResponseDTO responseDTO;
