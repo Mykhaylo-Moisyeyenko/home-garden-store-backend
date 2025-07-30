@@ -5,6 +5,7 @@ import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAllByUserUserId(Long userId);
 
     List<Order> findByStatusIn(Collection<Status> statuses);
+
+    List<Order> findByStatusAndUpdatedAtBefore(Status status, LocalDateTime updatedAtBefore);
 }
