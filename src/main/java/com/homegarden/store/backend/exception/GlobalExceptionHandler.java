@@ -52,4 +52,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidOrderItemQuantityException.class)
     public String handleInvalidOrderItemQuantityException(InvalidOrderItemQuantityException ex) {
         return "Invalid order item quantity: " + ex.getMessage();}
+
+    //product is not in the cart but gonna delete later
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String handleBadRequestException(IllegalArgumentException ex) {
+        return "Bad request: " + ex.getMessage();
+    }
 }

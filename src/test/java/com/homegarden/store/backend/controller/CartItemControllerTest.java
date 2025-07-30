@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -68,7 +69,7 @@ class CartItemControllerTest {
     void updateQuantityTest() throws Exception {
         when(cartItemServiceTest.getById(1L)).thenReturn(cartItem);
         when(cartItemServiceTest.updateQuantity(1L, updateDto.quantity()))
-                .thenReturn(updatedCartItem);
+                .thenReturn(Optional.ofNullable(updatedCartItem));
         when(cartItemConverter.toDto(updatedCartItem)).thenReturn(updatedResponseDto);
 
         mockMvc.perform(put("/v1/cart-items/1")

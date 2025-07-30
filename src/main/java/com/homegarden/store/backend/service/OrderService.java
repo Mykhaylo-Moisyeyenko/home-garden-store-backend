@@ -15,11 +15,11 @@ public interface OrderService {
 
     void updateStatus(Order order);
 
-    void cancelOrder(Long id);
+    void cancel(Long id);
 
-    List<Order> getAllOrdersByUserId(Long userId);
+    List<Order> getAllByUserId(Long userId);
 
-    List<Order> getAllOrdersByStatuses(List<Status> statuses);
+    List<Order> getAllByStatuses(List<Status> statuses);
 
     List<TopCancelledProductDTO> getTopCancelledProducts();
 

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,11 +34,16 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
-    public CartItem updateQuantity(Long id, Integer quantity) {
+    public Optional<CartItem> updateQuantity(Long id, Integer quantity) {
         CartItem item = getById(id);
 
         item.setQuantity(quantity);
-        return cartItemRepository.save(item);
+        if (quantity.equals(0)) {
+            cartItemRepository.delete(item);
+            return Optional.empty();
+        } else {
+            return Optional.of(cartItemRepository.save(item));
+        }
     }
 
     @Override

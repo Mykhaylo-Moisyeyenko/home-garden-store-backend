@@ -52,4 +52,11 @@ public class CartServiceImpl implements CartService {
         }
         return cart.get(0);
     }
+
+    @Override
+    public Cart update(Cart cart) {
+        Cart updatedCart = getById(cart.getCartId());
+        updatedCart.setItems(cart.getItems());
+        return cartRepository.save(updatedCart);
+    }
 }

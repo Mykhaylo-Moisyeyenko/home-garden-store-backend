@@ -2,6 +2,7 @@ package com.homegarden.store.backend.calculator;
 
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
+import com.homegarden.store.backend.utils.OrderStatusCalculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

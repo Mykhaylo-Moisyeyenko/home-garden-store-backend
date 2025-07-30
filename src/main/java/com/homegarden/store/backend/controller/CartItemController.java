@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,8 +30,9 @@ public class CartItemController {
             @PathVariable @NotNull @Min(1) Long id,
             @RequestBody @Valid UpdateCartItemRequestDTO dto) {
         cartItemService.getById(id);
-        CartItem updated = cartItemService.updateQuantity(id, dto.quantity());
-        return ResponseEntity.ok(converter.toDto(updated));
+        Optional<CartItem> updated = cartItemService.updateQuantity(id, dto.quantity());
+        return updated.map(cartItem -> ResponseEntity.ok(converter.toDto(cartItem)))
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     @PostMapping
@@ -47,7 +49,7 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<List<CartItemResponseDTO>> getAll() {
-         List<CartItemResponseDTO> result = cartItemService.getAll().stream()
+        List<CartItemResponseDTO> result = cartItemService.getAll().stream()
                 .map(converter::toDto)
                 .toList();
         return ResponseEntity.ok(result);
