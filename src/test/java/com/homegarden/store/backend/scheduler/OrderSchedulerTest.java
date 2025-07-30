@@ -37,7 +37,10 @@ class OrderSchedulerTest {
 
         when(orderService.getAllByStatuses(statuses)).thenReturn(orders);
 
-        orderScheduler.processOrders();
+        orderScheduler.processCreatedOrders();
+        orderScheduler.processAwaitingPayment();
+        orderScheduler.processPaid();
+        orderScheduler.processShipped();
 
         verify(orderService).getAllByStatuses(statuses);
         verify(orderService).updateStatus(order);
