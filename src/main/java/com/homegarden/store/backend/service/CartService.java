@@ -6,8 +6,14 @@ import java.util.List;
 
 public interface CartService {
     Cart create(Cart cart);
+
     Cart getById(Long id);
+
     List<Cart> getAll();
+
     void delete(Long id);
+
     Cart getByUserId(Long userId);
+
+    Cart update(Cart cart);
 }

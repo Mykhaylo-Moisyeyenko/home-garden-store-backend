@@ -95,7 +95,7 @@ class CartItemServiceImplTest {
         cartItemSaved.setQuantity(20);
         when(cartItemRepository.save(cartItemSaved)).thenReturn(updatedCartItem);
 
-        CartItem actual = cartItemServiceImpl.updateQuantity(1L, 20);
+        CartItem actual = cartItemServiceImpl.updateQuantity(1L, 20).get();
 
         assertEquals(updatedCartItem, actual);
         assertEquals(updatedCartItem.getCart(), actual.getCart());

@@ -1,6 +1,5 @@
 package com.homegarden.store.backend.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homegarden.store.backend.converter.Converter;
 import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
 import com.homegarden.store.backend.dto.OrderResponseDTO;
@@ -12,15 +11,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(OrderController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -29,10 +31,10 @@ class OrderControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private OrderService orderService;
 
-    @MockBean
+    @MockitoBean
     private Converter<Order, CreateOrderRequestDTO, OrderResponseDTO> converter;
 
     private Order order;
@@ -74,7 +76,7 @@ class OrderControllerTest {
 
     @Test
     void testGetOrdersByUser() throws Exception {
-        when(orderService.getAllOrdersByUserId(1L)).thenReturn(List.of(order));
+        when(orderService.getAllByUserId(1L)).thenReturn(List.of(order));
         when(converter.toDto(order)).thenReturn(responseDTO);
 
         mockMvc.perform(get("/v1/orders/history/1"))

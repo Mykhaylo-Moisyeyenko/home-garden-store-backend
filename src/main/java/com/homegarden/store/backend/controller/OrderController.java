@@ -5,7 +5,6 @@ import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
 import com.homegarden.store.backend.dto.OrderResponseDTO;
 import com.homegarden.store.backend.dto.TopCancelledProductDTO;
 import com.homegarden.store.backend.entity.Order;
-import com.homegarden.store.backend.service.CartToOrderService;
 import com.homegarden.store.backend.service.OrderService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -23,13 +22,12 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-    private final CartToOrderService cartToOrderService;
     private final Converter<Order, CreateOrderRequestDTO, OrderResponseDTO> converter;
 
     @PostMapping
     public ResponseEntity<OrderResponseDTO> create(@RequestBody @NotNull @Valid CreateOrderRequestDTO orderRequestDTO) {
         Order entity = converter.toEntity(orderRequestDTO);
-        Order order = cartToOrderService.create(entity);
+        Order order = orderService.create(entity);
         OrderResponseDTO response = converter.toDto(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -50,16 +48,16 @@ public class OrderController {
     }
 
     @GetMapping("/history/{userId}")
-    public ResponseEntity<List<OrderResponseDTO>> getAllOrdersByUserId(@PathVariable @Valid @Min(1) Long userId) {
-        List<OrderResponseDTO> result = orderService.getAllOrdersByUserId(userId).stream()
+    public ResponseEntity<List<OrderResponseDTO>> getAllByUserId(@PathVariable @Valid @Min(1) Long userId) {
+        List<OrderResponseDTO> result = orderService.getAllByUserId(userId).stream()
                 .map(converter::toDto)
                 .toList();
         return ResponseEntity.ok(result);
     }
 
     @PatchMapping("/{orderId}/cancel")
-    public ResponseEntity<Void> cancelOrder(@PathVariable @Valid @Min(1) Long orderId) {
-        orderService.cancelOrder(orderId);
+    public ResponseEntity<Void> cancel(@PathVariable @Valid @Min(1) Long orderId) {
+        orderService.cancel(orderId);
         return ResponseEntity.ok().build();
     }
 

@@ -3,6 +3,7 @@ package com.homegarden.store.backend.scheduler;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.service.OrderService;
+import com.homegarden.store.backend.service.scheduler.OrderScheduler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -34,11 +35,11 @@ class OrderSchedulerTest {
         List<Order> orders = List.of(order);
         List<Status> statuses = List.of(Status.CREATED, Status.AWAITING_PAYMENT, Status.PAID, Status.SHIPPED);
 
-        when(orderService.getAllOrdersByStatuses(statuses)).thenReturn(orders);
+        when(orderService.getAllByStatuses(statuses)).thenReturn(orders);
 
         orderScheduler.processOrders();
 
-        verify(orderService).getAllOrdersByStatuses(statuses);
+        verify(orderService).getAllByStatuses(statuses);
         verify(orderService).updateStatus(order);
     }
 }

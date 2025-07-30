@@ -1,4 +1,4 @@
-package com.homegarden.store.backend.scheduler;
+package com.homegarden.store.backend.service.scheduler;
 
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
@@ -18,7 +18,7 @@ public class OrderScheduler {
     @Scheduled(fixedDelay = 30000)
     public void processOrders() {
         List<Status> statuses = List.of(Status.CREATED, Status.AWAITING_PAYMENT, Status.PAID, Status.SHIPPED);
-        List<Order> pendingOrders = orderService.getAllOrdersByStatuses(statuses);
+        List<Order> pendingOrders = orderService.getAllByStatuses(statuses);
         for (Order order : pendingOrders) {
             orderService.updateStatus(order);
         }

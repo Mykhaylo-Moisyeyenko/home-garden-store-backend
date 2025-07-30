@@ -1,16 +1,14 @@
-package com.homegarden.store.backend.calculator;
+package com.homegarden.store.backend.utils;
 
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Component
 public class OrderStatusCalculator {
 
-    public Optional<Status> findNewStatus(Order order) {
+    public static Optional<Status> findNewStatus(Order order) {
         switch (order.getStatus()) {
             case CREATED, AWAITING_PAYMENT -> {
                 if (order.getUpdatedAt().isBefore(LocalDateTime.now().minusMinutes(15))) {
