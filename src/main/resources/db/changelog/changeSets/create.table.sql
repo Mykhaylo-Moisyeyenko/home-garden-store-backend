@@ -71,3 +71,13 @@ create table order_items
     quantity          bigint  not null check ( quantity > 0 ),
     price_at_purchase decimal not null
 );
+
+create table payments
+(
+    id bigint generated always as identity primary key,
+    order_id bigint not null references orders (order_id),
+    amount numeric(19,2) not null,
+    status varchar(20) not null,
+    created_at timestamp,
+    updated_at timestamp
+);

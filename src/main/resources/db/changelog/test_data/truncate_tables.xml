@@ -14,6 +14,7 @@
             TRUNCATE TABLE cart_items RESTART IDENTITY CASCADE;
             TRUNCATE TABLE orders RESTART IDENTITY CASCADE;
             TRUNCATE TABLE order_items RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE payments RESTART IDENTITY CASCADE;
         </sql>
     </changeSet>
 </databaseChangeLog>
