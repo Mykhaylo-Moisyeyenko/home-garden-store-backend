@@ -14,7 +14,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static com.homegarden.store.backend.enums.Status.*;
 import static com.homegarden.store.backend.utils.OrderStatusCalculator.findNewStatus;
@@ -93,11 +97,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void updateStatus(Order order) {
-        Optional<Status> newStatus = findNewStatus(order);
-        if (newStatus.isPresent()) {
-            order.setStatus(newStatus.get());
-            orderRepository.save(order);
-        }
+        Status newStatus = findNewStatus(order);
+        order.setStatus(newStatus);
+        orderRepository.save(order);
     }
 
     @Override
@@ -111,6 +113,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getAllByStatuses(List<Status> statuses) {
         return orderRepository.findByStatusIn(statuses);
+    }
+
+    @Override
+    public List<Order> getAllByStatusAndUpdatedAtBefore(Status status, LocalDateTime updatedAtBefore) {
+        return orderRepository.findByStatusAndUpdatedAtBefore(status, updatedAtBefore);
     }
 
     @Override
