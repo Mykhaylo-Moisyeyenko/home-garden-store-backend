@@ -119,4 +119,13 @@
                    (11, 9, 1, 14.99);
         </sql>
     </changeSet>
+
+    <changeSet id="insert-payments" author="Elizaveta" runAlways="true">
+        <sql>
+            INSERT INTO payments (user_id, order_id, amount, payment_date)
+            VALUES (1, 1, 49.99, NOW()),
+            (2, 2, 79.50, NOW()),
+            (3, 3, 120.00, NOW());
+        </sql>
+    </changeSet>
 </databaseChangeLog>
