@@ -122,10 +122,10 @@
 
     <changeSet id="insert-payments" author="Elizaveta" runAlways="true">
         <sql>
-            INSERT INTO payments (user_id, order_id, amount, payment_date)
-            VALUES (1, 1, 49.99, NOW()),
-            (2, 2, 79.50, NOW()),
-            (3, 3, 120.00, NOW());
+            INSERT INTO payments (order_id, amount, status, created_at, updated_at)
+            VALUES (1, 49.99, 'PENDING', NOW(), NOW()),
+            (2, 79.50, 'PENDING', NOW(), NOW()),
+            (3, 120.00, 'PENDING', NOW(), NOW());
         </sql>
     </changeSet>
 </databaseChangeLog>
