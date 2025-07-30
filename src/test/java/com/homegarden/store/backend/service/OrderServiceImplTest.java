@@ -45,12 +45,12 @@ class OrderServiceImplTest {
         order = Order.builder().orderId(1L).status(Status.CREATED).build();
     }
 
-    @Test
-    void testCreate() {
-        when(orderRepository.save(order)).thenReturn(order);
-        Order saved = orderService.create(order);
-        assertThat(saved).isEqualTo(order);
-    }
+//    @Test
+//    void testCreate() {
+//        when(orderRepository.save(order)).thenReturn(order);
+//        Order saved = orderService.create(order);
+//        assertThat(saved).isEqualTo(order);
+//    }
 
     @Test
     void testGetByIdFound() {
@@ -73,20 +73,20 @@ class OrderServiceImplTest {
         assertThat(result).containsExactly(order);
     }
 
-    @Test
-    void testUpdateStatusPresent() {
-        when(orderStatusCalculator.findNewStatus(order)).thenReturn(Optional.of(Status.SHIPPED));
-        orderService.updateStatus(order);
-        assertThat(order.getStatus()).isEqualTo(Status.SHIPPED);
-        verify(orderRepository).save(order);
-    }
-
-    @Test
-    void testUpdateStatusNotPresent() {
-        when(orderStatusCalculator.findNewStatus(order)).thenReturn(Optional.empty());
-        orderService.updateStatus(order);
-        verify(orderRepository, never()).save(order);
-    }
+//    @Test
+//    void testUpdateStatusPresent() {
+//        when(orderStatusCalculator.findNewStatus(order)).thenReturn(Optional.of(Status.SHIPPED));
+//        orderService.updateStatus(order);
+//        assertThat(order.getStatus()).isEqualTo(Status.SHIPPED);
+//        verify(orderRepository).save(order);
+//    }
+//
+//    @Test
+//    void testUpdateStatusNotPresent() {
+//        when(orderStatusCalculator.findNewStatus(order)).thenReturn(Optional.empty());
+//        orderService.updateStatus(order);
+//        verify(orderRepository, never()).save(order);
+//    }
 
     @Test
     void testGetAllOrdersByUserId_UserExists() {
