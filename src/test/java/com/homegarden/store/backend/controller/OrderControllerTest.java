@@ -1,7 +1,6 @@
 package com.homegarden.store.backend.controller;
 
-import com.homegarden.store.backend.converter.Converter;
-import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
+import com.homegarden.store.backend.converter.OrderConverter;
 import com.homegarden.store.backend.dto.OrderResponseDTO;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
@@ -36,7 +35,7 @@ class OrderControllerTest {
     private OrderService orderService;
 
     @MockitoBean
-    private Converter<Order, CreateOrderRequestDTO, OrderResponseDTO> converter;
+    private OrderConverter converter;
 
     private Order order;
     private OrderResponseDTO responseDTO;

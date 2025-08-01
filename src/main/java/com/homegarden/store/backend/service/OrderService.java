@@ -1,5 +1,6 @@
 package com.homegarden.store.backend.service;
 
+import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
 import com.homegarden.store.backend.dto.TopCancelledProductDTO;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface OrderService {
-    Order create(Order order);
+    Order create(CreateOrderRequestDTO createOrderRequestDTO);
 
     Order getById(long id);
 

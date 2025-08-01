@@ -5,7 +5,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.stream.Collectors;
 
@@ -16,19 +15,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {UserNotFoundException.class, CategoryNotFoundException.class,
             OrderNotFoundException.class, ProductNotFoundException.class,
             CartNotFoundException.class, CartItemNotFoundException.class})
-    public String handleNotFoundException(Exception exception){
+    public String handleNotFoundException(Exception exception) {
         return exception.getMessage();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public String handleBadRequestException(MethodArgumentTypeMismatchException exception){
-        return "HTTP method argument invalid type";  //when we get a String id instead of a Long id in Postman
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public String handleInvalidArgumentException(MethodArgumentNotValidException exception){
+    public String handleInvalidArgumentException(MethodArgumentNotValidException exception) {
         String message = exception.getBindingResult().getFieldErrors().stream()
                 .map(field -> field.getField() + ": " + field.getDefaultMessage())
                 .collect(Collectors.joining("; "));
@@ -49,14 +42,8 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(InvalidOrderItemQuantityException.class)
-    public String handleInvalidOrderItemQuantityException(InvalidOrderItemQuantityException ex) {
-        return "Invalid order item quantity: " + ex.getMessage();}
-
-    //product is not in the cart but gonna delete later
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalArgumentException.class)
-    public String handleBadRequestException(IllegalArgumentException ex) {
-        return "Bad request: " + ex.getMessage();
+    @ExceptionHandler(OrderItemsListIsEmptyException.class)
+    public String handleOrderItemsListIsEmptyException(OrderItemsListIsEmptyException ex) {
+        return ex.getMessage();
     }
 }
