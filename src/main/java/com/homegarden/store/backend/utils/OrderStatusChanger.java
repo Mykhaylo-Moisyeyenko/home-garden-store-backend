@@ -4,9 +4,9 @@ import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
 
 
-public class OrderStatusCalculator {
+public class OrderStatusChanger {
 
-    public static Status findNewStatus(Order order) {
+    public static Status getNext(Order order) {
         return switch (order.getStatus()) {
             case CREATED, AWAITING_PAYMENT -> Status.CANCELLED;
 
@@ -15,7 +15,6 @@ public class OrderStatusCalculator {
             case SHIPPED -> Status.DELIVERED;
 
             default -> order.getStatus();
-
         };
     }
 }

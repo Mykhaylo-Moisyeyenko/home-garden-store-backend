@@ -2,13 +2,12 @@ package com.homegarden.store.backend.calculator;
 
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
-import com.homegarden.store.backend.utils.OrderStatusCalculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import static com.homegarden.store.backend.utils.OrderStatusCalculator.findNewStatus;
+import static com.homegarden.store.backend.utils.OrderStatusChanger.getNext;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class OrderStatusCalculatorTest {
@@ -25,7 +24,7 @@ class OrderStatusCalculatorTest {
         order.setStatus(Status.CREATED);
         order.setUpdatedAt(LocalDateTime.now().minusMinutes(16));
 
-        Status result = findNewStatus(order);
+        Status result = getNext(order);
 
         assertEquals(Status.CANCELLED, result);
     }
@@ -35,7 +34,7 @@ class OrderStatusCalculatorTest {
         order.setStatus(Status.PAID);
         order.setUpdatedAt(LocalDateTime.now().minusMinutes(11));
 
-        Status result = findNewStatus(order);
+        Status result = getNext(order);
 
         assertEquals(Status.SHIPPED, result);
     }
@@ -45,7 +44,7 @@ class OrderStatusCalculatorTest {
         order.setStatus(Status.SHIPPED);
         order.setUpdatedAt(LocalDateTime.now().minusMinutes(11));
 
-        Status result = findNewStatus(order);
+        Status result = getNext(order);
 
         assertEquals(Status.DELIVERED, result);
     }
@@ -55,7 +54,7 @@ class OrderStatusCalculatorTest {
         order.setStatus(Status.DELIVERED);
         order.setUpdatedAt(LocalDateTime.now().minusMinutes(30));
 
-        Status result = findNewStatus(order);
+        Status result = getNext(order);
 
         assertEquals(Status.DELIVERED, result);
     }
