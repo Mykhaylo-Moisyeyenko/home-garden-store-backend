@@ -19,7 +19,7 @@ public class PaymentConverter {
 
     public PaymentResponseDTO toResponseDTO(Payment payment) {
         return new PaymentResponseDTO(
-                payment.getId(),
+                payment.getPaymentId(),
                 payment.getOrder().getOrderId(),
                 payment.getAmount(),
                 payment.getStatus(),
