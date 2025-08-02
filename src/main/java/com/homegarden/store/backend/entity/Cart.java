@@ -2,7 +2,6 @@ package com.homegarden.store.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -28,11 +27,6 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<CartItem> items = new ArrayList<>();
-
-    @Transactional
-    public void deleteCartItem(CartItem item) {
-        items.remove(item);
-    }
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true)

@@ -1,6 +1,6 @@
 package com.homegarden.store.backend.controller;
 
-import com.homegarden.store.backend.converter.Converter;
+import com.homegarden.store.backend.converter.OrderConverter;
 import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
 import com.homegarden.store.backend.dto.OrderResponseDTO;
 import com.homegarden.store.backend.dto.TopCancelledProductDTO;
@@ -22,12 +22,11 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-    private final Converter<Order, CreateOrderRequestDTO, OrderResponseDTO> converter;
+    private final OrderConverter converter;
 
     @PostMapping
     public ResponseEntity<OrderResponseDTO> create(@RequestBody @NotNull @Valid CreateOrderRequestDTO orderRequestDTO) {
-        Order entity = converter.toEntity(orderRequestDTO);
-        Order order = orderService.create(entity);
+        Order order = orderService.create(orderRequestDTO);
         OrderResponseDTO response = converter.toDto(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -62,7 +61,7 @@ public class OrderController {
     }
 
     @GetMapping("/report/top-cancelled-products")
-    public ResponseEntity<List<TopCancelledProductDTO>> getTopCancelledProducts(){
+    public ResponseEntity<List<TopCancelledProductDTO>> getTopCancelledProducts() {
         orderService.getTopCancelledProducts();
         return ResponseEntity.ok().body(orderService.getTopCancelledProducts());
     }

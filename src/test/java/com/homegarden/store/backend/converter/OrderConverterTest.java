@@ -1,7 +1,5 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.dto.CreateOrderItemRequestDTO;
-import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
 import com.homegarden.store.backend.dto.OrderItemResponseDTO;
 import com.homegarden.store.backend.dto.OrderResponseDTO;
 import com.homegarden.store.backend.entity.Order;
@@ -9,53 +7,22 @@ import com.homegarden.store.backend.entity.OrderItem;
 import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.enums.Status;
-import com.homegarden.store.backend.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class OrderConverterTest {
 
-    private ProductService productService;
     private OrderConverter orderConverter;
 
     @BeforeEach
     void setUp() {
-        productService = mock(ProductService.class);
-        orderConverter = new OrderConverter(productService);
-    }
-
-    @Test
-    void testToEntity() {
-        CreateOrderItemRequestDTO itemDTO = new CreateOrderItemRequestDTO(1L, 2);
-        CreateOrderRequestDTO dto = new CreateOrderRequestDTO(
-                List.of(itemDTO),
-                "Pushkina Street",
-                "Pickup");
-
-        Product product = Product.builder()
-                .productId(1L)
-                .price(BigDecimal.valueOf(100.00))
-                .build();
-
-        when(productService.getById(1L)).thenReturn(product);
-
-        Order order = orderConverter.toEntity(dto);
-
-        assertNotNull(order);
-        assertEquals("Pushkina Street", order.getDeliveryAddress());
-        assertEquals("Pickup", order.getDeliveryMethod());
-        assertEquals(1, order.getItems().size());
-
-        OrderItem orderItem = order.getItems().get(0);
-        assertEquals(product, orderItem.getProduct());
-        assertEquals(2, orderItem.getQuantity());
-        assertEquals(product.getPrice(), orderItem.getPriceAtPurchase());
+        orderConverter = new OrderConverter();
     }
 
     @Test
