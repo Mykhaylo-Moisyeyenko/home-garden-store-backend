@@ -1,29 +1,31 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.dto.PaymentCreateDTO;
 import com.homegarden.store.backend.dto.PaymentResponseDTO;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.entity.Payment;
+import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
+@Component
 public class PaymentConverter {
 
-    public static Payment toEntity(PaymentCreateDTO dto, Order order) {
+    public Payment toEntity(Long orderId, BigDecimal amount) {
         return Payment.builder()
-                .order(order)
-                .amount(dto.getAmount())
-                .status(dto.getStatus())
+                .order(Order.builder().orderId(orderId).build())
+                .amount(amount)
                 .build();
     }
 
-    public static PaymentResponseDTO toResponseDTO(Payment payment) {
-        return PaymentResponseDTO.builder()
-                .paymentId(payment.getId())
-                .orderId(payment.getOrder().getOrderId())
-                .amount(payment.getAmount())
-                .status(payment.getStatus())
-                .createdAt(payment.getCreatedAt())
-                .updatedAt(payment.getUpdatedAt())
-                .build();
+    public PaymentResponseDTO toResponseDTO(Payment payment) {
+        return new PaymentResponseDTO(
+                payment.getId(),
+                payment.getOrder().getOrderId(),
+                payment.getAmount(),
+                payment.getStatus(),
+                payment.getCreatedAt(),
+                payment.getUpdatedAt()
+        );
     }
 }
 
