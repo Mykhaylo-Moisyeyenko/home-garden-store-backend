@@ -11,7 +11,8 @@ public record PaymentResponseDTO(
         BigDecimal amount,
         PaymentStatus status,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
-) {}
+        LocalDateTime updatedAt)
+        
+{}
 
 
