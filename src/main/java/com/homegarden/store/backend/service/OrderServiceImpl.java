@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.homegarden.store.backend.enums.Status.*;
-import static com.homegarden.store.backend.utils.OrderStatusCalculator.findNewStatus;
+import static com.homegarden.store.backend.utils.OrderStatusChanger.getNext;
 
 @RequiredArgsConstructor
 @Service
@@ -100,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void updateStatus(Order order) {
-        Status newStatus = findNewStatus(order);
+        Status newStatus = getNext(order);
         order.setStatus(newStatus);
         orderRepository.save(order);
     }

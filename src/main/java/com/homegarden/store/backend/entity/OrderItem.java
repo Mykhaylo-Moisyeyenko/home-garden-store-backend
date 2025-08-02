@@ -34,8 +34,7 @@ public class OrderItem {
     @ToString.Exclude
     private Product product;
 
-    @Column(nullable = false)
-    private Integer quantity;
+    private int quantity;
 
     private BigDecimal priceAtPurchase;
 }

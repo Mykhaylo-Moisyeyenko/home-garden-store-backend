@@ -1,6 +1,5 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.utils.OrderStatusCalculator;
 import com.homegarden.store.backend.dto.TopCancelledProductDTO;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
@@ -8,6 +7,7 @@ import com.homegarden.store.backend.exception.OrderNotFoundException;
 import com.homegarden.store.backend.exception.OrderUnableToCancelException;
 import com.homegarden.store.backend.repository.OrderItemRepository;
 import com.homegarden.store.backend.repository.OrderRepository;
+import com.homegarden.store.backend.utils.OrderStatusChanger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,8 +17,10 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class OrderServiceImplTest {
 
@@ -29,7 +31,7 @@ class OrderServiceImplTest {
     private OrderItemRepository orderItemRepository;
 
     @Mock
-    private OrderStatusCalculator orderStatusCalculator;
+    private OrderStatusChanger orderStatusChanger;
 
     @Mock
     private UserService userService;
@@ -75,7 +77,7 @@ class OrderServiceImplTest {
 
 //    @Test
 //    void testUpdateStatusPresent() {
-//        when(orderStatusCalculator.findNewStatus(order)).thenReturn(Optional.of(Status.SHIPPED));
+//        when(orderStatusChanger.getNext(order)).thenReturn(Optional.of(Status.SHIPPED));
 //        orderService.updateStatus(order);
 //        assertThat(order.getStatus()).isEqualTo(Status.SHIPPED);
 //        verify(orderRepository).save(order);
@@ -83,7 +85,7 @@ class OrderServiceImplTest {
 //
 //    @Test
 //    void testUpdateStatusNotPresent() {
-//        when(orderStatusCalculator.findNewStatus(order)).thenReturn(Optional.empty());
+//        when(orderStatusChanger.getNext(order)).thenReturn(Optional.empty());
 //        orderService.updateStatus(order);
 //        verify(orderRepository, never()).save(order);
 //    }
