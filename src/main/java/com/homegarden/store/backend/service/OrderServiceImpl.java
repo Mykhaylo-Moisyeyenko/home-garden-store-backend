@@ -123,6 +123,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> getAllByStatusAndUpdatedAtAfter(Status status, LocalDateTime updatedAtAfter) {
+        return orderRepository.findByStatusAndUpdatedAtAfter(status, updatedAtAfter);
+    }
+
+    @Override
     public List<Order> getAllByStatusAndUpdatedAtBefore(Status status, LocalDateTime updatedAtBefore) {
         return orderRepository.findByStatusAndUpdatedAtBefore(status, updatedAtBefore);
     }

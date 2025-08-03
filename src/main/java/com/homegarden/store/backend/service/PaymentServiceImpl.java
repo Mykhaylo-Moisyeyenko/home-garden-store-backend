@@ -25,11 +25,13 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Transactional
     public Payment create(Payment payment) {
         Order order = orderService.getById(payment.getOrder().getOrderId());
 
         payment.setOrder(order);
         payment.setAmount(order.getOrderTotalSum());
+        order.setStatus(Status.AWAITING_PAYMENT);
 
         return paymentRepository.save(payment);
     }
