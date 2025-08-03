@@ -21,8 +21,6 @@ public interface OrderService {
 
     List<Order> getAllByUserId(Long userId);
 
-    List<Order> getAllByStatuses(List<Status> statuses);
-
     List<TopCancelledProductDTO> getTopCancelledProducts();
 
     boolean isProductUsedInOrders(Long productId);

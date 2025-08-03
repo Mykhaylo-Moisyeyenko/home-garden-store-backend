@@ -8,14 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "cart")
-@Getter
-@Setter
+@Table(name = "carts")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 public class Cart {
 
     @Id
@@ -29,7 +27,7 @@ public class Cart {
     private List<CartItem> items = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", unique = true)
+    @JoinColumn(name = "user_id")
     @ToString.Exclude
     @JsonBackReference
     private User user;

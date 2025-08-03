@@ -63,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
         existing.setPrice(product.getPrice());
 
         if (product.getCategory() != null) {
-            existing.setCategory(product.getCategory()); // обновлена категория
+            existing.setCategory(product.getCategory());
         }
 
         existing.setImageUrl(product.getImageUrl());

@@ -6,19 +6,16 @@ import lombok.*;
 
 @Entity
 @Table(name = "cart_items")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 public class CartItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    @Column(name = "cart_item_id")
     private Long cartItemId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,11 +25,10 @@ public class CartItem {
     private Cart cart;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false, unique = true)
+    @JoinColumn(name = "product_id")
     @JsonBackReference
     @ToString.Exclude
     private Product product;
 
-    @Column(nullable = false)
     private Integer quantity;
 }

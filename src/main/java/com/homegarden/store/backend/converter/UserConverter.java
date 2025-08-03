@@ -16,7 +16,6 @@ public class UserConverter implements Converter<User, CreateUserRequestDTO, User
                 .email(createUserRequestDTO.email())
                 .phoneNumber(createUserRequestDTO.phoneNumber())
                 .passwordHash(createUserRequestDTO.password())
-                //change to PasswordEncoder later!!!!
                 .build();
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     @Query(nativeQuery = true, value = """
-            SELECT 
+            SELECT
                 oi.product_id AS product_id,
                 p.name AS productName,
                 COUNT(distinct oi.order_id) AS cancelCount
@@ -20,8 +20,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
                     ON oi.product_id = p.product_id
             WHERE o.status = 'CANCELLED'
                     GROUP BY oi.product_id, p.name
-                            ORDER BY COUNT(DISTINCT oi.order_id) DESC 
-                                    LIMIT 10 
+                            ORDER BY COUNT(DISTINCT oi.order_id) DESC
+                                    LIMIT 10
             """)
     List<Object[]> findTopCancelledProducts();
 

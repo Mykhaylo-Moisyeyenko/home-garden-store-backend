@@ -8,13 +8,11 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_items")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
+@Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 public class OrderItem {
 
     @Id
@@ -29,7 +27,7 @@ public class OrderItem {
     private Order order;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false, unique = true)
+    @JoinColumn(name = "product_id")
     @JsonBackReference
     @ToString.Exclude
     private Product product;

@@ -5,14 +5,13 @@ import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.exception.OrderNotFoundException;
 import com.homegarden.store.backend.exception.OrderUnableToCancelException;
-import com.homegarden.store.backend.repository.OrderItemRepository;
 import com.homegarden.store.backend.repository.OrderRepository;
-import com.homegarden.store.backend.utils.OrderStatusChanger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,19 +21,17 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {
 
     @Mock
     private OrderRepository orderRepository;
 
     @Mock
-    private OrderItemRepository orderItemRepository;
-
-    @Mock
-    private OrderStatusChanger orderStatusChanger;
-
-    @Mock
     private UserService userService;
+
+    @Mock
+    private OrderItemService orderItemService;
 
     @InjectMocks
     private OrderServiceImpl orderService;
@@ -43,7 +40,6 @@ class OrderServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         order = Order.builder().orderId(1L).status(Status.CREATED).build();
     }
 
@@ -107,14 +103,6 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void testGetAllOrdersByStatuses() {
-        List<Status> statuses = List.of(Status.CREATED);
-        when(orderRepository.findByStatusIn(statuses)).thenReturn(List.of(order));
-        List<Order> result = orderService.getAllByStatuses(statuses);
-        assertThat(result).containsExactly(order);
-    }
-
-    @Test
     void testCancelOrderAllowed() {
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
         orderService.cancel(1L);
@@ -133,7 +121,7 @@ class OrderServiceImplTest {
     @Test
     void testGetTopCancelledProducts() {
         Object[] data = new Object[]{1L, "Product Name", 5L};
-        when(orderItemRepository.findTopCancelledProducts()).thenReturn(List.<Object[]>of(data));
+        when(orderItemService.getTopCancelledProducts()).thenReturn(List.<Object[]>of(data));
         List<TopCancelledProductDTO> result = orderService.getTopCancelledProducts();
         assertThat(result).hasSize(1);
         assertThat(result.get(0).productId()).isEqualTo(1L);
@@ -141,7 +129,7 @@ class OrderServiceImplTest {
 
     @Test
     void testIsProductUsedInOrders() {
-        when(orderItemRepository.existsByProductProductId(1L)).thenReturn(true);
+        when(orderItemService.isProductUsedInOrders(1L)).thenReturn(true);
         boolean used = orderService.isProductUsedInOrders(1L);
         assertThat(used).isTrue();
     }
