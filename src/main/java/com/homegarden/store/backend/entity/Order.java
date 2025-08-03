@@ -3,6 +3,8 @@ package com.homegarden.store.backend.entity;
 import com.homegarden.store.backend.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,13 +12,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
+@Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 public class Order {
 
     @Id
@@ -25,7 +25,7 @@ public class Order {
     private Long orderId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     @ToString.Exclude
     private User user;
 
@@ -35,7 +35,12 @@ public class Order {
     private List<OrderItem> items = new ArrayList<>();
 
     @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Payment> payment = new ArrayList<>();
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     private String deliveryAddress;
 
@@ -47,6 +52,6 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private Status status = Status.CREATED;
 
-    @Builder.Default
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }

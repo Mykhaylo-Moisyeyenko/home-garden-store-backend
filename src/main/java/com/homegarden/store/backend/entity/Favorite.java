@@ -6,13 +6,11 @@ import lombok.*;
 
 @Entity
 @Table(name = "favorites")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 public class Favorite {
 
     @Id

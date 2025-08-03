@@ -3,19 +3,19 @@ package com.homegarden.store.backend.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
-@Getter
-@Setter
 @Table(name = "products")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 public class Product {
 
     @Id
@@ -35,6 +35,10 @@ public class Product {
 
     private String imageUrl;
     private BigDecimal discountPrice;
+
+    @CreationTimestamp
     private Timestamp createdAt;
+
+    @UpdateTimestamp
     private Timestamp updatedAt;
 }

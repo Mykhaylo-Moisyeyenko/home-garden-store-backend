@@ -53,7 +53,7 @@
 
     <changeSet id="insert-carts" author="Sofia" runAlways="true">
         <sql>
-            INSERT INTO cart (user_id)
+            INSERT INTO carts (user_id)
             VALUES (1),
                    (2);
         </sql>

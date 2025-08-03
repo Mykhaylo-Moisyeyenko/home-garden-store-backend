@@ -2,8 +2,8 @@ package com.homegarden.store.backend.converter;
 
 import com.homegarden.store.backend.dto.CreateProductDto;
 import com.homegarden.store.backend.dto.ProductDto;
-import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.entity.Category;
+import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -30,16 +30,17 @@ public class ProductConverter implements Converter<Product, CreateProductDto, Pr
 
     @Override
     public ProductDto toDto(Product product) {
-        ProductDto dto = new ProductDto();
-        dto.setProductId(product.getProductId());
-        dto.setName(product.getName());
-        dto.setDescription(product.getDescription());
-        dto.setPrice(product.getPrice());
-        dto.setCategoryId(product.getCategory().getCategoryId());
-        dto.setImageUrl(product.getImageUrl());
-        dto.setDiscountPrice(product.getDiscountPrice());
-        dto.setCreatedAt(product.getCreatedAt());
-        dto.setUpdatedAt(product.getUpdatedAt());
-        return dto;
+
+        return ProductDto.builder()
+                .productId(product.getProductId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .categoryId(product.getCategory().getCategoryId())
+                .imageUrl(product.getImageUrl())
+                .discountPrice(product.getDiscountPrice())
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
+                .build();
     }
 }

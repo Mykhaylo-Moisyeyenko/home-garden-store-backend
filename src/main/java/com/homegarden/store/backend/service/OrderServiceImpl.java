@@ -8,14 +8,16 @@ import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.exception.OrderItemsListIsEmptyException;
 import com.homegarden.store.backend.exception.OrderNotFoundException;
 import com.homegarden.store.backend.exception.OrderUnableToCancelException;
-import com.homegarden.store.backend.repository.OrderItemRepository;
 import com.homegarden.store.backend.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.homegarden.store.backend.enums.Status.*;
 import static com.homegarden.store.backend.utils.OrderStatusChanger.getNext;
@@ -25,7 +27,7 @@ import static com.homegarden.store.backend.utils.OrderStatusChanger.getNext;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderItemRepository orderItemRepository;
+    private final OrderItemService orderItemService;
     private final UserService userService;
 
     private final CartService cartService;
@@ -114,11 +116,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllByStatuses(List<Status> statuses) {
-        return orderRepository.findByStatusIn(statuses);
-    }
-
-    @Override
     public List<Order> getAllByStatusAndUpdatedAtBefore(Status status, LocalDateTime updatedAtBefore) {
         return orderRepository.findByStatusAndUpdatedAtBefore(status, updatedAtBefore);
     }
@@ -136,7 +133,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<TopCancelledProductDTO> getTopCancelledProducts() {
-        List<Object[]> data = orderItemRepository.findTopCancelledProducts();
+        List<Object[]> data = orderItemService.getTopCancelledProducts();
         return data.stream()
                 .map(obj -> new TopCancelledProductDTO(
                         (Long) obj[0],
@@ -148,6 +145,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean isProductUsedInOrders(Long productId) {
-        return orderItemRepository.existsByProductProductId(productId);
+        return orderItemService.isProductUsedInOrders(productId);
     }
 }

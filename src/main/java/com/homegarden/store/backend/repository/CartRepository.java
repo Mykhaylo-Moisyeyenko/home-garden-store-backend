@@ -9,5 +9,6 @@ import java.util.List;
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
     boolean existsCartByUser(User user);
+
     List<Cart> findByUser_UserId(Long userUserId);
 }

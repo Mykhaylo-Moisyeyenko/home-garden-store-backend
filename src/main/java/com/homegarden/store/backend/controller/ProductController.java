@@ -15,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +29,6 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductDto> create(@RequestBody @Valid CreateProductDto productDto) {
         Product product = converter.toEntity(productDto);
-        product.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-        product.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
         Product created = productService.create(product);
         return ResponseEntity.status(201).body(converter.toDto(created));
     }
@@ -69,7 +65,6 @@ public class ProductController {
             @RequestBody @Valid CreateProductDto productDto) {
         Product productToUpdate = converter.toEntity(productDto);
         productToUpdate.setProductId(id);
-        productToUpdate.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
         Product updated = productService.update(productToUpdate);
         return ResponseEntity.ok(converter.toDto(updated));
     }

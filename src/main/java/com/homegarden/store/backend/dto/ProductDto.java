@@ -5,20 +5,16 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class ProductDto {
+public record ProductDto(
 
-    private Long productId;
-    private String name;
-    private String description;
-    private BigDecimal price;
-    private Long categoryId;
-    private String imageUrl;
-    private BigDecimal discountPrice;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+        Long productId,
+        String name,
+        String description,
+        BigDecimal price,
+        Long categoryId,
+        String imageUrl,
+        BigDecimal discountPrice,
+        Timestamp createdAt,
+        Timestamp updatedAt) {
 }
