@@ -20,17 +20,23 @@ public class PaymentServiceImpl implements PaymentService {
     private final OrderService orderService;
 
     @Override
-    public Payment createPayment(Payment payment) {
+    public List<Payment> getAllPayments() {
+        return paymentRepository.findAll();
+    }
+
+    @Override
+    public Payment create(Payment payment) {
         Order order = orderService.getById(payment.getOrder().getOrderId());
 
         payment.setOrder(order);
+        payment.setAmount(order.getOrderTotalSum());
 
         return paymentRepository.save(payment);
     }
 
     @Override
     @Transactional
-    public Payment confirmPayment(Long paymentId, PaymentStatus status) {
+    public Payment confirm(Long paymentId, PaymentStatus status) {
         Payment payment = getById(paymentId);
 
         payment.setStatus(status);

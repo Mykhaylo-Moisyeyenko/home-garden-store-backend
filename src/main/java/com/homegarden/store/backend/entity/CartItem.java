@@ -30,5 +30,5 @@ public class CartItem {
     @ToString.Exclude
     private Product product;
 
-    private Integer quantity;
+    private int quantity;
 }

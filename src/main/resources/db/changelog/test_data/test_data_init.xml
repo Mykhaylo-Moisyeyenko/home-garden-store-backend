@@ -69,26 +69,26 @@
 
     <changeSet id="insert-orders" author="Sofia" runAlways="true">
         <sql>
-            INSERT INTO orders (user_id, delivery_address, contact_phone, delivery_method, status, created_at, updated_at)
-            VALUES (1, 'Berlin, Panorama str. 1A', '+49-123-456789', 'Courier', 'CREATED', NOW(), NOW()),
-                   (4, 'Hamburg, Platz d.Deutschen Einheit 4', '+49-555-888999', 'Pickup', 'DELIVERED', NOW(), NOW()),
-                   (2, 'Bremen', '+49-555-888999', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (3, 'Hannover', '+49-555-111111', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (1, 'Berlin', '+49-555-222222', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (2, 'Bremen', '+49-555-333333', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (4, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (1, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (2, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (1, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (2, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (4, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (2, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW()),
-                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW());
+            INSERT INTO orders (user_id, delivery_address, contact_phone, delivery_method, status, created_at, updated_at, order_total_sum)
+            VALUES (1, 'Berlin, Panorama str. 1A', '+49-123-456789', 'Courier', 'CREATED', NOW(), NOW(), 18.44),
+                   (4, 'Hamburg, Platz d.Deutschen Einheit 4', '+49-555-888999', 'Pickup', 'DELIVERED', NOW(), NOW(), 19.55),
+                   (2, 'Bremen', '+49-555-888999', 'Pickup', 'CANCELLED', NOW(), NOW(), 652.54),
+                   (3, 'Hannover', '+49-555-111111', 'Pickup', 'CANCELLED', NOW(), NOW(),532.52),
+                   (1, 'Berlin', '+49-555-222222', 'Pickup', 'CANCELLED', NOW(), NOW(), 15.55),
+                   (2, 'Bremen', '+49-555-333333', 'Pickup', 'CANCELLED', NOW(), NOW(), 54.35),
+                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW(), 78.22),
+                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW(), 45.22),
+                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW(), 12.12),
+                   (4, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW(), 45.12),
+                   (1, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW(), 33.33),
+                   (2, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW(), 44.44),
+                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW(), 55.55),
+                   (1, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW(), 66.66),
+                   (2, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW(), 77.77),
+                   (4, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW(), 88.88),
+                   (2, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW(), 99.99),
+                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW(), 100.11),
+                   (3, 'Hannover', '+49-555-444444', 'Pickup', 'CANCELLED', NOW(), NOW(), 454.54);
         </sql>
     </changeSet>
 
