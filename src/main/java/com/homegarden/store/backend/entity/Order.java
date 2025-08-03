@@ -4,6 +4,7 @@ import com.homegarden.store.backend.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,4 +50,6 @@ public class Order {
 
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    BigDecimal orderTotalSum;
 }

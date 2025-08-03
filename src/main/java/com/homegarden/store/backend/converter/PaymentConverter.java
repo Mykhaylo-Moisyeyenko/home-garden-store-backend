@@ -7,16 +7,15 @@ import com.homegarden.store.backend.entity.Payment;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PaymentConverter {
+public class PaymentConverter implements Converter<Payment, PaymentCreateDTO, PaymentResponseDTO> {
 
     public Payment toEntity(PaymentCreateDTO dto) {
         return Payment.builder()
                 .order(Order.builder().orderId(dto.orderId()).build())
-                .amount(dto.amount())
                 .build();
     }
 
-    public PaymentResponseDTO toResponseDTO(Payment payment) {
+    public PaymentResponseDTO toDto(Payment payment) {
         return new PaymentResponseDTO(
                 payment.getId(),
                 payment.getOrder().getOrderId(),

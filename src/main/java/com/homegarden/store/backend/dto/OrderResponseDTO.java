@@ -3,6 +3,7 @@ package com.homegarden.store.backend.dto;
 import com.homegarden.store.backend.enums.Status;
 import lombok.Builder;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,5 +26,7 @@ public record OrderResponseDTO(
 
         Status status,
 
-        LocalDateTime updatedAt) {
+        LocalDateTime updatedAt,
+
+        BigDecimal totalSum) {
 }

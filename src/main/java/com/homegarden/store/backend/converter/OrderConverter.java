@@ -32,6 +32,7 @@ public class OrderConverter {
                 .deliveryMethod(order.getDeliveryMethod())
                 .createdAt(order.getCreatedAt())
                 .updatedAt(order.getUpdatedAt())
+                .totalSum(order.getOrderTotalSum())
                 .build();
 
         return orderResponseDTO;

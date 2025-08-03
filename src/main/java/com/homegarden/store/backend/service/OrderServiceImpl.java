@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -82,6 +83,12 @@ public class OrderServiceImpl implements OrderService {
         if (orderItems.isEmpty()) {
             throw new OrderItemsListIsEmptyException("Cannot create order: Products must be in the cart");
         } else {
+            BigDecimal orderTotalSum = orderItems.stream()
+                    .map(orderItem -> orderItem.getPriceAtPurchase()
+                            .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            order.setOrderTotalSum(orderTotalSum);
             order.setItems(orderItems);
         }
         cartService.update(cart);

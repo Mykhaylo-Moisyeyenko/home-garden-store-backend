@@ -8,9 +8,11 @@ import java.util.List;
 
 public interface PaymentService {
 
-    Payment createPayment(Payment payment);
+    List<Payment> getAllPayments();
 
-    Payment confirmPayment(Long paymentId, PaymentStatus status);
+    Payment create(Payment payment);
+
+    Payment confirm(Long paymentId, PaymentStatus status);
 
     Payment getById(Long paymentId);
 
