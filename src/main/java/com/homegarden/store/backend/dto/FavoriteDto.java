@@ -3,7 +3,6 @@ package com.homegarden.store.backend.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-
 public record FavoriteDto(
 
         @NotNull(message = "UserId name can't be empty")

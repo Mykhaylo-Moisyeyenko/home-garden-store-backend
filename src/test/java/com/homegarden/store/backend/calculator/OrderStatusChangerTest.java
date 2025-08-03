@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import static com.homegarden.store.backend.utils.OrderStatusChanger.getNext;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class OrderStatusCalculatorTest {
+class OrderStatusChangerTest {
 
     private Order order;
 

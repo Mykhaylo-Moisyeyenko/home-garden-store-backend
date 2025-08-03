@@ -26,4 +26,3 @@ public class PaymentConverter implements Converter<Payment, PaymentCreateDTO, Pa
         );
     }
 }
-

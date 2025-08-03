@@ -7,7 +7,7 @@
     <changeSet id="0" author="admin" runAlways="true">
         <sql>
             TRUNCATE TABLE users RESTART IDENTITY CASCADE;
-            TRUNCATE TABLE cart RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE carts RESTART IDENTITY CASCADE;
             TRUNCATE TABLE categories RESTART IDENTITY CASCADE;
             TRUNCATE TABLE products RESTART IDENTITY CASCADE;
             TRUNCATE TABLE favorites RESTART IDENTITY CASCADE;

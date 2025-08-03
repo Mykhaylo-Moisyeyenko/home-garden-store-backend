@@ -87,14 +87,14 @@ class ProductConverterTest {
         ProductDto result = productConverter.toDto(product);
 
         assertNotNull(result);
-        assertEquals(productDto.getProductId(), result.getProductId());
-        assertEquals(productDto.getName(), result.getName());
-        assertEquals(productDto.getDescription(), result.getDescription());
-        assertEquals(productDto.getPrice(), result.getPrice());
-        assertEquals(productDto.getCategoryId(), result.getCategoryId());
-        assertEquals(productDto.getImageUrl(), result.getImageUrl());
-        assertEquals(productDto.getDiscountPrice(), result.getDiscountPrice());
-        assertEquals(productDto.getCreatedAt(), result.getCreatedAt());
-        assertEquals(productDto.getUpdatedAt(), result.getUpdatedAt());
+        assertEquals(productDto.productId(), result.productId());
+        assertEquals(productDto.name(), result.name());
+        assertEquals(productDto.description(), result.description());
+        assertEquals(productDto.price(), result.price());
+        assertEquals(productDto.categoryId(), result.categoryId());
+        assertEquals(productDto.imageUrl(), result.imageUrl());
+        assertEquals(productDto.discountPrice(), result.discountPrice());
+        assertEquals(productDto.createdAt(), result.createdAt());
+        assertEquals(productDto.updatedAt(), result.updatedAt());
     }
 }

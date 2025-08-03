@@ -6,6 +6,7 @@
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
         <include file="db/changelog/changeSets/create.table.sql"/>
+        <include file="db/changelog/changeSets/2025-08-03-rename-cart-table.xml"/>
         <include file="db/changelog/changeSets/2025-08-03-add-order-totalsum.xml"/>
         <include file="db/changelog/test_data/truncate_tables.xml"/>
         <include file="db/changelog/test_data/test_data_init.xml"/>

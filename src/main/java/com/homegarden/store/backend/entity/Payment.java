@@ -1,5 +1,6 @@
 package com.homegarden.store.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.homegarden.store.backend.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,9 +10,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
 @Entity
 @Table(name = "payments")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -24,7 +25,9 @@ public class Payment {
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "order_id")
+    @JsonBackReference
+    @ToString.Exclude
     private Order order;
 
     private BigDecimal amount;

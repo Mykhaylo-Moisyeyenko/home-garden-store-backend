@@ -3,7 +3,6 @@ package com.homegarden.store.backend.utils;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
 
-
 public class OrderStatusChanger {
 
     public static Status getNext(Order order) {
