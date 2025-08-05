@@ -8,12 +8,12 @@
         <sql>
             INSERT INTO users (name, email, phone_number, password_hash, role)
             VALUES
-                ('User-1', 'user-1@example.com', '+11111111111', 'password1', 'ROLE_USER'),
-                ('User-2', 'user-2@example.com', '+11111111112', 'password2', 'ROLE_USER'),
-                ('User-3', 'user-3@example.com', '+11111111113', 'password3', 'ROLE_USER'),
-                ('User-4', 'user-4@example.com', '+11111111114', 'password4', 'ROLE_USER'),
-                ('User-5', 'user-5@example.com', '+11111111115', 'password5', 'ROLE_USER'),
-                ('Admin', 'admin@example.com', '+11111111116', 'password6', 'ROLE_ADMINISTRATOR');
+                ('User-1', 'user-1@example.com', '+11111111111', '$2a$10$iuX/bVrjbvKQJSZbzr8v/.K2F44ARWEEUvWxLvfEA/eCCgDS.oZvO', 'ROLE_USER'),
+                ('User-2', 'user-2@example.com', '+11111111112', '$2a$10$EoWXs3JUxCgmE2lpb.egCe5JSji/Qhf/3SQ4Qfh5xEjv5.r2im0Eu', 'ROLE_USER'),
+                ('User-3', 'user-3@example.com', '+11111111113', '$2a$10$6RepRNu.sjV3Hm.DiwS2yOOk7Ts3LW3dJX2yNSQpZC7tnFpEKr6fK', 'ROLE_USER'),
+                ('User-4', 'user-4@example.com', '+11111111114', '$2a$10$yRX.Y9neeapY0sXVys3rge4TQ8K2tgpaMLBcEGBdTjTh91Rj0h50a', 'ROLE_USER'),
+                ('User-5', 'user-5@example.com', '+11111111115', '$2a$10$961ZBtEaj6mWfoqWTehA4.xtVYLTS/PYObS3U5WKdFZCOdesRLbsS', 'ROLE_USER'),
+                ('Admin', 'admin@example.com', '+11111111116', '$2a$10$n7Q/3W7iJd7As2WfELf1bObxyQU.84LVfiNJnIXIXfy1GXHlRfbTC', 'ROLE_ADMINISTRATOR');
         </sql>
     </changeSet>
 
