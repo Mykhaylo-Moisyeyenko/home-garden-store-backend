@@ -18,38 +18,38 @@ public class OrderScheduler {
     private final OrderService orderService;
 
     @Async
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(cron="${scheduler.orders.interval-in-cron}")
     public void processCreatedOrders() {
         List<Order> createdOrders = orderService.getAllByStatusAndUpdatedAtBefore(Status.CREATED, LocalDateTime.now().minusMinutes(5));
         for (Order order : createdOrders) {
-            orderService.updateStatus(order);
+            orderService.updateStatus(order, Status.CANCELLED);
         }
     }
 
     @Async
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(cron="${scheduler.orders.interval-in-cron}")
     public void processAwaitingPayment() {
         List<Order> createdOrders = orderService.getAllByStatusAndUpdatedAtBefore(Status.AWAITING_PAYMENT, LocalDateTime.now().minusMinutes(5));
         for (Order order : createdOrders) {
-            orderService.updateStatus(order);
+            orderService.updateStatus(order, Status.CANCELLED);
         }
     }
 
     @Async
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(cron="${scheduler.orders.interval-in-cron}")
     public void processPaid() {
-        List<Order> createdOrders = orderService.getAllByStatusAndUpdatedAtAfter(Status.PAID, LocalDateTime.now().minusMinutes(3));
+        List<Order> createdOrders = orderService.getAllByStatusAndUpdatedAtBefore(Status.PAID, LocalDateTime.now().minusMinutes(3));
         for (Order order : createdOrders) {
-            orderService.updateStatus(order);
+            orderService.updateStatus(order, Status.SHIPPED);
         }
     }
 
     @Async
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(cron="${scheduler.orders.interval-in-cron}")
     public void processShipped() {
-        List<Order> createdOrders = orderService.getAllByStatusAndUpdatedAtAfter(Status.SHIPPED, LocalDateTime.now().minusMinutes(3));
+        List<Order> createdOrders = orderService.getAllByStatusAndUpdatedAtBefore(Status.SHIPPED, LocalDateTime.now().minusMinutes(3));
         for (Order order : createdOrders) {
-            orderService.updateStatus(order);
+            orderService.updateStatus(order, Status.DELIVERED);
         }
     }
 }

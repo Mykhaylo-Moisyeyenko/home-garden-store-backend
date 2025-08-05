@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.homegarden.store.backend.enums.Status.*;
-import static com.homegarden.store.backend.utils.OrderStatusChanger.getNext;
 
 @RequiredArgsConstructor
 @Service
@@ -108,9 +107,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateStatus(Order order) {
-        Status newStatus = getNext(order);
-        order.setStatus(newStatus);
+    public void updateStatus(Order order, Status status) {
+        order.setStatus(status);
         orderRepository.save(order);
     }
 
@@ -135,12 +133,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void cancel(Long id) {
         Order order = getById(id);
-        if (order.getStatus().equals(CREATED) || order.getStatus().equals(AWAITING_PAYMENT)) {
-            order.setStatus(CANCELLED);
-            orderRepository.save(order);
-        } else {
+        if (!order.getStatus().equals(CREATED) && !order.getStatus().equals(AWAITING_PAYMENT)) {
             throw new OrderUnableToCancelException("Order with id " + id + " can't be cancelled");
         }
+
+        updateStatus(order, CANCELLED);
     }
 
     @Override
