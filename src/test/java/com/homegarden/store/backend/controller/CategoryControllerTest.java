@@ -4,6 +4,7 @@ import com.homegarden.store.backend.converter.CategoryConverter;
 import com.homegarden.store.backend.dto.CategoryDto;
 import com.homegarden.store.backend.entity.Category;
 import com.homegarden.store.backend.service.CategoryService;
+import com.homegarden.store.backend.service.security.JwtFilter;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ class CategoryControllerTest {
 
     @MockitoBean
     private CategoryConverter categoryConverterTest;
+
+    @MockitoBean
+    private JwtFilter jwtFilter;
 
     Category category1 = new Category(1L, "tools", null);
 

@@ -13,6 +13,7 @@ import com.homegarden.store.backend.exception.CartItemNotFoundException;
 import com.homegarden.store.backend.exception.CartNotFoundException;
 import com.homegarden.store.backend.exception.ProductNotFoundException;
 import com.homegarden.store.backend.service.CartItemService;
+import com.homegarden.store.backend.service.security.JwtFilter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -43,6 +44,9 @@ class CartItemControllerTest {
 
     @MockitoBean
     private CartItemConverter cartItemConverter;
+
+    @MockitoBean
+    private JwtFilter jwtFilter;
 
     @Autowired
     private ObjectMapper objectMapper;
