@@ -2,7 +2,7 @@ package com.homegarden.store.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homegarden.store.backend.entity.User;
-import com.homegarden.store.backend.security.model.LoginRequestDto;
+import com.homegarden.store.backend.dto.security.LoginRequestDto;
 import com.homegarden.store.backend.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
