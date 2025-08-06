@@ -9,12 +9,20 @@ import java.sql.Timestamp;
 public record ProductDto(
 
         Long productId,
+
         String name,
+
         String description,
+
         BigDecimal price,
+
         Long categoryId,
+
         String imageUrl,
+
         BigDecimal discountPrice,
+
         Timestamp createdAt,
+
         Timestamp updatedAt) {
 }

@@ -11,8 +11,13 @@ public class CartConverter implements Converter<Cart, CreateCartRequestDTO, Cart
 
     @Override
     public Cart toEntity(CreateCartRequestDTO dto) {
-        User user = User.builder().userId(dto.userId()).build();
-        return Cart.builder().user(user).build();
+        User user = User.builder()
+                .userId(dto.userId())
+                .build();
+
+        return Cart.builder()
+                .user(user)
+                .build();
     }
 
     @Override

@@ -21,12 +21,14 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
+
     private final Converter<Cart, CreateCartRequestDTO, CartResponseDTO> cartConverter;
 
     @PostMapping
     public ResponseEntity<CartResponseDTO> create(@RequestBody @Valid CreateCartRequestDTO dto) {
         Cart cart = cartConverter.toEntity(dto);
         Cart created = cartService.create(cart);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(cartConverter.toDto(created));
     }
 
@@ -37,12 +39,14 @@ public class CartController {
 
     @GetMapping
     public List<CartResponseDTO> getAll() {
-        return cartService.getAll().stream().map(cartConverter::toDto).toList();
+        return cartService.getAll().stream()
+                .map(cartConverter::toDto)
+                .toList();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable @NotNull @Min(1) Long id) {
         cartService.delete(id);
+
         return ResponseEntity.noContent().build();
-    }
-}
+    }}
