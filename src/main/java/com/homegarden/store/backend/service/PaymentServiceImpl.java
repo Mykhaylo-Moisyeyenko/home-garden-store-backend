@@ -4,6 +4,7 @@ import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.entity.Payment;
 import com.homegarden.store.backend.enums.PaymentStatus;
 import com.homegarden.store.backend.enums.Status;
+import com.homegarden.store.backend.exception.OrderNotFoundException;
 import com.homegarden.store.backend.exception.PaymentNotFoundException;
 import com.homegarden.store.backend.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public Payment create(Payment payment) {
         Order order = orderService.getById(payment.getOrder().getOrderId());
+        if (!(order.getStatus().equals(Status.CREATED) || order.getStatus().equals(Status.AWAITING_PAYMENT))){
+            throw new OrderNotFoundException("Order not found");
+        }
 
         payment.setOrder(order);
         payment.setAmount(order.getOrderTotalSum());

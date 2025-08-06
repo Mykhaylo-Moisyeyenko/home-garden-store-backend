@@ -10,6 +10,7 @@ import com.homegarden.store.backend.exception.CartAlreadyExistsException;
 import com.homegarden.store.backend.exception.CartNotFoundException;
 import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.service.CartService;
+import com.homegarden.store.backend.service.security.JwtFilter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -39,6 +40,9 @@ class CartControllerTest {
 
     @MockitoBean
     CartConverter cartConverterTest;
+
+    @MockitoBean
+    private JwtFilter jwtFilter;
 
     @Autowired
     ObjectMapper objectMapper = new ObjectMapper();

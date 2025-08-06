@@ -8,6 +8,7 @@ import com.homegarden.store.backend.entity.Category;
 import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.exception.ProductNotFoundException;
 import com.homegarden.store.backend.service.ProductService;
+import com.homegarden.store.backend.service.security.JwtFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,9 @@ class ProductControllerTest {
 
     @MockitoBean
     private ProductConverter productConverter;
+
+    @MockitoBean
+    private JwtFilter jwtFilter;
 
     private CreateProductDto createProductDto;
     private Product productEntity;

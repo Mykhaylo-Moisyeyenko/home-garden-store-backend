@@ -7,6 +7,7 @@ import com.homegarden.store.backend.entity.Favorite;
 import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.service.FavoriteService;
+import com.homegarden.store.backend.service.security.JwtFilter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -35,6 +37,9 @@ class FavoriteControllerTest {
     private final FavoriteService favoriteService;
     private final Converter<Favorite, FavoriteDto, FavoriteDto> converter;
     private final ObjectMapper objectMapper;
+
+    @MockitoBean
+    private JwtFilter jwtFilter;
 
     @Autowired
     public FavoriteControllerTest(MockMvc mockMvc,

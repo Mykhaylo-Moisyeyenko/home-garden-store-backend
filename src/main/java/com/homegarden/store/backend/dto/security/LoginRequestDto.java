@@ -1,4 +1,4 @@
-package com.homegarden.store.backend.security.model;
+package com.homegarden.store.backend.dto.security;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
