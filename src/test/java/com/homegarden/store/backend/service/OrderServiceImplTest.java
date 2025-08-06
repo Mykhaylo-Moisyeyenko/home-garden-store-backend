@@ -1,7 +1,9 @@
 package com.homegarden.store.backend.service;
 
+import com.homegarden.store.backend.dto.CreateOrderItemRequestDTO;
+import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
 import com.homegarden.store.backend.dto.TopCancelledProductDTO;
-import com.homegarden.store.backend.entity.Order;
+import com.homegarden.store.backend.entity.*;
 import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.exception.OrderNotFoundException;
 import com.homegarden.store.backend.exception.OrderUnableToCancelException;
@@ -13,13 +15,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {
@@ -33,6 +36,9 @@ class OrderServiceImplTest {
     @Mock
     private OrderItemService orderItemService;
 
+    @Mock
+    private CartService cartService;
+
     @InjectMocks
     private OrderServiceImpl orderService;
 
@@ -42,13 +48,6 @@ class OrderServiceImplTest {
     void setUp() {
         order = Order.builder().orderId(1L).status(Status.CREATED).build();
     }
-
-//    @Test
-//    void testCreate() {
-//        when(orderRepository.save(order)).thenReturn(order);
-//        Order saved = orderService.create(order);
-//        assertThat(saved).isEqualTo(order);
-//    }
 
     @Test
     void testGetByIdFound() {
@@ -71,20 +70,21 @@ class OrderServiceImplTest {
         assertThat(result).containsExactly(order);
     }
 
-//    @Test
-//    void testUpdateStatusPresent() {
-//        when(orderStatusChanger.getNext(order)).thenReturn(Optional.of(Status.SHIPPED));
-//        orderService.updateStatus(order);
-//        assertThat(order.getStatus()).isEqualTo(Status.SHIPPED);
-//        verify(orderRepository).save(order);
-//    }
-//
-//    @Test
-//    void testUpdateStatusNotPresent() {
-//        when(orderStatusChanger.getNext(order)).thenReturn(Optional.empty());
-//        orderService.updateStatus(order);
-//        verify(orderRepository, never()).save(order);
-//    }
+    @Test
+    void testCancelOrderAllowed() {
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        orderService.cancel(1L);
+        assertThat(order.getStatus()).isEqualTo(Status.CANCELLED);
+        verify(orderRepository).save(order);
+    }
+
+    @Test
+    void testCancelOrderNotAllowed() {
+        order.setStatus(Status.SHIPPED);
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        assertThatThrownBy(() -> orderService.cancel(1L))
+                .isInstanceOf(OrderUnableToCancelException.class);
+    }
 
     @Test
     void testGetAllOrdersByUserId_UserExists() {
@@ -103,22 +103,6 @@ class OrderServiceImplTest {
     }
 
     @Test
-    void testCancelOrderAllowed() {
-        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-        orderService.cancel(1L);
-        assertThat(order.getStatus()).isEqualTo(Status.CANCELLED);
-        verify(orderRepository).save(order);
-    }
-
-    @Test
-    void testCancelOrderNotAllowed() {
-        order.setStatus(Status.SHIPPED);
-        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-        assertThatThrownBy(() -> orderService.cancel(1L))
-                .isInstanceOf(OrderUnableToCancelException.class);
-    }
-
-    @Test
     void testGetTopCancelledProducts() {
         Object[] data = new Object[]{1L, "Product Name", 5L};
         when(orderItemService.getTopCancelledProducts()).thenReturn(List.<Object[]>of(data));
@@ -133,4 +117,68 @@ class OrderServiceImplTest {
         boolean used = orderService.isProductUsedInOrders(1L);
         assertThat(used).isTrue();
     }
+
+    @Test
+    void testUpdateStatusFromAwaitingPaymentToCancelled() {
+        User user = User.builder().userId(1L).build();
+        Product product = Product.builder()
+                .productId(1L)
+                .price(new BigDecimal("100.00"))
+                .build();
+
+        OrderItem item = OrderItem.builder()
+                .product(product)
+                .quantity(2)
+                .build();
+
+        Order testOrder = Order.builder()
+                .orderId(10L)
+                .user(user)
+                .status(Status.AWAITING_PAYMENT)
+                .items(new ArrayList<>(List.of(item)))
+                .build();
+
+        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        orderService.updateStatus(testOrder);
+
+        assertThat(testOrder.getStatus()).isEqualTo(Status.CANCELLED);
+        verify(orderRepository).save(testOrder);
+    }
+
+    @Test
+    void testCreate() {
+        Product product = Product.builder()
+                .productId(1L)
+                .price(new BigDecimal("100.00"))
+                .build();
+
+        CartItem cartItem = CartItem.builder()
+                .product(product)
+                .quantity(2)
+                .build();
+
+        Cart cart = Cart.builder()
+                .user(User.builder().userId(1L).build())
+                .items(new ArrayList<>(List.of(cartItem)))
+                .build();
+
+        CreateOrderItemRequestDTO itemDTO = new CreateOrderItemRequestDTO(1L, 2);
+        CreateOrderRequestDTO requestDTO = new CreateOrderRequestDTO(
+                new ArrayList<>(List.of(itemDTO)),
+                "Test Address",
+                "Courier"
+        );
+
+        when(cartService.getByUserId(1L)).thenReturn(cart);
+        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Order created = orderService.create(requestDTO);
+
+        assertThat(created.getItems()).hasSize(1);
+        assertThat(created.getOrderTotalSum()).isEqualTo(new BigDecimal("200.00"));
+        assertThat(created.getDeliveryAddress()).isEqualTo("Test Address");
+        assertThat(created.getDeliveryMethod()).isEqualTo("Courier");
+    }
 }
+
