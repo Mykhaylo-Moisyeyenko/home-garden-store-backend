@@ -15,7 +15,7 @@ public interface OrderService {
 
     List<Order> getAll();
 
-    void updateStatus(Order order);
+    void updateStatus(Order order, Status status);
 
     void cancel(Long id);
 
