@@ -38,7 +38,7 @@ public class OrderScheduler {
     @Async
     @Scheduled(cron="${scheduler.orders.interval-in-cron}")
     public void processPaid() {
-        List<Order> createdOrders = orderService.getAllByStatusAndUpdatedAtBefore(Status.PAID, LocalDateTime.now().minusMinutes(3));
+        List<Order> createdOrders = orderService.getAllByStatusAndUpdatedAtAfter(Status.PAID, LocalDateTime.now().minusMinutes(3));
         for (Order order : createdOrders) {
             orderService.updateStatus(order, Status.SHIPPED);
         }
@@ -47,7 +47,7 @@ public class OrderScheduler {
     @Async
     @Scheduled(cron="${scheduler.orders.interval-in-cron}")
     public void processShipped() {
-        List<Order> createdOrders = orderService.getAllByStatusAndUpdatedAtBefore(Status.SHIPPED, LocalDateTime.now().minusMinutes(3));
+        List<Order> createdOrders = orderService.getAllByStatusAndUpdatedAtAfter(Status.SHIPPED, LocalDateTime.now().minusMinutes(3));
         for (Order order : createdOrders) {
             orderService.updateStatus(order, Status.DELIVERED);
         }
