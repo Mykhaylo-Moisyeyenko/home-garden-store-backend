@@ -6,6 +6,7 @@ import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.repository.FavoriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,7 +42,8 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
+    @Transactional
     public void removeFromFavorites(Favorite favorite) {
-        favoriteRepository.delete(favorite);
+        favoriteRepository.deleteByUserAndProduct(favorite.getUser(), favorite.getProduct());
     }
 }
