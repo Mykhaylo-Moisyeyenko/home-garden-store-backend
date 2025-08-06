@@ -23,6 +23,7 @@ import java.util.Optional;
 public class CartItemController {
 
     private final CartItemService cartItemService;
+
     private final Converter<CartItem, CreateCartItemRequestDTO, CartItemResponseDTO> converter;
 
     @PutMapping("/{id}")
@@ -31,6 +32,7 @@ public class CartItemController {
             @RequestBody @Valid UpdateCartItemRequestDTO dto) {
         cartItemService.getById(id);
         Optional<CartItem> updated = cartItemService.updateQuantity(id, dto.quantity());
+
         return updated.map(cartItem -> ResponseEntity.ok(converter.toDto(cartItem)))
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
