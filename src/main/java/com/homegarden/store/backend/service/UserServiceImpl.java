@@ -1,21 +1,22 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.exception.UserAlreadyExistsException;
-import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.dto.UpdateUserRequestDTO;
 import com.homegarden.store.backend.entity.User;
+import com.homegarden.store.backend.exception.UserAlreadyExistsException;
+import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final AccessCheckService accessCheckService;
 
     @Override
     public List<User> getAll() {
@@ -33,6 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(Long userId, UpdateUserRequestDTO updateDto) {
         User user = getById(userId);
+        accessCheckService.checkAccess(user);
         user.setName(updateDto.username());
         user.setPhoneNumber(updateDto.phoneNumber());
         return userRepository.save(user);
@@ -40,7 +42,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+        accessCheckService.checkAccess(user);
+        return user;
     }
 
     @Override
