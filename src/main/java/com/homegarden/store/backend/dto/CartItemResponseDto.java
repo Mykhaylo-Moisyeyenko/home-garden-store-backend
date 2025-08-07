@@ -1,6 +1,6 @@
 package com.homegarden.store.backend.dto;
 
-public record CartItemResponseDTO(
+public record CartItemResponseDto(
 
         Long id,
 

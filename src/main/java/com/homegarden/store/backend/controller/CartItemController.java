@@ -1,9 +1,9 @@
 package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.converter.Converter;
-import com.homegarden.store.backend.dto.CartItemResponseDTO;
-import com.homegarden.store.backend.dto.CreateCartItemRequestDTO;
-import com.homegarden.store.backend.dto.UpdateCartItemRequestDTO;
+import com.homegarden.store.backend.dto.CartItemResponseDto;
+import com.homegarden.store.backend.dto.CreateCartItemRequestDto;
+import com.homegarden.store.backend.dto.UpdateCartItemRequestDto;
 import com.homegarden.store.backend.entity.CartItem;
 import com.homegarden.store.backend.service.CartItemService;
 import jakarta.validation.Valid;
@@ -24,12 +24,12 @@ public class CartItemController {
 
     private final CartItemService cartItemService;
 
-    private final Converter<CartItem, CreateCartItemRequestDTO, CartItemResponseDTO> converter;
+    private final Converter<CartItem, CreateCartItemRequestDto, CartItemResponseDto> converter;
 
     @PutMapping("/{id}")
-    public ResponseEntity<CartItemResponseDTO> updateQuantity(
+    public ResponseEntity<CartItemResponseDto> updateQuantity(
             @PathVariable @NotNull @Min(1) Long id,
-            @RequestBody @Valid UpdateCartItemRequestDTO dto) {
+            @RequestBody @Valid UpdateCartItemRequestDto dto) {
         cartItemService.getById(id);
         Optional<CartItem> updated = cartItemService.updateQuantity(id, dto.quantity());
 
@@ -38,20 +38,20 @@ public class CartItemController {
     }
 
     @PostMapping
-    public ResponseEntity<CartItemResponseDTO> create(@RequestBody @Valid CreateCartItemRequestDTO dto) {
+    public ResponseEntity<CartItemResponseDto> create(@RequestBody @Valid CreateCartItemRequestDto dto) {
         CartItem entity = converter.toEntity(dto);
         CartItem created = cartItemService.create(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body(converter.toDto(created));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CartItemResponseDTO> getById(@PathVariable @NotNull @Min(1) Long id) {
+    public ResponseEntity<CartItemResponseDto> getById(@PathVariable @NotNull @Min(1) Long id) {
         return ResponseEntity.ok(converter.toDto(cartItemService.getById(id)));
     }
 
     @GetMapping
-    public ResponseEntity<List<CartItemResponseDTO>> getAll() {
-        List<CartItemResponseDTO> result = cartItemService.getAll().stream()
+    public ResponseEntity<List<CartItemResponseDto>> getAll() {
+        List<CartItemResponseDto> result = cartItemService.getAll().stream()
                 .map(converter::toDto)
                 .toList();
         return ResponseEntity.ok(result);

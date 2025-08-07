@@ -11,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+
 public class Favorite {
 
     @Id

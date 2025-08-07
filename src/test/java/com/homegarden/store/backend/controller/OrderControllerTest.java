@@ -2,10 +2,10 @@ package com.homegarden.store.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homegarden.store.backend.converter.OrderConverter;
-import com.homegarden.store.backend.dto.CreateOrderItemRequestDTO;
-import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
-import com.homegarden.store.backend.dto.OrderResponseDTO;
-import com.homegarden.store.backend.dto.TopCancelledProductDTO;
+import com.homegarden.store.backend.dto.CreateOrderItemRequestDto;
+import com.homegarden.store.backend.dto.CreateOrderRequestDto;
+import com.homegarden.store.backend.dto.OrderResponseDto;
+import com.homegarden.store.backend.dto.TopCancelledProductDto;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.service.OrderService;
@@ -47,7 +47,7 @@ class OrderControllerTest {
     private JwtFilter jwtFilter;
 
     private Order order;
-    private OrderResponseDTO responseDTO;
+    private OrderResponseDto responseDTO;
 
     @BeforeEach
     void setUp() {
@@ -56,7 +56,7 @@ class OrderControllerTest {
                 .status(Status.CREATED)
                 .build();
 
-        responseDTO = OrderResponseDTO.builder()
+        responseDTO = OrderResponseDto.builder()
                 .orderId(1L)
                 .status(Status.CREATED)
                 .build();
@@ -102,15 +102,15 @@ class OrderControllerTest {
 
     @Test
     void testCreateOrder() throws Exception {
-        CreateOrderItemRequestDTO item = new CreateOrderItemRequestDTO(1L, 2);
+        CreateOrderItemRequestDto item = new CreateOrderItemRequestDto(1L, 2);
 
-        CreateOrderRequestDTO requestDTO = new CreateOrderRequestDTO(
+        CreateOrderRequestDto requestDTO = new CreateOrderRequestDto(
                 List.of(item),
                 "Test Address",
                 "Courier");
 
 
-        when(orderService.create(any(CreateOrderRequestDTO.class))).thenReturn(order);
+        when(orderService.create(any(CreateOrderRequestDto.class))).thenReturn(order);
         when(converter.toDto(order)).thenReturn(responseDTO);
 
         mockMvc.perform(post("/v1/orders")
@@ -122,7 +122,7 @@ class OrderControllerTest {
 
     @Test
     void testGetTopCancelledProducts() throws Exception {
-        TopCancelledProductDTO dto = new TopCancelledProductDTO(10L, "Product Name", 5L);
+        TopCancelledProductDto dto = new TopCancelledProductDto(10L, "Product Name", 5L);
         when(orderService.getTopCancelledProducts()).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/orders/report/top-cancelled-products"))

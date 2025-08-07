@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.dto.OrderItemResponseDTO;
-import com.homegarden.store.backend.dto.OrderResponseDTO;
+import com.homegarden.store.backend.dto.OrderItemResponseDto;
+import com.homegarden.store.backend.dto.OrderResponseDto;
 import com.homegarden.store.backend.entity.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,11 +10,16 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+
 public class OrderConverter {
 
-    public OrderResponseDTO toDto(Order order) {
-        List<OrderItemResponseDTO> items = order.getItems().stream()
-                .map(orderItem -> OrderItemResponseDTO.builder()
+    public OrderResponseDto toDto(Order order) {
+
+        List<OrderItemResponseDto> items = order
+                .getItems()
+                .stream()
+                .map(orderItem -> OrderItemResponseDto
+                        .builder()
                         .orderId(order.getOrderId())
                         .productId(orderItem.getProduct().getProductId())
                         .quantity(orderItem.getQuantity())
@@ -22,7 +27,8 @@ public class OrderConverter {
                         .build())
                 .toList();
 
-        OrderResponseDTO orderResponseDTO = OrderResponseDTO.builder()
+        OrderResponseDto orderResponseDTO = OrderResponseDto
+                .builder()
                 .orderId(order.getOrderId())
                 .userId(order.getUser().getUserId())
                 .status(order.getStatus())

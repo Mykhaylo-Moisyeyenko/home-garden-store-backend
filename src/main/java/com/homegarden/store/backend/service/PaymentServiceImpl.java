@@ -10,11 +10,11 @@ import com.homegarden.store.backend.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
@@ -22,14 +22,18 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<Payment> getAllPayments() {
+
         return paymentRepository.findAll();
     }
 
     @Override
     @Transactional
     public Payment create(Payment payment) {
+
         Order order = orderService.getById(payment.getOrder().getOrderId());
+
         if (!(order.getStatus().equals(Status.CREATED) || order.getStatus().equals(Status.AWAITING_PAYMENT))){
+
             throw new OrderNotFoundException("Order not found");
         }
 
@@ -43,6 +47,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public Payment confirm(Long paymentId, PaymentStatus status) {
+
         Payment payment = getById(paymentId);
 
         payment.setStatus(status);
@@ -57,12 +62,14 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment getById(Long paymentId) {
+
         return paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new PaymentNotFoundException(paymentId));
     }
 
     @Override
     public List<Payment> getPaymentsByOrder(Order order){
+
         return paymentRepository.findByOrder(order);
     }
 }

@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.dto.CartItemResponseDTO;
-import com.homegarden.store.backend.dto.CreateCartItemRequestDTO;
+import com.homegarden.store.backend.dto.CartItemResponseDto;
+import com.homegarden.store.backend.dto.CreateCartItemRequestDto;
 import com.homegarden.store.backend.entity.Cart;
 import com.homegarden.store.backend.entity.CartItem;
 import com.homegarden.store.backend.entity.Product;
@@ -16,8 +16,8 @@ class CartItemConverterTest {
 
     private CartItemConverter converter = new CartItemConverter();
 
-    CreateCartItemRequestDTO dto = new CreateCartItemRequestDTO(1L, 1L, 10);
-    CartItemResponseDTO responseDTO = new CartItemResponseDTO(1L, 1L, 1L, "TestProduct", 10);
+    CreateCartItemRequestDto dto = new CreateCartItemRequestDto(1L, 1L, 10);
+    CartItemResponseDto responseDTO = new CartItemResponseDto(1L, 1L, 1L, "TestProduct", 10);
 
     Cart cart = new Cart(1L, new ArrayList<>(), new User());
     Product product = Product.builder().productId(1L).name("TestProduct").build();
@@ -35,7 +35,7 @@ class CartItemConverterTest {
 
     @Test
     void toDtoTest() {
-        CartItemResponseDTO actual = converter.toDto(cartItem);
+        CartItemResponseDto actual = converter.toDto(cartItem);
 
         assertEquals(responseDTO, actual);
         assertEquals(1L, actual.id());

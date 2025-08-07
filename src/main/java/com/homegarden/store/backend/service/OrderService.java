@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
-import com.homegarden.store.backend.dto.TopCancelledProductDTO;
+import com.homegarden.store.backend.dto.CreateOrderRequestDto;
+import com.homegarden.store.backend.dto.TopCancelledProductDto;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
 
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface OrderService {
-    Order create(CreateOrderRequestDTO createOrderRequestDTO);
+    Order create(CreateOrderRequestDto createOrderRequestDTO);
 
     Order getById(long id);
 
@@ -21,7 +21,7 @@ public interface OrderService {
 
     List<Order> getAllByUserId(Long userId);
 
-    List<TopCancelledProductDTO> getTopCancelledProducts();
+    List<TopCancelledProductDto> getTopCancelledProducts();
 
     boolean isProductUsedInOrders(Long productId);
 

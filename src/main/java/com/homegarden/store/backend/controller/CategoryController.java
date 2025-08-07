@@ -9,13 +9,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/categories")
+
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -26,14 +26,19 @@ public class CategoryController {
         Category entity = converter.toEntity(dto);
         Category category = categoryService.create(entity);
         CategoryDto response = converter.toDto(category);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAll() {
-        List<CategoryDto> response = categoryService.getAll().stream()
+        List<CategoryDto> response = categoryService
+
+                .getAll()
+                .stream()
                 .map(converter::toDto)
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(response);
     }
 
@@ -41,12 +46,14 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> getById(@PathVariable Long id) {
         Category category = categoryService.getById(id);
         CategoryDto response = converter.toDto(category);
+
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         categoryService.delete(id);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -56,6 +63,7 @@ public class CategoryController {
             @RequestBody @Valid CategoryDto dto) {
         Category updated = categoryService.update(id, dto.name());
         CategoryDto response = converter.toDto(updated);
+
         return ResponseEntity.ok(response);
     }
 }

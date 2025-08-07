@@ -2,9 +2,9 @@ package com.homegarden.store.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homegarden.store.backend.converter.Converter;
-import com.homegarden.store.backend.dto.CreateUserRequestDTO;
-import com.homegarden.store.backend.dto.UpdateUserRequestDTO;
-import com.homegarden.store.backend.dto.UserResponseDTO;
+import com.homegarden.store.backend.dto.CreateUserRequestDto;
+import com.homegarden.store.backend.dto.UpdateUserRequestDto;
+import com.homegarden.store.backend.dto.UserResponseDto;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.service.UserService;
 import com.homegarden.store.backend.service.security.JwtFilter;
@@ -37,7 +37,7 @@ class UserControllerTest {
     private UserService userService;
 
     @MockBean
-    private Converter<User, CreateUserRequestDTO, UserResponseDTO> converter;
+    private Converter<User, CreateUserRequestDto, UserResponseDto> converter;
 
     @MockBean
     private PasswordEncoder passwordEncoder;
@@ -49,7 +49,7 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     private User user;
-    private UserResponseDTO userResponseDTO;
+    private UserResponseDto userResponseDTO;
 
     @BeforeEach
     void setUp() {
@@ -60,7 +60,7 @@ class UserControllerTest {
                 .phoneNumber("1234567890")
                 .build();
 
-        userResponseDTO = new UserResponseDTO(1L, "Test User", "test@example.com", "1234567890", null);
+        userResponseDTO = new UserResponseDto(1L, "Test User", "test@example.com", "1234567890", null);
     }
 
     @Test
@@ -75,7 +75,7 @@ class UserControllerTest {
 
     @Test
     void testCreate() throws Exception {
-        CreateUserRequestDTO dto = new CreateUserRequestDTO("Test User", "test@example.com", "1234567890", "password");
+        CreateUserRequestDto dto = new CreateUserRequestDto("Test User", "test@example.com", "1234567890", "password");
 
 
         Mockito.when(converter.toEntity(dto)).thenReturn(user);
@@ -93,7 +93,7 @@ class UserControllerTest {
 
     @Test
     void testUpdate() throws Exception {
-        UpdateUserRequestDTO updateDto = new UpdateUserRequestDTO("Updated", "9999999999");
+        UpdateUserRequestDto updateDto = new UpdateUserRequestDto("Updated", "9999999999");
         user.setName("Updated");
         user.setPhoneNumber("9999999999");
         Mockito.when(userService.update(eq(1L), eq(updateDto))).thenReturn(user);

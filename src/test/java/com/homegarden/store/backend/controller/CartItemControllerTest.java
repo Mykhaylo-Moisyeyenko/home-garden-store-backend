@@ -2,9 +2,9 @@ package com.homegarden.store.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homegarden.store.backend.converter.CartItemConverter;
-import com.homegarden.store.backend.dto.CartItemResponseDTO;
-import com.homegarden.store.backend.dto.CreateCartItemRequestDTO;
-import com.homegarden.store.backend.dto.UpdateCartItemRequestDTO;
+import com.homegarden.store.backend.dto.CartItemResponseDto;
+import com.homegarden.store.backend.dto.CreateCartItemRequestDto;
+import com.homegarden.store.backend.dto.UpdateCartItemRequestDto;
 import com.homegarden.store.backend.entity.Cart;
 import com.homegarden.store.backend.entity.CartItem;
 import com.homegarden.store.backend.entity.Product;
@@ -51,7 +51,7 @@ class CartItemControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    CreateCartItemRequestDTO dto = new CreateCartItemRequestDTO(1L, 1L, 10);
+    CreateCartItemRequestDto dto = new CreateCartItemRequestDto(1L, 1L, 10);
 
     CartItem cartItemConverted = CartItem.builder()
             .cart(Cart.builder().cartId(1L).build())
@@ -59,10 +59,10 @@ class CartItemControllerTest {
             .quantity(10)
             .build();
 
-    CartItemResponseDTO responseDTO = new CartItemResponseDTO(1L, 1L, 1L, "TestProduct", 10);
+    CartItemResponseDto responseDTO = new CartItemResponseDto(1L, 1L, 1L, "TestProduct", 10);
 
-    UpdateCartItemRequestDTO updateDto = new UpdateCartItemRequestDTO(20);
-    CartItemResponseDTO updatedResponseDto = new CartItemResponseDTO(1L, 1L, 1L, "TestProduct", 20);
+    UpdateCartItemRequestDto updateDto = new UpdateCartItemRequestDto(20);
+    CartItemResponseDto updatedResponseDto = new CartItemResponseDto(1L, 1L, 1L, "TestProduct", 20);
 
     Cart cart = new Cart(1L, new ArrayList<>(), User.builder().userId(1L).build());
     Product product = Product.builder().productId(1L).name("TestProduct").build();
