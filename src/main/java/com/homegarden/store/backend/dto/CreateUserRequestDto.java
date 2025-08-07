@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record CreateUserRequestDTO(
+public record CreateUserRequestDto(
 
         @NotBlank(message = "Username can't be empty")
         String username,

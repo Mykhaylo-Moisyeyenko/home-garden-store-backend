@@ -1,19 +1,19 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.exception.ProductNotFoundException;
 import com.homegarden.store.backend.entity.Product;
+import com.homegarden.store.backend.exception.ProductNotFoundException;
 import com.homegarden.store.backend.exception.ProductUsedInOrdersException;
 import com.homegarden.store.backend.repository.ProductRepository;
 import com.homegarden.store.backend.utils.ProductFilterSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -21,6 +21,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(Product product) {
+
         return productRepository.save(product);
     }
 
@@ -30,15 +31,19 @@ public class ProductServiceImpl implements ProductService {
             BigDecimal minPrice,
             BigDecimal maxPrice,
             Boolean discount,
-            String sort
-    ) {
+            String sort) {
         Specification<Product> specification = ProductFilterSpecification.filter(
-                categoryId, minPrice, maxPrice, discount, sort);
+                categoryId,
+                minPrice,
+                maxPrice,
+                discount,
+                sort);
         return productRepository.findAll(specification);
     }
 
     @Override
     public Product getById(Long id) {
+
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
     }
@@ -46,6 +51,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(Long id) {
         getById(id);
+
         if (orderService.isProductUsedInOrders(id)) {
             throw new ProductUsedInOrdersException("Unable to delete product with id: " + id + " because it is used in Orders");
         }
@@ -75,6 +81,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean existsById(Long id) {
+
         return productRepository.existsById(id);
     }
 }

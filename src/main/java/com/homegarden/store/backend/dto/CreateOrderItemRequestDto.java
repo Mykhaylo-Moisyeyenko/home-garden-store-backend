@@ -3,7 +3,7 @@ package com.homegarden.store.backend.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public record CreateOrderItemRequestDTO (
+public record CreateOrderItemRequestDto(
 
     @NotNull(message = "productId can't be empty")
     @Positive(message = "productId must be more than 0")

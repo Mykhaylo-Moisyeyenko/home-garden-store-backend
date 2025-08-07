@@ -3,7 +3,7 @@ package com.homegarden.store.backend.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-public record UpdateCartItemRequestDTO(
+public record UpdateCartItemRequestDto(
 
         @NotNull
         @Min(1)

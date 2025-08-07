@@ -1,8 +1,8 @@
 package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.converter.Converter;
-import com.homegarden.store.backend.dto.CartResponseDTO;
-import com.homegarden.store.backend.dto.CreateCartRequestDTO;
+import com.homegarden.store.backend.dto.CartResponseDto;
+import com.homegarden.store.backend.dto.CreateCartRequestDto;
 import com.homegarden.store.backend.entity.Cart;
 import com.homegarden.store.backend.service.CartService;
 import jakarta.validation.Valid;
@@ -22,10 +22,10 @@ public class CartController {
 
     private final CartService cartService;
 
-    private final Converter<Cart, CreateCartRequestDTO, CartResponseDTO> cartConverter;
+    private final Converter<Cart, CreateCartRequestDto, CartResponseDto> cartConverter;
 
     @PostMapping
-    public ResponseEntity<CartResponseDTO> create(@RequestBody @Valid CreateCartRequestDTO dto) {
+    public ResponseEntity<CartResponseDto> create(@RequestBody @Valid CreateCartRequestDto dto) {
         Cart cart = cartConverter.toEntity(dto);
         Cart created = cartService.create(cart);
 
@@ -33,12 +33,12 @@ public class CartController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CartResponseDTO> getById(@PathVariable @NotNull @Min(1) Long id) {
+    public ResponseEntity<CartResponseDto> getById(@PathVariable @NotNull @Min(1) Long id) {
         return ResponseEntity.ok(cartConverter.toDto(cartService.getById(id)));
     }
 
     @GetMapping
-    public List<CartResponseDTO> getAll() {
+    public List<CartResponseDto> getAll() {
         return cartService.getAll().stream()
                 .map(cartConverter::toDto)
                 .toList();

@@ -9,5 +9,6 @@ public record CategoryDto(
 
         @NotBlank(message = "Category name can't be empty")
         @Size(max = 100, message = "Category name can't exceed 100 characters")
+
         String name){
 }

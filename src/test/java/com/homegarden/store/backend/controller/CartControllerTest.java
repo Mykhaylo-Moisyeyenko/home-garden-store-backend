@@ -2,8 +2,8 @@ package com.homegarden.store.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homegarden.store.backend.converter.CartConverter;
-import com.homegarden.store.backend.dto.CartResponseDTO;
-import com.homegarden.store.backend.dto.CreateCartRequestDTO;
+import com.homegarden.store.backend.dto.CartResponseDto;
+import com.homegarden.store.backend.dto.CreateCartRequestDto;
 import com.homegarden.store.backend.entity.Cart;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.exception.CartAlreadyExistsException;
@@ -47,13 +47,13 @@ class CartControllerTest {
     @Autowired
     ObjectMapper objectMapper = new ObjectMapper();
 
-    CreateCartRequestDTO createCartRequestDTO = new CreateCartRequestDTO(1L);
+    CreateCartRequestDto createCartRequestDTO = new CreateCartRequestDto(1L);
 
     User user = User.builder().userId(1L).build();
     Cart cartForCreate = Cart.builder().user(user).build();
 
     Cart cart = new Cart(1L, new ArrayList<>(), user);
-    CartResponseDTO cartResponseDTO = new CartResponseDTO(1L, 1L);
+    CartResponseDto cartResponseDTO = new CartResponseDto(1L, 1L);
 
     @Test
     void createTestWhenCartNotExist() throws Exception {

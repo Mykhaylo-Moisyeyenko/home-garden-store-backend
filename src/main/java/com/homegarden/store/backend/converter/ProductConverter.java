@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+
 public class ProductConverter implements Converter<Product, CreateProductDto, ProductDto> {
 
     private final CategoryService categoryService;
@@ -31,7 +32,8 @@ public class ProductConverter implements Converter<Product, CreateProductDto, Pr
     @Override
     public ProductDto toDto(Product product) {
 
-        return ProductDto.builder()
+        return ProductDto
+                .builder()
                 .productId(product.getProductId())
                 .name(product.getName())
                 .description(product.getDescription())

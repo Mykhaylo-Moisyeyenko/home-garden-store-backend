@@ -1,6 +1,6 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.dto.TopCancelledProductDTO;
+import com.homegarden.store.backend.dto.TopCancelledProductDto;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.exception.OrderNotFoundException;
@@ -122,7 +122,7 @@ class OrderServiceImplTest {
     void testGetTopCancelledProducts() {
         Object[] data = new Object[]{1L, "Product Name", 5L};
         when(orderItemService.getTopCancelledProducts()).thenReturn(List.<Object[]>of(data));
-        List<TopCancelledProductDTO> result = orderService.getTopCancelledProducts();
+        List<TopCancelledProductDto> result = orderService.getTopCancelledProducts();
         assertThat(result).hasSize(1);
         assertThat(result.get(0).productId()).isEqualTo(1L);
     }

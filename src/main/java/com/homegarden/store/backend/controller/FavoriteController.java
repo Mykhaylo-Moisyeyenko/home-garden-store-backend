@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/v1/favorites")
 @RequiredArgsConstructor
+
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
@@ -24,10 +25,13 @@ public class FavoriteController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<FavoriteDto>> getAll(@PathVariable @Min(1) Long userId) {
-        List<FavoriteDto> response = favoriteService.getAll(userId)
+        List<FavoriteDto> response = favoriteService
+
+                .getAll(userId)
                 .stream()
                 .map(converter::toDto)
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(response);
     }
 
@@ -35,6 +39,7 @@ public class FavoriteController {
     public ResponseEntity<Void> addToFavorites(@Valid @RequestBody FavoriteDto favoriteDto) {
         Favorite entity = converter.toEntity(favoriteDto);
         favoriteService.addToFavorites(entity);
+
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -42,6 +47,7 @@ public class FavoriteController {
     public ResponseEntity<Void> removeFromFavorites(@RequestBody @Valid FavoriteDto favoriteDto) {
         Favorite entity = converter.toEntity(favoriteDto);
         favoriteService.removeFromFavorites(entity);
+
         return ResponseEntity.noContent().build();
     }
 }

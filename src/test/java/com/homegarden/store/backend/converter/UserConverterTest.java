@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.dto.CreateUserRequestDTO;
-import com.homegarden.store.backend.dto.UserResponseDTO;
+import com.homegarden.store.backend.dto.CreateUserRequestDto;
+import com.homegarden.store.backend.dto.UserResponseDto;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.enums.Role;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ class UserConverterTest {
 
     private UserConverter converter = new UserConverter();
 
-    CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO(
+    CreateUserRequestDto createUserRequestDTO = new CreateUserRequestDto(
             "Misha",
             "misha@gmail.com",
             "+11111111111",
@@ -41,7 +41,7 @@ class UserConverterTest {
 
     @Test
     void toDtoTest() {
-        UserResponseDTO dtoResult = converter.toDto(user);
+        UserResponseDto dtoResult = converter.toDto(user);
 
         assertEquals(1L, dtoResult.userId());
         assertEquals("Misha", dtoResult.name());
