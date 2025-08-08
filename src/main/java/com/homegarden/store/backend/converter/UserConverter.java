@@ -11,8 +11,7 @@ public class UserConverter implements Converter<User, CreateUserRequestDto, User
     @Override
     public User toEntity(CreateUserRequestDto createUserRequestDto) {
 
-        return User
-                .builder()
+        return User.builder()
                 .name(createUserRequestDto.username())
                 .email(createUserRequestDto.email())
                 .phoneNumber(createUserRequestDto.phoneNumber())
@@ -23,6 +22,12 @@ public class UserConverter implements Converter<User, CreateUserRequestDto, User
     @Override
     public UserResponseDto toDto(User user) {
 
-        return new UserResponseDto(user.getUserId(), user.getName(), user.getEmail(), user.getPhoneNumber(), user.getRole());
+        return UserResponseDto.builder()
+                .userId(user.getUserId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .role(user.getRole())
+                .build();
     }
 }

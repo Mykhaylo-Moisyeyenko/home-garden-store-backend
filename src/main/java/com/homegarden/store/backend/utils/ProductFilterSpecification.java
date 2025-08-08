@@ -15,8 +15,8 @@ public class ProductFilterSpecification {
             BigDecimal minPrice,
             BigDecimal maxPrice,
             Boolean discount,
-            String sort
-    ) {
+            String sort) {
+
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 

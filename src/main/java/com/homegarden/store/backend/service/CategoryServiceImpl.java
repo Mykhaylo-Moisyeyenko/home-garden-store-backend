@@ -9,26 +9,22 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
     @Override
     public Category create(Category category) {
-
         return categoryRepository.save(category);
     }
 
     @Override
     public List<Category> getAll() {
-
         return categoryRepository.findAll();
     }
 
     @Override
     public Category getById(Long categoryId) {
-
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryNotFoundException("Category with id " + categoryId + " not found"));
     }
@@ -43,7 +39,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(Long id) {
-
         categoryRepository.delete(getById(id));
     }
 }

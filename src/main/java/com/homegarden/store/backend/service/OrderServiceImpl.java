@@ -23,7 +23,6 @@ import static com.homegarden.store.backend.enums.Status.*;
 
 @RequiredArgsConstructor
 @Service
-
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
@@ -106,21 +105,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getById(long id) {
-
         return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
     }
 
     @Override
     public List<Order> getAll() {
-
         return orderRepository.findAll();
     }
 
     @Override
-    public void updateStatus(
-            Order order,
-            Status status) {
-
+    public void updateStatus(Order order, Status status) {
         order.setStatus(status);
         orderRepository.save(order);
     }
@@ -128,7 +122,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getAllByUserId(Long userId) {
         if (!userService.existsById(userId)) {
-
             throw new OrderNotFoundException("User with id " + userId + " not found");
         }
 

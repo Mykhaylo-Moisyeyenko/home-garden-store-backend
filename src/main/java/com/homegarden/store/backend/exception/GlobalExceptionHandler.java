@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
-
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -20,14 +19,12 @@ public class GlobalExceptionHandler {
             CartNotFoundException.class,
             CartItemNotFoundException.class,
             PaymentNotFoundException.class})
-
     public String handleNotFoundException(Exception exception) {
         return exception.getMessage();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-
     public String handleInvalidArgumentException(MethodArgumentNotValidException exception) {
         String message = exception
                 .getBindingResult()
@@ -45,7 +42,6 @@ public class GlobalExceptionHandler {
             OrderUnableToCancelException.class,
             ProductUsedInOrdersException.class,
             CartAlreadyExistsException.class})
-
     public String handleConflict(Exception exception) {
 
         return exception.getMessage();
@@ -53,7 +49,6 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.CREATED)
     @ExceptionHandler(FavoriteAlreadyExistsException.class)
-
     public String handleConflict(FavoriteAlreadyExistsException ex) {
 
         return ex.getMessage();
@@ -61,7 +56,6 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(OrderItemsListIsEmptyException.class)
-
     public String handleOrderItemsListIsEmptyException(OrderItemsListIsEmptyException ex) {
 
         return ex.getMessage();

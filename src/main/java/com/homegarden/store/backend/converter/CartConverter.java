@@ -7,19 +7,15 @@ import com.homegarden.store.backend.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
-
 public class CartConverter implements Converter<Cart, CreateCartRequestDto, CartResponseDto> {
 
     @Override
     public Cart toEntity(CreateCartRequestDto dto) {
-
-        User user = User
-                .builder()
+        User user = User.builder()
                 .userId(dto.userId())
                 .build();
 
-        return Cart
-                .builder()
+        return Cart.builder()
                 .user(user)
                 .build();
     }

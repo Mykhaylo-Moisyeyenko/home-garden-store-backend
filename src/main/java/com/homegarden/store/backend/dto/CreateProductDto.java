@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class CreateProductDto {
 
     @NotBlank(message = "Product name can't be empty")

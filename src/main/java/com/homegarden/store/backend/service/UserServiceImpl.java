@@ -11,20 +11,17 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
     @Override
     public List<User> getAll() {
-
         return userRepository.findAll();
     }
 
     @Override
     public User create(User user) {
-
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new UserAlreadyExistsException("User with email " + user.getEmail() + " already exists");
         }
@@ -33,10 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(
-            Long userId,
-            UpdateUserRequestDto updateDto) {
-
+    public User update(Long userId, UpdateUserRequestDto updateDto) {
         User user = getById(userId);
         user.setName(updateDto.username());
         user.setPhoneNumber(updateDto.phoneNumber());
@@ -46,32 +40,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Long userId) {
-
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
     }
 
     @Override
     public void delete(Long id) {
-        User user = getById(id);
-        userRepository.delete(user);
+        userRepository.delete(getById(id));
     }
 
     @Override
     public boolean existsByEmail(String email) {
-
         return userRepository.existsByEmail(email);
     }
 
     @Override
     public boolean existsById(Long id) {
-
         return userRepository.existsById(id);
     }
 
     @Override
     public User getByEmail(String email) {
-
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
     }

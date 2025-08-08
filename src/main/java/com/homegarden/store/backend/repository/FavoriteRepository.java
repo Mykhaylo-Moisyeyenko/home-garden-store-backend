@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     List<Favorite> findAllByUser_UserId(Long userUserId);

@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/categories")
-
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -23,17 +22,14 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryDto> create(@RequestBody @Valid CategoryDto dto) {
-        Category entity = converter.toEntity(dto);
-        Category category = categoryService.create(entity);
-        CategoryDto response = converter.toDto(category);
+        Category category = categoryService.create(converter.toEntity(dto));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(converter.toDto(category));
     }
 
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAll() {
         List<CategoryDto> response = categoryService
-
                 .getAll()
                 .stream()
                 .map(converter::toDto)
@@ -44,10 +40,7 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDto> getById(@PathVariable Long id) {
-        Category category = categoryService.getById(id);
-        CategoryDto response = converter.toDto(category);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(converter.toDto(categoryService.getById(id)));
     }
 
     @DeleteMapping("/{id}")
@@ -62,8 +55,7 @@ public class CategoryController {
             @PathVariable("id") Long id,
             @RequestBody @Valid CategoryDto dto) {
         Category updated = categoryService.update(id, dto.name());
-        CategoryDto response = converter.toDto(updated);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(converter.toDto(updated));
     }
 }

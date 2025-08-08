@@ -19,5 +19,4 @@ public record CreateUserRequestDto(
         @NotBlank(message = "Password can't be empty")
         @Size(min = 8, message = "Password must be at least 8 characters long")
         String password) {
-
 }

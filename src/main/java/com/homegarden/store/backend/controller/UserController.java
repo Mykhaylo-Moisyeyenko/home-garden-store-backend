@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/users")
-
 public class UserController {
 
     private final UserService userService;
@@ -29,7 +28,6 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAll() {
         List<UserResponseDto> response = userService
-
                 .getAll()
                 .stream()
                 .map(converter::toDto)
@@ -40,33 +38,27 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> create(@RequestBody @Valid CreateUserRequestDto userRequestDTO) {
-
         User entity = converter.toEntity(userRequestDTO);
         entity.setPasswordHash(passwordEncoder.encode(userRequestDTO.password()));
-        User user = userService.create(entity);
-        UserResponseDto response = converter.toDto(user);
+        UserResponseDto response = converter.toDto(userService.create(entity));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserResponseDto> update
-
-            (@PathVariable @Min(1) Long userId,
-             @RequestBody @Valid UpdateUserRequestDto updateDto) {
+    public ResponseEntity<UserResponseDto> update(
+            @PathVariable @Min(1) Long userId,
+            @RequestBody @Valid UpdateUserRequestDto updateDto) {
         User updatedUser = userService.update(userId, updateDto);
-        UserResponseDto response = converter.toDto(updatedUser);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(converter.toDto(updatedUser));
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<UserResponseDto> getById(@PathVariable @Min(1) Long id) {
-
         User user = userService.getById(id);
-        UserResponseDto response = converter.toDto(user);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(converter.toDto(user));
     }
 
     @DeleteMapping("/{id}")

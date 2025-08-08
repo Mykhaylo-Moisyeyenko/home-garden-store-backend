@@ -6,5 +6,3 @@ public class PaymentNotFoundException extends RuntimeException {
     super("Payment with paymentId=" + paymentId + " not found");
   }
 }
-
-

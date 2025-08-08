@@ -20,22 +20,23 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-
     private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
         String authorizationHeader = request.getHeader("Authorization");
+
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
+
             return;
         }
 
         String jwt = authorizationHeader.substring("Bearer ".length());
         String username = null;
+
         try{
             username = jwtService.extractUsername(jwt);
         } catch (ExpiredJwtException expiredJwtException) {

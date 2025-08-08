@@ -44,6 +44,7 @@ public class JwtService {
 
     private SecretKey getJwtSecret() {
         byte[] decode = Decoders.BASE64.decode(jwtSecret);
+
         return Keys.hmacShaKeyFor(decode);
     }
 
@@ -61,10 +62,12 @@ public class JwtService {
 
     private <T> T extractClaim(String jwt, Function<Claims, T> claimsResolver) {
         Claims claims = extractClaim(jwt);
+
         return claimsResolver.apply(claims);
     }
 
     private Claims extractClaim(String jwt) {
+
         return Jwts.parser()
                 .setSigningKey(getJwtSecret())
                 .build()

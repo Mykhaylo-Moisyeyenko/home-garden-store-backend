@@ -8,7 +8,6 @@ import com.homegarden.store.backend.entity.Product;
 import org.springframework.stereotype.Component;
 
 @Component
-
 public class CartItemConverter implements Converter<CartItem, CreateCartItemRequestDto, CartItemResponseDto> {
 
     @Override
@@ -29,11 +28,12 @@ public class CartItemConverter implements Converter<CartItem, CreateCartItemRequ
     @Override
     public CartItemResponseDto toDto(CartItem item) {
 
-        return new CartItemResponseDto(
-                item.getCartItemId(),
-                item.getCart().getCartId(),
-                item.getProduct().getProductId(),
-                item.getProduct().getName(),
-                item.getQuantity());
+        return CartItemResponseDto.builder()
+                .id(item.getCartItemId())
+                .cartId(item.getCartItemId())
+                .productId(item.getProduct().getProductId())
+                .productName(item.getProduct().getName())
+                .quantity(item.getQuantity())
+                .build();
     }
 }

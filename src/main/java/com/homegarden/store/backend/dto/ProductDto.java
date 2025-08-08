@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Builder
-
 public record ProductDto(
 
         Long productId,
