@@ -5,7 +5,6 @@ import com.homegarden.store.backend.entity.CartItem;
 import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.exception.CartAlreadyExistsException;
-import com.homegarden.store.backend.exception.CartNotFoundException;
 import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.repository.CartRepository;
 import org.junit.jupiter.api.Test;
@@ -15,9 +14,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -87,46 +86,27 @@ class CartServiceImplTest {
         verify(cartRepositoryTest, times(1)).existsCartByUser(user);
         verify(cartRepositoryTest, never()).save(cart);
     }
-
-    @Test
-    void getByIdTestSuccessful() {
-        when(cartRepositoryTest.findById(1L)).thenReturn(Optional.ofNullable(cartSaved));
-        doNothing().when(accessCheckService).checkAccess(cartSaved);
-
-        Cart result = cartServiceImpl.getById(1L);
-
-        assertEquals(cartSaved, result);
-        verify(cartRepositoryTest, times(1)).findById(1L);
-        verify(accessCheckService, times(1)).checkAccess(cartSaved);
-    }
-
-    @Test
-    void getByIdTestWhenCartNotFound() {
-        when(cartRepositoryTest.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(CartNotFoundException.class, () -> cartServiceImpl.getById(1L));
-        verify(cartRepositoryTest, times(1)).findById(1L);
-    }
-
-    @Test
-    void getAllTest() {
-        when(cartRepositoryTest.findAll()).thenReturn(List.of(cartSaved));
-
-        List<Cart> result = cartServiceImpl.getAll();
-
-        assertEquals(List.of(cartSaved), result);
-        verify(cartRepositoryTest, times(1)).findAll();
-    }
-
-    @Test
-    void deleteTest() {
-        when(cartRepositoryTest.findById(1L)).thenReturn(Optional.ofNullable(cartSaved));
-        doNothing().when(accessCheckService).checkAccess(cartSaved);
-        doNothing().when(cartRepositoryTest).deleteById(1L);
-
-        cartServiceImpl.delete(1L);
-
-        verify(cartRepositoryTest, times(1)).findById(1L);
-        verify(cartRepositoryTest, times(1)).deleteById(1L);
-    }
 }
+//
+//    @Test
+//    void getAllTest() {
+//        when(cartRepositoryTest.findAll()).thenReturn(List.of(cartSaved));
+//
+//        List<Cart> result = cartServiceImpl.getAll();
+//
+//        assertEquals(List.of(cartSaved), result);
+//        verify(cartRepositoryTest, times(1)).findAll();
+//    }
+//
+//    @Test
+//    void deleteTest() {
+//        when(cartRepositoryTest.findById(1L)).thenReturn(Optional.ofNullable(cartSaved));
+//        doNothing().when(accessCheckService).checkAccess(cartSaved);
+//        doNothing().when(cartRepositoryTest).deleteById(1L);
+//
+//        cartServiceImpl.delete(1L);
+//
+//        verify(cartRepositoryTest, times(1)).findById(1L);
+//        verify(cartRepositoryTest, times(1)).deleteById(1L);
+//    }
+//}

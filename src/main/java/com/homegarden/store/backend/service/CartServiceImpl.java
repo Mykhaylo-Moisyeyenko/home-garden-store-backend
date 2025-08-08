@@ -4,7 +4,7 @@ import com.homegarden.store.backend.entity.Cart;
 import com.homegarden.store.backend.entity.CartItem;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.exception.CartAlreadyExistsException;
-import com.homegarden.store.backend.exception.CartNotFoundException;
+import com.homegarden.store.backend.exception.CartItemNotFoundException;
 import com.homegarden.store.backend.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,19 +25,11 @@ public class CartServiceImpl implements CartService {
     public Cart create(Cart cart) {
         User user = userService.getById(cart.getUser().getUserId());
         accessCheckService.checkAccess(user);
-        if(cartRepository.existsCartByUser(user)) {
+        if (cartRepository.existsCartByUser(user)) {
             throw new CartAlreadyExistsException("Cart already exists for this user");
         }
         cart.setUser(user);
         return cartRepository.save(cart);
-    }
-
-    @Override
-    public Cart getById(Long id) {
-        Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new CartNotFoundException("Cart not found"));
-        accessCheckService.checkAccess(cart);
-        return cart;
     }
 
     @Override
@@ -49,7 +41,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void delete(Long id) {
-        Cart cart = getById(id);
+        Cart cart = getCart();
         accessCheckService.checkAccess(cart);
         cartRepository.deleteById(id);
     }
@@ -61,7 +53,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart update(Cart cart) {
-        Cart updatedCart = getById(cart.getCartId());
+        Cart updatedCart = getCart();
         updatedCart.setItems(cart.getItems());
         return cartRepository.save(updatedCart);
     }
@@ -76,11 +68,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart updateCartItemQuantity(Long id, Integer quantity) {
         Cart cart = getCart();
-
-        CartItem item = cart.getItems().stream()
-                .filter((cartItem) -> cartItem.getCartItemId().equals(id))
-                .toList().getFirst();
-
+        CartItem item = findCartItem(id);
         item.setQuantity(quantity);
         if (quantity.equals(0)) {
             cart.getItems().remove(item);
@@ -90,11 +78,21 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart deleteCartItem(Long id) {
+        findCartItem(id);
         return updateCartItemQuantity(id, 0);
     }
 
     private Cart getCart() {
         User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         return cartRepository.getByUser(user);
+    }
+
+    private CartItem findCartItem(Long id) {
+        Cart cart = getCart();
+        List<CartItem> item = cart.getItems().stream().filter((cartItem) -> cartItem.getCartItemId().equals(id)).toList();
+        if (item.isEmpty()) {
+            throw new CartItemNotFoundException("Cart Item is not found");
+        }
+        return item.get(0);
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    Order create(CreateOrderRequestDto createOrderRequestDTO);
+    Order create(CreateOrderRequestDto createOrderRequestDto);
 
     Order getById(long id);
 

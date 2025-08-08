@@ -13,7 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CartConverterTest {
 
-    private CartConverter cartConverter = new CartConverter();
+    private CartItemConverter cartItemConverter = new CartItemConverter();
+    private CartConverter cartConverter = new CartConverter(cartItemConverter);
 
     CreateCartRequestDto createCartRequestDTO = new CreateCartRequestDto(1L);
 

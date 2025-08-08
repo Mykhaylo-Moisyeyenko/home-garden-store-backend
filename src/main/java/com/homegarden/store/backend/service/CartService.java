@@ -10,8 +10,6 @@ public interface CartService {
 
     Cart create(Cart cart);
 
-    Cart getById(Long id);
-
     List<CartItem> getAllCartItems();
 
     void delete(Long id);

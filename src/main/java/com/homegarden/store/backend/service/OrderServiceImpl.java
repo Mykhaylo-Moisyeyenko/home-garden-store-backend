@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order create(CreateOrderRequestDto createOrderRequestDTO) {
+    public Order create(CreateOrderRequestDto createOrderRequestDto) {
         User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         Cart cart = cartService.getByUser(user);
 

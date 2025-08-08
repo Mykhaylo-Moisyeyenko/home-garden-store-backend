@@ -1,9 +1,9 @@
 package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.converter.Converter;
-import com.homegarden.store.backend.dto.CartResponseDto;
-import com.homegarden.store.backend.dto.CreateCartRequestDto;
+import com.homegarden.store.backend.dto.*;
 import com.homegarden.store.backend.entity.Cart;
+import com.homegarden.store.backend.entity.CartItem;
 import com.homegarden.store.backend.service.CartService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -22,30 +22,43 @@ public class CartController {
 
     private final CartService cartService;
     private final Converter<Cart, CreateCartRequestDto, CartResponseDto> cartConverter;
+    private final Converter<CartItem, CreateCartItemRequestDto, CartItemResponseDto> cartItemConverter;
 
     @PostMapping
     public ResponseEntity<CartResponseDto> create(@RequestBody @Valid CreateCartRequestDto dto) {
         Cart created = cartService.create(cartConverter.toEntity(dto));
-
         return ResponseEntity.status(HttpStatus.CREATED).body(cartConverter.toDto(created));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CartResponseDto> getById(@PathVariable @NotNull @Min(1) Long id) {
-        return ResponseEntity.ok(cartConverter.toDto(cartService.getById(id)));
-    }
-
     @GetMapping
-    public List<CartResponseDto> getAll() {
-        return cartService.getAll()
+    public List<CartItemResponseDto> getAllCartItems() {
+        return cartService.getAllCartItems()
                 .stream()
-                .map(cartConverter::toDto)
+                .map(cartItemConverter::toDto)
                 .toList();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable @NotNull @Min(1) Long id) {
         cartService.delete(id);
-
         return ResponseEntity.noContent().build();
-    }}
+    }
+
+    @PostMapping("/item")
+    public ResponseEntity<CartResponseDto> addCartItem(@RequestBody @Valid CreateCartItemRequestDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(cartConverter.toDto(cartService.addCartItem(cartItemConverter.toEntity(dto))));
+    }
+
+    @PutMapping("/item")
+    public ResponseEntity<CartResponseDto> updateCartItemQuantity(@RequestBody @Valid UpdateCartItemRequestDto dto) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(cartConverter.toDto(cartService.updateCartItemQuantity(dto.cartItemId(), dto.quantity())));
+    }
+
+    @DeleteMapping("/item/{id}")
+    public ResponseEntity<Void> deleteCartItem(@PathVariable @NotNull @Min(1) Long id) {
+        cartService.deleteCartItem(id);
+        return ResponseEntity.noContent().build();
+    }
+}
