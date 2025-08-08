@@ -3,12 +3,12 @@ package com.homegarden.store.backend.repository;
 import com.homegarden.store.backend.entity.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
 import java.util.List;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     @Query(nativeQuery = true, value = """
+            
             SELECT
                 oi.product_id AS product_id,
                 p.name AS productName,
@@ -23,6 +23,7 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
                             ORDER BY COUNT(DISTINCT oi.order_id) DESC
                                     LIMIT 10
             """)
+
     List<Object[]> findTopCancelledProducts();
 
     boolean existsByProductProductId(Long productId);

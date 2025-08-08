@@ -1,9 +1,9 @@
 package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.converter.OrderConverter;
-import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
-import com.homegarden.store.backend.dto.OrderResponseDTO;
-import com.homegarden.store.backend.dto.TopCancelledProductDTO;
+import com.homegarden.store.backend.dto.CreateOrderRequestDto;
+import com.homegarden.store.backend.dto.OrderResponseDto;
+import com.homegarden.store.backend.dto.TopCancelledProductDto;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.service.OrderService;
 import jakarta.validation.Valid;
@@ -19,50 +19,63 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/orders")
+
 public class OrderController {
 
     private final OrderService orderService;
     private final OrderConverter converter;
 
     @PostMapping
-    public ResponseEntity<OrderResponseDTO> create(@RequestBody @NotNull @Valid CreateOrderRequestDTO orderRequestDTO) {
+    public ResponseEntity<OrderResponseDto> create(@RequestBody @NotNull @Valid CreateOrderRequestDto orderRequestDTO) {
+
         Order order = orderService.create(orderRequestDTO);
-        OrderResponseDTO response = converter.toDto(order);
+        OrderResponseDto response = converter.toDto(order);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponseDTO>> getAll() {
-        List<OrderResponseDTO> response = orderService.getAll().stream()
+    public ResponseEntity<List<OrderResponseDto>> getAll() {
+        List<OrderResponseDto> response = orderService
+
+                .getAll().stream()
                 .map(converter::toDto)
                 .toList();
+
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderResponseDTO> getById(@PathVariable @Valid @Min(1) Long orderId) {
+    public ResponseEntity<OrderResponseDto> getById(@PathVariable @Valid @Min(1) Long orderId) {
         Order order = orderService.getById(orderId);
-        OrderResponseDTO response = converter.toDto(order);
+        OrderResponseDto response = converter.toDto(order);
+
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/history/{userId}")
-    public ResponseEntity<List<OrderResponseDTO>> getAllByUserId(@PathVariable @Valid @Min(1) Long userId) {
-        List<OrderResponseDTO> result = orderService.getAllByUserId(userId).stream()
+    public ResponseEntity<List<OrderResponseDto>> getAllByUserId(@PathVariable @Valid @Min(1) Long userId) {
+        List<OrderResponseDto> result = orderService
+
+                .getAllByUserId(userId)
+                .stream()
                 .map(converter::toDto)
                 .toList();
+
         return ResponseEntity.ok(result);
     }
 
     @PatchMapping("/{orderId}/cancel")
     public ResponseEntity<Void> cancel(@PathVariable @Valid @Min(1) Long orderId) {
         orderService.cancel(orderId);
+
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/report/top-cancelled-products")
-    public ResponseEntity<List<TopCancelledProductDTO>> getTopCancelledProducts() {
+    public ResponseEntity<List<TopCancelledProductDto>> getTopCancelledProducts() {
         orderService.getTopCancelledProducts();
+
         return ResponseEntity.ok().body(orderService.getTopCancelledProducts());
     }
 }

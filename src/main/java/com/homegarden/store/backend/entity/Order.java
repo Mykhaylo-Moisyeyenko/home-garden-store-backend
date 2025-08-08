@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+
 public class Order {
 
     @Id
@@ -41,6 +41,7 @@ public class Order {
     private List<Payment> payment = new ArrayList<>();
 
     @CreationTimestamp
+
     private LocalDateTime createdAt;
 
     private String deliveryAddress;
@@ -52,7 +53,7 @@ public class Order {
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private Status status = Status.CREATED;
-    
+
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 

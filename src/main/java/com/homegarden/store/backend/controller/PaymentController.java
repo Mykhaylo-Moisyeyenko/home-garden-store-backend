@@ -1,8 +1,8 @@
 package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.converter.Converter;
-import com.homegarden.store.backend.dto.PaymentCreateDTO;
-import com.homegarden.store.backend.dto.PaymentResponseDTO;
+import com.homegarden.store.backend.dto.PaymentCreateDto;
+import com.homegarden.store.backend.dto.PaymentResponseDto;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.entity.Payment;
 import com.homegarden.store.backend.enums.PaymentStatus;
@@ -19,49 +19,65 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/payments")
 @RequiredArgsConstructor
+
 public class PaymentController {
 
     private final PaymentService paymentService;
-    private final Converter<Payment, PaymentCreateDTO, PaymentResponseDTO> converter;
+    private final Converter<Payment, PaymentCreateDto, PaymentResponseDto> converter;
     private final OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<List<PaymentResponseDTO>> getAllPayments() {
-        List<PaymentResponseDTO> result = paymentService.getAllPayments().stream()
+    public ResponseEntity<List<PaymentResponseDto>> getAllPayments() {
+        List<PaymentResponseDto> result = paymentService
+
+                .getAllPayments()
+                .stream()
                 .map(converter::toDto)
                 .toList();
+
         return ResponseEntity.ok().body(result);
     }
 
     @PostMapping
-    public ResponseEntity<PaymentResponseDTO> create(@RequestBody @Valid PaymentCreateDTO dto) {
+    public ResponseEntity<PaymentResponseDto> create(@RequestBody @Valid PaymentCreateDto dto) {
+
         Payment payment = converter.toEntity(dto);
         Payment savedPayment = paymentService.create(payment);
-        PaymentResponseDTO paymentResponseDTO = converter.toDto(savedPayment);
+        PaymentResponseDto paymentResponseDTO = converter.toDto(savedPayment);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(paymentResponseDTO);
     }
 
     @PostMapping("/{paymentId}/confirmation")
-    public ResponseEntity<PaymentResponseDTO> confirm(
+    public ResponseEntity<PaymentResponseDto> confirm(
             @PathVariable Long paymentId,
             @RequestParam(defaultValue = "SUCCESS") PaymentStatus status) {
+
         Payment payment = paymentService.confirm(paymentId, status);
-        PaymentResponseDTO paymentResponseDTO = converter.toDto(payment);
+        PaymentResponseDto paymentResponseDTO = converter.toDto(payment);
+
         return ResponseEntity.status(HttpStatus.OK).body(paymentResponseDTO);
     }
 
     @GetMapping("/{paymentId}")
-    public ResponseEntity<PaymentResponseDTO> getById(@PathVariable Long paymentId) {
+    public ResponseEntity<PaymentResponseDto> getById(@PathVariable Long paymentId) {
+
         Payment payment = paymentService.getById(paymentId);
+
         return ResponseEntity.status(HttpStatus.OK).body(converter.toDto(payment));
     }
 
     @GetMapping("/payments-by-order/{orderId}")
-    public ResponseEntity<List<PaymentResponseDTO>> getPaymentsByOrder(@PathVariable Long orderId) {
+    public ResponseEntity<List<PaymentResponseDto>> getPaymentsByOrder(@PathVariable Long orderId) {
+
         Order order = orderService.getById(orderId);
-        List<PaymentResponseDTO> paymentList = paymentService.getPaymentsByOrder(order).stream()
+        List<PaymentResponseDto> paymentList = paymentService
+
+                .getPaymentsByOrder(order)
+                .stream()
                 .map(converter::toDto)
                 .toList();
+
         return ResponseEntity.ok().body(paymentList);
     }
 }
