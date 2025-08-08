@@ -1,7 +1,9 @@
 package com.homegarden.store.backend.dto;
 
 import com.homegarden.store.backend.enums.Role;
+import lombok.Builder;
 
+@Builder
 public record UserResponseDto(
 
         Long userId,

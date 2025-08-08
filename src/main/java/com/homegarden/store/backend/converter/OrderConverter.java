@@ -10,11 +10,9 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-
 public class OrderConverter {
 
     public OrderResponseDto toDto(Order order) {
-
         List<OrderItemResponseDto> items = order
                 .getItems()
                 .stream()
@@ -27,8 +25,7 @@ public class OrderConverter {
                         .build())
                 .toList();
 
-        OrderResponseDto orderResponseDTO = OrderResponseDto
-                .builder()
+        return OrderResponseDto.builder()
                 .orderId(order.getOrderId())
                 .userId(order.getUser().getUserId())
                 .status(order.getStatus())
@@ -40,7 +37,5 @@ public class OrderConverter {
                 .updatedAt(order.getUpdatedAt())
                 .totalSum(order.getOrderTotalSum())
                 .build();
-
-        return orderResponseDTO;
     }
 }

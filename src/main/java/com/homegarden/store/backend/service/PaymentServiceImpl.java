@@ -14,7 +14,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
@@ -34,7 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         accessCheckService.checkAccess(order);
       
-        if (!(order.getStatus().equals(Status.CREATED))){
+        if (!order.getStatus().equals(Status.CREATED)){
                 throw new OrderNotFoundException("Unable create payment for order");
         }
 
@@ -49,7 +48,6 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public Payment confirm(Long paymentId, PaymentStatus status) {
         Payment payment = getById(paymentId);
-
         payment.setStatus(status);
 
         if (status == PaymentStatus.SUCCESS) {
@@ -64,6 +62,7 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment getById(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new PaymentNotFoundException(paymentId));
+      
         accessCheckService.checkAccess(payment);
       
         return payment;

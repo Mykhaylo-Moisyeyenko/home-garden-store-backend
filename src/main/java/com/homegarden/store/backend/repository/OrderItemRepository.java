@@ -3,12 +3,14 @@ package com.homegarden.store.backend.repository;
 import com.homegarden.store.backend.entity.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
+@Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
-    @Query(nativeQuery = true, value = """
-            
+    @Query(nativeQuery = true, value = """            
             SELECT
                 oi.product_id AS product_id,
                 p.name AS productName,

@@ -11,7 +11,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-
 public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
@@ -20,7 +19,6 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public List<Favorite> getAll(Long userId) {
-
         if (!userService.existsById(userId)) {
             throw new UserNotFoundException("User with id " + userId + " doesn't exists");
         }
@@ -30,14 +28,12 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public void addToFavorites(Favorite favorite) {
-
         if (!userService.existsById(favorite.getUser().getUserId())) {
             throw new UserNotFoundException("User not found");
         }
         if (!productService.existsById(favorite.getProduct().getProductId())) {
             throw new ProductNotFoundException("Product not found");
         }
-
         if (!favoriteRepository
                 .existsByUser_AndProduct(favorite.getUser(), favorite.getProduct())) {
             favoriteRepository.save(favorite);
@@ -46,9 +42,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     @Transactional
-
     public void removeFromFavorites(Favorite favorite) {
-
         favoriteRepository.deleteByUserAndProduct(
                 favorite.getUser(),
                 favorite.getProduct());

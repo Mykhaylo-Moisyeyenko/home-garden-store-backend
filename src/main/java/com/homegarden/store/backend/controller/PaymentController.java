@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/payments")
 @RequiredArgsConstructor
-
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -29,7 +28,6 @@ public class PaymentController {
     @GetMapping
     public ResponseEntity<List<PaymentResponseDto>> getAllPayments() {
         List<PaymentResponseDto> result = paymentService
-
                 .getAllPayments()
                 .stream()
                 .map(converter::toDto)
@@ -40,9 +38,7 @@ public class PaymentController {
 
     @PostMapping
     public ResponseEntity<PaymentResponseDto> create(@RequestBody @Valid PaymentCreateDto dto) {
-
-        Payment payment = converter.toEntity(dto);
-        Payment savedPayment = paymentService.create(payment);
+        Payment savedPayment = paymentService.create(converter.toEntity(dto));
         PaymentResponseDto paymentResponseDTO = converter.toDto(savedPayment);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(paymentResponseDTO);
@@ -69,10 +65,8 @@ public class PaymentController {
 
     @GetMapping("/payments-by-order/{orderId}")
     public ResponseEntity<List<PaymentResponseDto>> getPaymentsByOrder(@PathVariable Long orderId) {
-
         Order order = orderService.getById(orderId);
         List<PaymentResponseDto> paymentList = paymentService
-
                 .getPaymentsByOrder(order)
                 .stream()
                 .map(converter::toDto)

@@ -12,7 +12,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-
 public class OrderScheduler {
 
     private final OrderService orderService;
@@ -20,7 +19,6 @@ public class OrderScheduler {
     @Async
     @Scheduled(cron = "${scheduler.orders.interval-in-cron}")
     public void processCreatedOrders() {
-
         List<Order> createdOrders = orderService
                 .getAllByStatusAndUpdatedAtBefore(
                         Status.CREATED,
@@ -34,7 +32,6 @@ public class OrderScheduler {
     @Async
     @Scheduled(cron = "${scheduler.orders.interval-in-cron}")
     public void processAwaitingPayment() {
-
         List<Order> createdOrders = orderService
                 .getAllByStatusAndUpdatedAtBefore(
                         Status.AWAITING_PAYMENT,
@@ -48,7 +45,6 @@ public class OrderScheduler {
     @Async
     @Scheduled(cron = "${scheduler.orders.interval-in-cron}")
     public void processPaid() {
-
         List<Order> createdOrders = orderService
                 .getAllByStatusAndUpdatedAtAfter(
                         Status.PAID,
@@ -62,7 +58,6 @@ public class OrderScheduler {
     @Async
     @Scheduled(cron = "${scheduler.orders.interval-in-cron}")
     public void processShipped() {
-
         List<Order> createdOrders = orderService
                 .getAllByStatusAndUpdatedAtAfter(
                         Status.SHIPPED,

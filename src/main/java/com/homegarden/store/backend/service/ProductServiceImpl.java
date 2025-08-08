@@ -13,7 +13,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -21,7 +20,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(Product product) {
-
         return productRepository.save(product);
     }
 
@@ -32,18 +30,19 @@ public class ProductServiceImpl implements ProductService {
             BigDecimal maxPrice,
             Boolean discount,
             String sort) {
+
         Specification<Product> specification = ProductFilterSpecification.filter(
                 categoryId,
                 minPrice,
                 maxPrice,
                 discount,
                 sort);
+
         return productRepository.findAll(specification);
     }
 
     @Override
     public Product getById(Long id) {
-
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
     }
@@ -51,7 +50,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(Long id) {
         getById(id);
-
         if (orderService.isProductUsedInOrders(id)) {
             throw new ProductUsedInOrdersException("Unable to delete product with id: " + id + " because it is used in Orders");
         }
@@ -60,10 +58,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product update(Product product) {
-        Long id = product.getProductId();
-
-        Product existing = getById(id);
-
+        Product existing = getById(product.getProductId());
         existing.setName(product.getName());
         existing.setDescription(product.getDescription());
         existing.setPrice(product.getPrice());
@@ -81,7 +76,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean existsById(Long id) {
-
         return productRepository.existsById(id);
     }
 }

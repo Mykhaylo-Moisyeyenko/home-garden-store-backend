@@ -11,7 +11,6 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -33,10 +32,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(
-            Long userId,
-            UpdateUserRequestDto updateDto) {
-
+    public User update(Long userId, UpdateUserRequestDto updateDto) {
         User user = getById(userId);
         accessCheckService.checkAccess(user);
         user.setName(updateDto.username());
@@ -49,6 +45,7 @@ public class UserServiceImpl implements UserService {
     public User getById(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+      
         accessCheckService.checkAccess(user);
         
       return user;
@@ -56,8 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long id) {
-        User user = getById(id);
-        userRepository.delete(user);
+        userRepository.delete(getById(id));
     }
 
     @Override

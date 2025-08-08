@@ -6,7 +6,5 @@ public interface OrderItemService {
 
     List<Object[]> getTopCancelledProducts();
 
-    boolean isProductUsedInOrders(
-
-            Long productId);
+    boolean isProductUsedInOrders(Long productId);
 }

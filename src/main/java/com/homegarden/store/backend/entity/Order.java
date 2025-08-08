@@ -17,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-
 public class Order {
 
     @Id
@@ -41,7 +40,6 @@ public class Order {
     private List<Payment> payment = new ArrayList<>();
 
     @CreationTimestamp
-
     private LocalDateTime createdAt;
 
     private String deliveryAddress;

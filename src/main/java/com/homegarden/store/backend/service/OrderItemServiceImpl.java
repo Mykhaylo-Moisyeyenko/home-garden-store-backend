@@ -7,18 +7,15 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-
 public class OrderItemServiceImpl implements OrderItemService {
 
     private final OrderItemRepository orderItemRepository;
 
     public List<Object[]> getTopCancelledProducts() {
-
         return orderItemRepository.findTopCancelledProducts();
     }
 
     public boolean isProductUsedInOrders(Long productId) {
-
         return orderItemRepository.existsByProductProductId(productId);
     }
 }

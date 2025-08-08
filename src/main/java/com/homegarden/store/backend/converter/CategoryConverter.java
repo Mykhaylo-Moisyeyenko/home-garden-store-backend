@@ -5,7 +5,6 @@ import com.homegarden.store.backend.entity.Category;
 import org.springframework.stereotype.Component;
 
 @Component
-
 public class CategoryConverter implements Converter<Category, CategoryDto, CategoryDto> {
 
     public CategoryDto toDto(Category category) {
