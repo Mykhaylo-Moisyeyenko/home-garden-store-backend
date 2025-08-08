@@ -1,4 +1,12 @@
 package com.homegarden.store.backend.dto;
 
-public record CartResponseDto(Long cartId, Long userId) {
+import java.util.List;
+
+public record CartResponseDto(
+
+        Long cartId,
+
+        Long userId,
+
+        List<CartItemResponseDto> items) {
 }

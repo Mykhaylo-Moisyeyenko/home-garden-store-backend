@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,10 +37,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order create(CreateOrderRequestDto createOrderRequestDto) {
-
         User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-
-        Cart cart = cartService.getByUserId(user.getUserId());
+        Cart cart = cartService.getByUser(user);
 
         Order order = Order.builder()
                 .user(user)
@@ -51,14 +50,12 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> orderItems = new ArrayList<>();
 
         Map<Long, CartItem> cartItems = new HashMap<>();
-
         for (CartItem cartItem : cart.getItems()) {
             cartItems.put(cartItem.getProduct().getProductId(), cartItem);
         }
 
         for (CreateOrderItemRequestDto dto : createOrderRequestDto.orderItems()) {
             Long productId = dto.productId();
-
             if (cartItems.containsKey(productId)) {
 
                 CartItem cartItem = cartItems.get(dto.productId());
@@ -68,14 +65,12 @@ public class OrderServiceImpl implements OrderService {
 
                 if (cartItem.getQuantity() - dto.quantity() > 0) {
                     cartItem.setQuantity(cartItem.getQuantity() - dto.quantity());
-
                 } else {
                     quantity = cartItem.getQuantity();
                     cart.getItems().remove(cartItem);
                 }
 
-                OrderItem orderItem = OrderItem
-                        .builder()
+                OrderItem orderItem = OrderItem.builder()
                         .product(product)
                         .quantity(quantity)
                         .priceAtPurchase(product.getDiscountPrice() != null ? product.getDiscountPrice() : product.getPrice())
@@ -88,18 +83,16 @@ public class OrderServiceImpl implements OrderService {
 
         if (orderItems.isEmpty()) {
             throw new OrderItemsListIsEmptyException("Cannot create order: Products must be in the cart");
-
-        } else {
-
-            BigDecimal orderTotalSum = orderItems
-                    .stream()
-                    .map(orderItem -> orderItem.getPriceAtPurchase()
-                    .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            order.setOrderTotalSum(orderTotalSum);
-            order.setItems(orderItems);
         }
+
+        BigDecimal orderTotalSum = orderItems.stream()
+                .map(orderItem -> orderItem.getPriceAtPurchase()
+                .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        order.setOrderTotalSum(orderTotalSum);
+        order.setItems(orderItems);
+
         cartService.update(cart);
 
         return orderRepository.save(order);
@@ -131,7 +124,7 @@ public class OrderServiceImpl implements OrderService {
         if (!userService.existsById(userId)) {
             throw new OrderNotFoundException("User with id " + userId + " not found");
         }
-      
+
         User user = userService.getById(userId);
         accessCheckService.checkAccess(user);
 
@@ -163,7 +156,6 @@ public class OrderServiceImpl implements OrderService {
         Order order = getById(id);
 
         if (!order.getStatus().equals(CREATED) && !order.getStatus().equals(AWAITING_PAYMENT)) {
-
             throw new OrderUnableToCancelException("Order with id " + id + " can't be cancelled");
         }
 
