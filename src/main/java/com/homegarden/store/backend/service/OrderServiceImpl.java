@@ -44,9 +44,9 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = Order.builder()
                 .user(user)
-                .deliveryAddress(createOrderRequestDTO.deliveryAddress())
+                .deliveryAddress(createOrderRequestDto.deliveryAddress())
                 .contactPhone("")
-                .deliveryMethod(createOrderRequestDTO.deliveryMethod())
+                .deliveryMethod(createOrderRequestDto.deliveryMethod())
                 .build();
 
         List<OrderItem> orderItems = new ArrayList<>();
