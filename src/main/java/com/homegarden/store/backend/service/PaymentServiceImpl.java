@@ -19,6 +19,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderService orderService;
 
+    private final AccessCheckService accessCheckService;
+
     @Override
     public List<Payment> getAllPayments() {
         return paymentRepository.findAll();
@@ -29,14 +31,16 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment create(Payment payment) {
         Order order = orderService.getById(payment.getOrder().getOrderId());
 
-        if (!(order.getStatus().equals(Status.CREATED) || order.getStatus().equals(Status.AWAITING_PAYMENT))){
-            throw new OrderNotFoundException("Order not found");
+        accessCheckService.checkAccess(order);
+      
+        if (!order.getStatus().equals(Status.CREATED)){
+                throw new OrderNotFoundException("Unable create payment for order");
         }
 
         payment.setOrder(order);
         payment.setAmount(order.getOrderTotalSum());
         order.setStatus(Status.AWAITING_PAYMENT);
-
+    
         return paymentRepository.save(payment);
     }
 
@@ -50,18 +54,24 @@ public class PaymentServiceImpl implements PaymentService {
             Order order = payment.getOrder();
             order.setStatus(Status.PAID);
         }
-
+      
         return paymentRepository.save(payment);
     }
 
     @Override
     public Payment getById(Long paymentId) {
-        return paymentRepository.findById(paymentId)
+        Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new PaymentNotFoundException(paymentId));
+      
+        accessCheckService.checkAccess(payment);
+      
+        return payment;
     }
 
     @Override
     public List<Payment> getPaymentsByOrder(Order order){
+        accessCheckService.checkAccess(order);
+
         return paymentRepository.findByOrder(order);
     }
 }

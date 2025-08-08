@@ -21,6 +21,9 @@ class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private AccessCheckService accessCheckService;
+
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -91,6 +94,7 @@ class UserServiceImplTest {
     void testUpdateUser() {
         UpdateUserRequestDto updateDto = new UpdateUserRequestDto("Updated Name", "9876543210");
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        doNothing().when(accessCheckService).checkAccess(user);
         when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
         User updated = userService.update(1L, updateDto);
