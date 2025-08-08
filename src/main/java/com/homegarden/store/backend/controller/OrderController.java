@@ -59,9 +59,7 @@ public class OrderController {
     @GetMapping("/history/{userId}")
     @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<List<OrderResponseDto>> getAllByUserId(@PathVariable @Valid @Min(1) Long userId) {
-        List<OrderResponseDto> result = orderService
-
-                .getAllByUserId(userId)
+        List<OrderResponseDto> result = orderService.getAllByUser(userId)
                 .stream()
                 .map(converter::toDto)
                 .toList();

@@ -61,9 +61,7 @@ public class UserController {
     @GetMapping("/id/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<UserResponseDto> getById(@PathVariable @Min(1) Long id) {
-        User user = userService.getById(id);
-
-        return ResponseEntity.ok(converter.toDto(user));
+        return ResponseEntity.ok(converter.toDto(userService.getById(id)));
     }
 
     @DeleteMapping("/{id}")

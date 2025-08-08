@@ -4,6 +4,7 @@ import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.entity.Payment;
 import com.homegarden.store.backend.enums.PaymentStatus;
 import com.homegarden.store.backend.enums.Status;
+import com.homegarden.store.backend.exception.DoublePaymentException;
 import com.homegarden.store.backend.exception.OrderNotFoundException;
 import com.homegarden.store.backend.exception.PaymentNotFoundException;
 import com.homegarden.store.backend.repository.PaymentRepository;
@@ -34,8 +35,14 @@ public class PaymentServiceImpl implements PaymentService {
 
         accessCheckService.checkAccess(order);
       
-        if (!order.getStatus().equals(Status.CREATED)){
+        if (!order.getStatus().equals(Status.CREATED)) {
                 throw new OrderNotFoundException("Unable create payment for order");
+        }
+        List<Payment> payments = order.getPayment();
+        for (Payment p : payments) {
+            if(p.getStatus().equals(PaymentStatus.PENDING))
+                throw new DoublePaymentException("Order id" + order.getOrderId()
+                        + " already has unpaid payment: id" + p.getId());
         }
 
         payment.setOrder(order);
@@ -51,9 +58,11 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = getById(paymentId);
         payment.setStatus(status);
 
+        Order order = payment.getOrder();
         if (status == PaymentStatus.SUCCESS) {
-            Order order = payment.getOrder();
             order.setStatus(Status.PAID);
+        } else {
+            order.setStatus(Status.CREATED);
         }
       
         return paymentRepository.save(payment);

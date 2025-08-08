@@ -114,22 +114,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testExistsByEmail() {
-        when(userRepository.existsByEmail("test@example.com")).thenReturn(true);
-
-        assertTrue(userService.existsByEmail("test@example.com"));
-        verify(userRepository).existsByEmail("test@example.com");
-    }
-
-    @Test
-    void testExistsById() {
-        when(userRepository.existsById(1L)).thenReturn(true);
-
-        assertTrue(userService.existsById(1L));
-        verify(userRepository).existsById(1L);
-    }
-
-    @Test
     void testGetByEmail_UserExists() {
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
 

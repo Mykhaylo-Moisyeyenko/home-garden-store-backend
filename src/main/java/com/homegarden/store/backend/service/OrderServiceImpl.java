@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = Order.builder()
                 .user(user)
                 .deliveryAddress(createOrderRequestDto.deliveryAddress())
-                .contactPhone("")
+                .contactPhone(user.getPhoneNumber())
                 .deliveryMethod(createOrderRequestDto.deliveryMethod())
                 .build();
 
@@ -88,18 +88,17 @@ public class OrderServiceImpl implements OrderService {
 
         if (orderItems.isEmpty()) {
             throw new OrderItemsListIsEmptyException("Cannot create order: Products must be in the cart");
-
-        } else {
-
-            BigDecimal orderTotalSum = orderItems
-                    .stream()
-                    .map(orderItem -> orderItem.getPriceAtPurchase()
-                    .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            order.setOrderTotalSum(orderTotalSum);
-            order.setItems(orderItems);
         }
+
+        BigDecimal orderTotalSum = orderItems
+                .stream()
+                .map(orderItem -> orderItem.getPriceAtPurchase()
+                .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        order.setOrderTotalSum(orderTotalSum);
+        order.setItems(orderItems);
+
         cartService.update(cart);
 
         return orderRepository.save(order);
@@ -127,15 +126,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllByUserId(Long userId) {
-        if (!userService.existsById(userId)) {
-            throw new OrderNotFoundException("User with id " + userId + " not found");
-        }
-      
+    public List<Order> getAllByUser(Long userId) {
         User user = userService.getById(userId);
         accessCheckService.checkAccess(user);
 
-        return orderRepository.findAllByUserUserId(userId);
+        return orderRepository.findAllByUser(user);
     }
 
     @Override
