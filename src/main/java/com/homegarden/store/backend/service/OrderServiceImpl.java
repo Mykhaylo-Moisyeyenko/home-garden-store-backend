@@ -11,6 +11,7 @@ import com.homegarden.store.backend.exception.OrderUnableToCancelException;
 import com.homegarden.store.backend.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -35,11 +36,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order create(CreateOrderRequestDTO createOrderRequestDTO) {
-
-        Cart cart = cartService.getByUserId(1L);
+        User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        Cart cart = cartService.getByUser(user);
 
         Order order = Order.builder()
-                .user(User.builder().userId(1L).build())
+                .user(user)
                 .deliveryAddress(createOrderRequestDTO.deliveryAddress())
                 .contactPhone("")
                 .deliveryMethod(createOrderRequestDTO.deliveryMethod())

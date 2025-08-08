@@ -1,5 +1,6 @@
 package com.homegarden.store.backend.converter;
 
+import com.homegarden.store.backend.dto.CartItemResponseDTO;
 import com.homegarden.store.backend.dto.CartResponseDTO;
 import com.homegarden.store.backend.dto.CreateCartRequestDTO;
 import com.homegarden.store.backend.entity.Cart;
@@ -22,6 +23,7 @@ public class CartConverter implements Converter<Cart, CreateCartRequestDTO, Cart
 
     @Override
     public CartResponseDTO toDto(Cart cart) {
-        return new CartResponseDTO(cart.getCartId(), cart.getUser().getUserId());
+        return new CartResponseDTO(cart.getCartId(), cart.getUser().getUserId(), cart.getItems().stream()
+                .map(()-> CartItemResponseDTO()));
     }
 }
