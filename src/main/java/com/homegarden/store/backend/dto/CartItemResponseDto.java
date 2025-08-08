@@ -1,6 +1,9 @@
 package com.homegarden.store.backend.dto;
 
-public record CartItemResponseDTO(
+import lombok.Builder;
+
+@Builder
+public record CartItemResponseDto(
 
         Long id,
 

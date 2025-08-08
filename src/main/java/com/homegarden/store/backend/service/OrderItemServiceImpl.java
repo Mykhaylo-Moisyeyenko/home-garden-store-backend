@@ -3,7 +3,6 @@ package com.homegarden.store.backend.service;
 import com.homegarden.store.backend.repository.OrderItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -16,7 +15,7 @@ public class OrderItemServiceImpl implements OrderItemService {
         return orderItemRepository.findTopCancelledProducts();
     }
 
-    public boolean isProductUsedInOrders(Long productId){
+    public boolean isProductUsedInOrders(Long productId) {
         return orderItemRepository.existsByProductProductId(productId);
     }
 }

@@ -1,14 +1,13 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.exception.ProductNotFoundException;
 import com.homegarden.store.backend.entity.Product;
+import com.homegarden.store.backend.exception.ProductNotFoundException;
 import com.homegarden.store.backend.exception.ProductUsedInOrdersException;
 import com.homegarden.store.backend.repository.ProductRepository;
 import com.homegarden.store.backend.utils.ProductFilterSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -30,10 +29,15 @@ public class ProductServiceImpl implements ProductService {
             BigDecimal minPrice,
             BigDecimal maxPrice,
             Boolean discount,
-            String sort
-    ) {
+            String sort) {
+
         Specification<Product> specification = ProductFilterSpecification.filter(
-                categoryId, minPrice, maxPrice, discount, sort);
+                categoryId,
+                minPrice,
+                maxPrice,
+                discount,
+                sort);
+
         return productRepository.findAll(specification);
     }
 
@@ -54,10 +58,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product update(Product product) {
-        Long id = product.getProductId();
-
-        Product existing = getById(id);
-
+        Product existing = getById(product.getProductId());
         existing.setName(product.getName());
         existing.setDescription(product.getDescription());
         existing.setPrice(product.getPrice());

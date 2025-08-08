@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -24,7 +23,9 @@ public class Product {
     private Long productId;
 
     private String name;
+
     private String description;
+
     private BigDecimal price;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,6 +35,7 @@ public class Product {
     private Category category;
 
     private String imageUrl;
+
     private BigDecimal discountPrice;
 
     @CreationTimestamp

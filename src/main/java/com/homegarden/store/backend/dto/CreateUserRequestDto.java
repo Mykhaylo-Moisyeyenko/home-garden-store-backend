@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record CreateUserRequestDTO(
+public record CreateUserRequestDto(
 
         @NotBlank(message = "Username can't be empty")
         String username,
@@ -19,5 +19,4 @@ public record CreateUserRequestDTO(
         @NotBlank(message = "Password can't be empty")
         @Size(min = 8, message = "Password must be at least 8 characters long")
         String password) {
-
 }

@@ -1,17 +1,17 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.dto.CartItemResponseDTO;
-import com.homegarden.store.backend.dto.CreateCartItemRequestDTO;
+import com.homegarden.store.backend.dto.CartItemResponseDto;
+import com.homegarden.store.backend.dto.CreateCartItemRequestDto;
 import com.homegarden.store.backend.entity.Cart;
 import com.homegarden.store.backend.entity.CartItem;
 import com.homegarden.store.backend.entity.Product;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CartItemConverter implements Converter<CartItem, CreateCartItemRequestDTO, CartItemResponseDTO> {
+public class CartItemConverter implements Converter<CartItem, CreateCartItemRequestDto, CartItemResponseDto> {
 
     @Override
-    public CartItem toEntity(CreateCartItemRequestDTO dto) {
+    public CartItem toEntity(CreateCartItemRequestDto dto) {
         Cart cart = new Cart();
         cart.setCartId(dto.cartId());
 
@@ -26,12 +26,14 @@ public class CartItemConverter implements Converter<CartItem, CreateCartItemRequ
     }
 
     @Override
-    public CartItemResponseDTO toDto(CartItem item) {
-        return new CartItemResponseDTO(
-                item.getCartItemId(),
-                item.getCart().getCartId(),
-                item.getProduct().getProductId(),
-                item.getProduct().getName(),
-                item.getQuantity());
+    public CartItemResponseDto toDto(CartItem item) {
+
+        return CartItemResponseDto.builder()
+                .id(item.getCartItemId())
+                .cartId(item.getCartItemId())
+                .productId(item.getProduct().getProductId())
+                .productName(item.getProduct().getName())
+                .quantity(item.getQuantity())
+                .build();
     }
 }

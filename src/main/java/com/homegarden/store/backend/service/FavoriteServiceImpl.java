@@ -7,7 +7,6 @@ import com.homegarden.store.backend.repository.FavoriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
@@ -23,6 +22,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         if (!userService.existsById(userId)) {
             throw new UserNotFoundException("User with id " + userId + " doesn't exists");
         }
+
         return favoriteRepository.findAllByUser_UserId(userId);
     }
 
@@ -34,7 +34,6 @@ public class FavoriteServiceImpl implements FavoriteService {
         if (!productService.existsById(favorite.getProduct().getProductId())) {
             throw new ProductNotFoundException("Product not found");
         }
-
         if (!favoriteRepository
                 .existsByUser_AndProduct(favorite.getUser(), favorite.getProduct())) {
             favoriteRepository.save(favorite);
@@ -44,6 +43,8 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     @Transactional
     public void removeFromFavorites(Favorite favorite) {
-        favoriteRepository.deleteByUserAndProduct(favorite.getUser(), favorite.getProduct());
+        favoriteRepository.deleteByUserAndProduct(
+                favorite.getUser(),
+                favorite.getProduct());
     }
 }

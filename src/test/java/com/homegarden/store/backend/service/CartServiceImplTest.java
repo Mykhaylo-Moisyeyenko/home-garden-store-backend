@@ -29,6 +29,9 @@ class CartServiceImplTest {
     @Mock
     private UserService userServiceTest;
 
+    @Mock
+    private AccessCheckService accessCheckService;
+
     @InjectMocks
     private CartServiceImpl cartServiceImpl;
 
@@ -49,6 +52,7 @@ class CartServiceImplTest {
     @Test
     void createTestSuccessful() {
         when(userServiceTest.getById(1L)).thenReturn(user);
+        doNothing().when(accessCheckService).checkAccess(user);
         when(cartRepositoryTest.existsCartByUser(user)).thenReturn(false);
         when(cartRepositoryTest.save(cart)).thenReturn(cartSaved);
 
@@ -58,6 +62,7 @@ class CartServiceImplTest {
         verify(userServiceTest, times(1)).getById(1L);
         verify(cartRepositoryTest, times(1)).existsCartByUser(user);
         verify(cartRepositoryTest, times(1)).save(cart);
+        verify(accessCheckService, times(1)).checkAccess(user);
     }
 
     @Test
@@ -68,6 +73,7 @@ class CartServiceImplTest {
 
         verify(userServiceTest, times(1)).getById(1L);
         verify(cartRepositoryTest, never()).save(cart);
+        verify(accessCheckService, never()).checkAccess(user);
     }
 
     @Test
@@ -85,11 +91,13 @@ class CartServiceImplTest {
     @Test
     void getByIdTestSuccessful() {
         when(cartRepositoryTest.findById(1L)).thenReturn(Optional.ofNullable(cartSaved));
+        doNothing().when(accessCheckService).checkAccess(cartSaved);
 
         Cart result = cartServiceImpl.getById(1L);
 
         assertEquals(cartSaved, result);
         verify(cartRepositoryTest, times(1)).findById(1L);
+        verify(accessCheckService, times(1)).checkAccess(cartSaved);
     }
 
     @Test
@@ -113,6 +121,7 @@ class CartServiceImplTest {
     @Test
     void deleteTest() {
         when(cartRepositoryTest.findById(1L)).thenReturn(Optional.ofNullable(cartSaved));
+        doNothing().when(accessCheckService).checkAccess(cartSaved);
         doNothing().when(cartRepositoryTest).deleteById(1L);
 
         cartServiceImpl.delete(1L);

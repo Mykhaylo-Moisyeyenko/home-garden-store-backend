@@ -3,7 +3,8 @@ package com.homegarden.store.backend.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public record CreateCartItemRequestDTO(
+public record CreateCartItemRequestDto(
+
         @NotNull(message = "Cart ID is required")
         @Positive(message = "Cart ID must be more than 0")
         Long cartId,

@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,30 +22,31 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryDto> create(@RequestBody @Valid CategoryDto dto) {
-        Category entity = converter.toEntity(dto);
-        Category category = categoryService.create(entity);
-        CategoryDto response = converter.toDto(category);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        Category category = categoryService.create(converter.toEntity(dto));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(converter.toDto(category));
     }
 
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAll() {
-        List<CategoryDto> response = categoryService.getAll().stream()
+        List<CategoryDto> response = categoryService
+                .getAll()
+                .stream()
                 .map(converter::toDto)
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDto> getById(@PathVariable Long id) {
-        Category category = categoryService.getById(id);
-        CategoryDto response = converter.toDto(category);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(converter.toDto(categoryService.getById(id)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         categoryService.delete(id);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -55,7 +55,7 @@ public class CategoryController {
             @PathVariable("id") Long id,
             @RequestBody @Valid CategoryDto dto) {
         Category updated = categoryService.update(id, dto.name());
-        CategoryDto response = converter.toDto(updated);
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok(converter.toDto(updated));
     }
 }

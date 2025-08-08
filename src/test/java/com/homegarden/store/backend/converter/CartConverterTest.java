@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.dto.CartResponseDTO;
-import com.homegarden.store.backend.dto.CreateCartRequestDTO;
+import com.homegarden.store.backend.dto.CartResponseDto;
+import com.homegarden.store.backend.dto.CreateCartRequestDto;
 import com.homegarden.store.backend.entity.Cart;
 import com.homegarden.store.backend.entity.User;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ class CartConverterTest {
 
     private CartConverter cartConverter = new CartConverter();
 
-    CreateCartRequestDTO createCartRequestDTO = new CreateCartRequestDTO(1L);
+    CreateCartRequestDto createCartRequestDTO = new CreateCartRequestDto(1L);
 
     Cart cart = new Cart(1L, new ArrayList<>(), User.builder().userId(1L).build());
 
@@ -29,7 +29,7 @@ class CartConverterTest {
 
     @Test
     void toDtoTest() {
-        CartResponseDTO actual = cartConverter.toDto(cart);
+        CartResponseDto actual = cartConverter.toDto(cart);
 
         assertEquals(1L, actual.cartId());
         assertEquals(1L, actual.userId());

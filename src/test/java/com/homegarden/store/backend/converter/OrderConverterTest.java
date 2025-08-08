@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.dto.OrderItemResponseDTO;
-import com.homegarden.store.backend.dto.OrderResponseDTO;
+import com.homegarden.store.backend.dto.OrderItemResponseDto;
+import com.homegarden.store.backend.dto.OrderResponseDto;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.entity.OrderItem;
 import com.homegarden.store.backend.entity.Product;
@@ -46,7 +46,7 @@ class OrderConverterTest {
                 .items(List.of(item))
                 .build();
 
-        OrderResponseDTO dto = orderConverter.toDto(order);
+        OrderResponseDto dto = orderConverter.toDto(order);
 
         assertNotNull(dto);
         assertEquals(1L, dto.orderId());
@@ -56,7 +56,7 @@ class OrderConverterTest {
         assertEquals("1234567890", dto.contactPhone());
         assertEquals(Status.CREATED, dto.status());
 
-        List<OrderItemResponseDTO> itemDTOs = dto.items();
+        List<OrderItemResponseDto> itemDTOs = dto.items();
         assertEquals(1, itemDTOs.size());
         assertEquals(1L, itemDTOs.get(0).productId());
         assertEquals(2, itemDTOs.get(0).quantity());

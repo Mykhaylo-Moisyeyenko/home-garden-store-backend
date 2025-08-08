@@ -2,7 +2,7 @@ package com.homegarden.store.backend.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record UpdateUserRequestDTO(
+public record UpdateUserRequestDto(
 
         @NotBlank(message = "Username can't be empty")
         String username,

@@ -19,10 +19,13 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final UserService userService;
 
+    private final AccessCheckService accessCheckService;
+
     @Override
     public Cart create(Cart cart) {
         User user = userService.getById(cart.getUser().getUserId());
-        if (cartRepository.existsCartByUser(user)) {
+        accessCheckService.checkAccess(user);
+        if(cartRepository.existsCartByUser(user)) {
             throw new CartAlreadyExistsException("Cart already exists for this user");
         }
         cart.setUser(user);
@@ -31,7 +34,10 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart getById(Long id) {
-        return cartRepository.findById(id).orElseThrow(() -> new CartNotFoundException("Cart not found"));
+        Cart cart = cartRepository.findById(id)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found"));
+        accessCheckService.checkAccess(cart);
+        return cart;
     }
 
     @Override
@@ -43,7 +49,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void delete(Long id) {
-        getById(id);
+        Cart cart = getById(id);
+        accessCheckService.checkAccess(cart);
         cartRepository.deleteById(id);
     }
 

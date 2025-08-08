@@ -1,8 +1,8 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.dto.CreateOrderItemRequestDTO;
-import com.homegarden.store.backend.dto.CreateOrderRequestDTO;
-import com.homegarden.store.backend.dto.TopCancelledProductDTO;
+import com.homegarden.store.backend.dto.CreateOrderItemRequestDto;
+import com.homegarden.store.backend.dto.CreateOrderRequestDto;
+import com.homegarden.store.backend.dto.TopCancelledProductDto;
 import com.homegarden.store.backend.entity.*;
 import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.exception.OrderItemsListIsEmptyException;
@@ -30,22 +30,21 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemService orderItemService;
     private final UserService userService;
-
     private final CartService cartService;
+
+    private final AccessCheckService accessCheckService;
 
     @Override
     @Transactional
-    public Order create(CreateOrderRequestDTO createOrderRequestDTO) {
+    public Order create(CreateOrderRequestDto createOrderRequestDTO) {
         User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         Cart cart = cartService.getByUser(user);
 
         Order order = Order.builder()
                 .user(user)
-                .deliveryAddress(createOrderRequestDTO.deliveryAddress())
+                .deliveryAddress(createOrderRequestDto.deliveryAddress())
                 .contactPhone("")
-                .deliveryMethod(createOrderRequestDTO.deliveryMethod())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .deliveryMethod(createOrderRequestDto.deliveryMethod())
                 .build();
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -55,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
             cartItems.put(cartItem.getProduct().getProductId(), cartItem);
         }
 
-        for (CreateOrderItemRequestDTO dto : createOrderRequestDTO.orderItems()) {
+        for (CreateOrderItemRequestDto dto : createOrderRequestDto.orderItems()) {
             Long productId = dto.productId();
             if (cartItems.containsKey(productId)) {
 
@@ -84,22 +83,29 @@ public class OrderServiceImpl implements OrderService {
 
         if (orderItems.isEmpty()) {
             throw new OrderItemsListIsEmptyException("Cannot create order: Products must be in the cart");
-        } else {
-            BigDecimal orderTotalSum = orderItems.stream()
-                    .map(orderItem -> orderItem.getPriceAtPurchase()
-                            .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            order.setOrderTotalSum(orderTotalSum);
-            order.setItems(orderItems);
         }
+
+        BigDecimal orderTotalSum = orderItems.stream()
+                .map(orderItem -> orderItem.getPriceAtPurchase()
+                .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        order.setOrderTotalSum(orderTotalSum);
+        order.setItems(orderItems);
+
         cartService.update(cart);
+
         return orderRepository.save(order);
     }
 
     @Override
     public Order getById(long id) {
-        return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
+
+        accessCheckService.checkAccess(order);
+
+        return order;
     }
 
     @Override
@@ -118,22 +124,37 @@ public class OrderServiceImpl implements OrderService {
         if (!userService.existsById(userId)) {
             throw new OrderNotFoundException("User with id " + userId + " not found");
         }
+
+        User user = userService.getById(userId);
+        accessCheckService.checkAccess(user);
+
         return orderRepository.findAllByUserUserId(userId);
     }
 
     @Override
-    public List<Order> getAllByStatusAndUpdatedAtAfter(Status status, LocalDateTime updatedAtAfter) {
-        return orderRepository.findByStatusAndUpdatedAtAfter(status, updatedAtAfter);
+    public List<Order> getAllByStatusAndUpdatedAtAfter(
+            Status status,
+            LocalDateTime updatedAtAfter) {
+
+        return orderRepository.findByStatusAndUpdatedAtAfter(
+                status,
+                updatedAtAfter);
     }
 
     @Override
-    public List<Order> getAllByStatusAndUpdatedAtBefore(Status status, LocalDateTime updatedAtBefore) {
-        return orderRepository.findByStatusAndUpdatedAtBefore(status, updatedAtBefore);
+    public List<Order> getAllByStatusAndUpdatedAtBefore
+            (Status status,
+             LocalDateTime updatedAtBefore) {
+
+        return orderRepository.findByStatusAndUpdatedAtBefore(
+                status,
+                updatedAtBefore);
     }
 
     @Override
     public void cancel(Long id) {
         Order order = getById(id);
+
         if (!order.getStatus().equals(CREATED) && !order.getStatus().equals(AWAITING_PAYMENT)) {
             throw new OrderUnableToCancelException("Order with id " + id + " can't be cancelled");
         }
@@ -142,10 +163,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<TopCancelledProductDTO> getTopCancelledProducts() {
+    public List<TopCancelledProductDto> getTopCancelledProducts() {
         List<Object[]> data = orderItemService.getTopCancelledProducts();
-        return data.stream()
-                .map(obj -> new TopCancelledProductDTO(
+
+        return data
+                .stream()
+                .map(obj -> new TopCancelledProductDto(
                         (Long) obj[0],
                         (String) obj[1],
                         (Long) obj[2]

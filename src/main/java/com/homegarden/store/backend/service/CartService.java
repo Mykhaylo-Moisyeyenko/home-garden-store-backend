@@ -7,6 +7,7 @@ import com.homegarden.store.backend.entity.User;
 import java.util.List;
 
 public interface CartService {
+
     Cart create(Cart cart);
 
     Cart getById(Long id);
@@ -24,5 +25,4 @@ public interface CartService {
     Cart deleteCartItem(Long id);
 
     Cart getByUser(User user);
-
 }

@@ -1,7 +1,9 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.dto.TopCancelledProductDTO;
+import com.homegarden.store.backend.dto.TopCancelledProductDto;
 import com.homegarden.store.backend.entity.Order;
+import com.homegarden.store.backend.entity.User;
+import com.homegarden.store.backend.enums.Role;
 import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.exception.OrderNotFoundException;
 import com.homegarden.store.backend.exception.OrderUnableToCancelException;
@@ -18,8 +20,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {
@@ -33,14 +34,19 @@ class OrderServiceImplTest {
     @Mock
     private OrderItemService orderItemService;
 
+    @Mock
+    private AccessCheckService accessCheckService;
+
     @InjectMocks
     private OrderServiceImpl orderService;
 
     private Order order;
+    private User user;
 
     @BeforeEach
     void setUp() {
         order = Order.builder().orderId(1L).status(Status.CREATED).build();
+        user = User.builder().userId(1L).role(Role.ROLE_USER).build();
     }
 
 //    @Test
@@ -53,8 +59,12 @@ class OrderServiceImplTest {
     @Test
     void testGetByIdFound() {
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        doNothing().when(accessCheckService).checkAccess(order);
         Order result = orderService.getById(1L);
+
         assertThat(result).isEqualTo(order);
+        verify(orderRepository, times(1)).findById(1L);
+        verify(accessCheckService, times(1)).checkAccess(order);
     }
 
     @Test
@@ -62,6 +72,8 @@ class OrderServiceImplTest {
         when(orderRepository.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> orderService.getById(1L))
                 .isInstanceOf(OrderNotFoundException.class);
+        verify(orderRepository, times(1)).findById(1L);
+        verify(accessCheckService,never()).checkAccess(order);
     }
 
     @Test
@@ -89,9 +101,15 @@ class OrderServiceImplTest {
     @Test
     void testGetAllOrdersByUserId_UserExists() {
         when(userService.existsById(1L)).thenReturn(true);
+        when(userService.getById(1L)).thenReturn(user);
+        doNothing().when(accessCheckService).checkAccess(user);
         when(orderRepository.findAllByUserUserId(1L)).thenReturn(List.of(order));
+
         List<Order> result = orderService.getAllByUserId(1L);
+
         assertThat(result).containsExactly(order);
+        verify(orderRepository, times(1)).findAllByUserUserId(1L);
+        verify(accessCheckService, times(1)).checkAccess(user);
     }
 
     @Test
@@ -100,6 +118,8 @@ class OrderServiceImplTest {
 
         assertThatThrownBy(() -> orderService.getAllByUserId(1L))
                 .isInstanceOf(OrderNotFoundException.class);
+        verify(orderRepository, never()).findAllByUserUserId(1L);
+        verify(accessCheckService, never()).checkAccess(user);
     }
 
     @Test
@@ -122,7 +142,7 @@ class OrderServiceImplTest {
     void testGetTopCancelledProducts() {
         Object[] data = new Object[]{1L, "Product Name", 5L};
         when(orderItemService.getTopCancelledProducts()).thenReturn(List.<Object[]>of(data));
-        List<TopCancelledProductDTO> result = orderService.getTopCancelledProducts();
+        List<TopCancelledProductDto> result = orderService.getTopCancelledProducts();
         assertThat(result).hasSize(1);
         assertThat(result.get(0).productId()).isEqualTo(1L);
     }

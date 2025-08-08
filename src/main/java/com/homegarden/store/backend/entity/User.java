@@ -1,10 +1,9 @@
 package com.homegarden.store.backend.entity;
 
-import com.homegarden.store.backend.enums.Role;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.homegarden.store.backend.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
 

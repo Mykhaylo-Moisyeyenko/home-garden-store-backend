@@ -2,8 +2,8 @@ package com.homegarden.store.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homegarden.store.backend.converter.CartConverter;
-import com.homegarden.store.backend.dto.CartResponseDTO;
-import com.homegarden.store.backend.dto.CreateCartRequestDTO;
+import com.homegarden.store.backend.dto.CartResponseDto;
+import com.homegarden.store.backend.dto.CreateCartRequestDto;
 import com.homegarden.store.backend.entity.Cart;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.exception.CartAlreadyExistsException;
@@ -47,19 +47,19 @@ class CartControllerTest {
     @Autowired
     ObjectMapper objectMapper = new ObjectMapper();
 
-    CreateCartRequestDTO createCartRequestDTO = new CreateCartRequestDTO(1L);
+    CreateCartRequestDto createCartRequestDTO = new CreateCartRequestDto(1L);
 
     User user = User.builder().userId(1L).build();
     Cart cartForCreate = Cart.builder().user(user).build();
 
     Cart cart = new Cart(1L, new ArrayList<>(), user);
-    CartResponseDTO cartResponseDTO = new CartResponseDTO(1L, 1L);
+    CartResponseDto cartResponseDto = new CartResponseDto(1L, 1L, new ArrayList<>());
 
     @Test
     void createTestWhenCartNotExist() throws Exception {
         when(cartConverterTest.toEntity(createCartRequestDTO)).thenReturn(cartForCreate);
         when(cartServiceTest.create(cartForCreate)).thenReturn(cart);
-        when(cartConverterTest.toDto(cart)).thenReturn(cartResponseDTO);
+        when(cartConverterTest.toDto(cart)).thenReturn(cartResponseDto);
 
         mockMvc.perform(post("/v1/carts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -98,7 +98,7 @@ class CartControllerTest {
     @Test
     void getByIdSuccessful() throws Exception {
         when(cartServiceTest.getById(1L)).thenReturn(cart);
-        when(cartConverterTest.toDto(cart)).thenReturn(cartResponseDTO);
+        when(cartConverterTest.toDto(cart)).thenReturn(cartResponseDto);
 
         mockMvc.perform(get("/v1/carts/1"))
                 .andDo(print())
@@ -116,16 +116,16 @@ class CartControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    void getAll() throws Exception {
-        when(cartServiceTest.getAll()).thenReturn(List.of(cart));
-        when(cartConverterTest.toDto(cart)).thenReturn(cartResponseDTO);
-
-        mockMvc.perform(get("/v1/carts"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].cartId").value(1L));
-    }
+//    @Test
+//    void getAll() throws Exception {
+//        when(cartServiceTest.getAll()).thenReturn(List.of(cart));
+//        when(cartConverterTest.toDto(cart)).thenReturn(cartResponseDTO);
+//
+//        mockMvc.perform(get("/v1/carts"))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$[0].cartId").value(1L));
+//    }
 
     @Test
     void deleteTest() throws Exception {

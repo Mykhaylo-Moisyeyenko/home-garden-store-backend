@@ -1,11 +1,13 @@
 package com.homegarden.store.backend.dto;
 
 import com.homegarden.store.backend.enums.PaymentStatus;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record PaymentResponseDTO(
+@Builder
+public record PaymentResponseDto(
 
         Long paymentId,
 
