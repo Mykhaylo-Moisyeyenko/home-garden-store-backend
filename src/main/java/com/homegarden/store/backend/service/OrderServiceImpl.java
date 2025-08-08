@@ -11,6 +11,7 @@ import com.homegarden.store.backend.exception.OrderUnableToCancelException;
 import com.homegarden.store.backend.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,20 +32,21 @@ public class OrderServiceImpl implements OrderService {
     private final UserService userService;
     private final CartService cartService;
 
+    private final AccessCheckService accessCheckService;
+
     @Override
     @Transactional
     public Order create(CreateOrderRequestDto createOrderRequestDto) {
 
-        Cart cart = cartService.getByUserId(1L);
+        User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
-        Order order = Order
-                .builder()
-                .user(User.builder().userId(1L).build())
+        Cart cart = cartService.getByUserId(user.getUserId());
+
+        Order order = Order.builder()
+                .user(user)
                 .deliveryAddress(createOrderRequestDto.deliveryAddress())
                 .contactPhone("")
                 .deliveryMethod(createOrderRequestDto.deliveryMethod())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
                 .build();
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -106,8 +108,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getById(long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
 
-        return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
+        accessCheckService.checkAccess(order);
+
+        return order;
     }
 
     @Override
@@ -131,6 +137,9 @@ public class OrderServiceImpl implements OrderService {
 
             throw new OrderNotFoundException("User with id " + userId + " not found");
         }
+      
+        User user = userService.getById(userId);
+        accessCheckService.checkAccess(user);
 
         return orderRepository.findAllByUserUserId(userId);
     }
@@ -183,7 +192,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean isProductUsedInOrders(Long productId) {
-
         return orderItemService.isProductUsedInOrders(productId);
     }
 }
