@@ -144,7 +144,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void cancel(Long id) {
         Order order = getById(id);
-        accessCheckService.checkAccess(order);
         if (!order.getStatus().equals(CREATED) && !order.getStatus().equals(AWAITING_PAYMENT)) {
             throw new OrderUnableToCancelException("Order with id " + id + " can't be cancelled");
         }
