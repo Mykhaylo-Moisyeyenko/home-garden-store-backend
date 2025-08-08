@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/users")
+@PreAuthorize("hasRole('ADMINISTRATOR')")
 public class UserController {
 
     private final UserService userService;
@@ -37,6 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("isAnonymous() or hasRole('ADMINISTRATOR')")
     public ResponseEntity<UserResponseDto> create(@RequestBody @Valid CreateUserRequestDto userRequestDTO) {
         User entity = converter.toEntity(userRequestDTO);
         entity.setPasswordHash(passwordEncoder.encode(userRequestDTO.password()));
@@ -46,6 +49,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<UserResponseDto> update(
             @PathVariable @Min(1) Long userId,
             @RequestBody @Valid UpdateUserRequestDto updateDto) {
@@ -55,6 +59,7 @@ public class UserController {
     }
 
     @GetMapping("/id/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<UserResponseDto> getById(@PathVariable @Min(1) Long id) {
         User user = userService.getById(id);
 

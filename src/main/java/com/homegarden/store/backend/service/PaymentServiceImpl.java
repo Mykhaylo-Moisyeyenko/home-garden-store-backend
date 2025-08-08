@@ -10,6 +10,7 @@ import com.homegarden.store.backend.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
@@ -69,9 +70,10 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public List<Payment> getPaymentsByOrder(Order order){
+    public List<Payment> getAllByOrder(Long orderId) {
+        Order order = orderService.getById(orderId);
         accessCheckService.checkAccess(order);
 
-        return paymentRepository.findByOrder(order);
+        return paymentRepository.findAllByOrder(order);
     }
 }

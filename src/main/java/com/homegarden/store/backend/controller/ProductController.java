@@ -13,6 +13,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/v1/products")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMINISTRATOR')")
 public class ProductController {
 
     private final ProductService productService;
@@ -35,6 +37,7 @@ public class ProductController {
     }
 
     @GetMapping
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<ProductDto>> getAll(
             @RequestParam(required = false) @Min(1) Long categoryId,
             @RequestParam(required = false) @PositiveOrZero BigDecimal minPrice,
@@ -50,6 +53,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<ProductDto> getById(@PathVariable @Min(1) Long id) {
 
         return ResponseEntity.ok(converter.toDto(productService.getById(id)));

@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
-    List<Payment> findByOrder(Order order);
+    List<Payment> findAllByOrder(Order order);
 }

@@ -1,8 +1,8 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.entity.Payment;
 import com.homegarden.store.backend.enums.PaymentStatus;
+
 import java.util.List;
 
 public interface PaymentService {
@@ -15,5 +15,5 @@ public interface PaymentService {
 
     Payment getById(Long paymentId);
 
-    List<Payment> getPaymentsByOrder(Order order);
+    List<Payment> getAllByOrder(Long orderId);
 }

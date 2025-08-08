@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/categories")
+@PreAuthorize("hasAnyRole('ADMINISTRATOR','USER')")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -28,6 +30,7 @@ public class CategoryController {
     }
 
     @GetMapping
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<CategoryDto>> getAll() {
         List<CategoryDto> response = categoryService
                 .getAll()
@@ -39,6 +42,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<CategoryDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(converter.toDto(categoryService.getById(id)));
     }
