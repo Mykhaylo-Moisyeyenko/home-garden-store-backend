@@ -29,8 +29,6 @@ public class CartItemConverter implements Converter<CartItem, CreateCartItemRequ
     public CartItemResponseDto toDto(CartItem item) {
 
         return CartItemResponseDto.builder()
-                .id(item.getCartItemId())
-                .cartId(item.getCartItemId())
                 .productId(item.getProduct().getProductId())
                 .productName(item.getProduct().getName())
                 .quantity(item.getQuantity())

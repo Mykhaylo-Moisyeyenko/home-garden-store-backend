@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,16 +31,13 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemService orderItemService;
     private final UserService userService;
     private final CartService cartService;
-
     private final AccessCheckService accessCheckService;
 
     @Override
     @Transactional
     public Order create(CreateOrderRequestDto createOrderRequestDto) {
-
         User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-
-        Cart cart = cartService.getByUserId(user.getUserId());
+        Cart cart = cartService.getByUser(user);
 
         Order order = Order.builder()
                 .user(user)
@@ -51,14 +49,12 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> orderItems = new ArrayList<>();
 
         Map<Long, CartItem> cartItems = new HashMap<>();
-
         for (CartItem cartItem : cart.getItems()) {
             cartItems.put(cartItem.getProduct().getProductId(), cartItem);
         }
 
         for (CreateOrderItemRequestDto dto : createOrderRequestDto.orderItems()) {
             Long productId = dto.productId();
-
             if (cartItems.containsKey(productId)) {
 
                 CartItem cartItem = cartItems.get(dto.productId());
@@ -68,14 +64,12 @@ public class OrderServiceImpl implements OrderService {
 
                 if (cartItem.getQuantity() - dto.quantity() > 0) {
                     cartItem.setQuantity(cartItem.getQuantity() - dto.quantity());
-
                 } else {
                     quantity = cartItem.getQuantity();
                     cart.getItems().remove(cartItem);
                 }
 
-                OrderItem orderItem = OrderItem
-                        .builder()
+                OrderItem orderItem = OrderItem.builder()
                         .product(product)
                         .quantity(quantity)
                         .priceAtPurchase(product.getDiscountPrice() != null ? product.getDiscountPrice() : product.getPrice())
@@ -90,8 +84,7 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderItemsListIsEmptyException("Cannot create order: Products must be in the cart");
         }
 
-        BigDecimal orderTotalSum = orderItems
-                .stream()
+        BigDecimal orderTotalSum = orderItems.stream()
                 .map(orderItem -> orderItem.getPriceAtPurchase()
                 .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -144,9 +137,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllByStatusAndUpdatedAtBefore
-            (Status status,
-             LocalDateTime updatedAtBefore) {
+    public List<Order> getAllByStatusAndUpdatedAtBefore(
+            Status status,
+            LocalDateTime updatedAtBefore) {
 
         return orderRepository.findByStatusAndUpdatedAtBefore(
                 status,
@@ -158,7 +151,6 @@ public class OrderServiceImpl implements OrderService {
         Order order = getById(id);
 
         if (!order.getStatus().equals(CREATED) && !order.getStatus().equals(AWAITING_PAYMENT)) {
-
             throw new OrderUnableToCancelException("Order with id " + id + " can't be cancelled");
         }
 
@@ -169,8 +161,7 @@ public class OrderServiceImpl implements OrderService {
     public List<TopCancelledProductDto> getTopCancelledProducts() {
         List<Object[]> data = orderItemService.getTopCancelledProducts();
 
-        return data
-                .stream()
+        return data.stream()
                 .map(obj -> new TopCancelledProductDto(
                         (Long) obj[0],
                         (String) obj[1],

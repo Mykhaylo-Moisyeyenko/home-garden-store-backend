@@ -17,7 +17,7 @@ class CartItemConverterTest {
     private CartItemConverter converter = new CartItemConverter();
 
     CreateCartItemRequestDto dto = new CreateCartItemRequestDto(1L, 1L, 10);
-    CartItemResponseDto responseDTO = new CartItemResponseDto(1L, 1L, 1L, "TestProduct", 10);
+    CartItemResponseDto responseDTO = new CartItemResponseDto( 1L, "TestProduct", 10);
 
     Cart cart = new Cart(1L, new ArrayList<>(), new User());
     Product product = Product.builder().productId(1L).name("TestProduct").build();
@@ -38,8 +38,6 @@ class CartItemConverterTest {
         CartItemResponseDto actual = converter.toDto(cartItem);
 
         assertEquals(responseDTO, actual);
-        assertEquals(1L, actual.id());
-        assertEquals(1L, actual.cartId());
         assertEquals(1L, actual.productId());
         assertEquals(10, actual.quantity());
     }
