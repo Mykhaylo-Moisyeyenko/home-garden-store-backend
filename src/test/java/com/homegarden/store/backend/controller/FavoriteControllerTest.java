@@ -65,7 +65,7 @@ class FavoriteControllerTest {
     @Test
     @DisplayName("GET /v1/favorites/{userId} should return list of favoriteDto")
     void getAllFavorites_shouldReturnList() throws Exception {
-        when(favoriteService.getAll(userId)).thenReturn(List.of(favorite));
+        when(favoriteService.getAll()).thenReturn(List.of(favorite));
         when(converter.toDto(favorite)).thenReturn(favoriteDto);
 
         mockMvc.perform(get("/v1/favorites/{userId}", userId))
@@ -73,7 +73,7 @@ class FavoriteControllerTest {
                 .andExpect(jsonPath("$[0].userId").value(userId))
                 .andExpect(jsonPath("$[0].productId").value(productId));
 
-        verify(favoriteService).getAll(userId);
+        verify(favoriteService).getAll();
     }
 
     @Test
@@ -122,10 +122,10 @@ class FavoriteControllerTest {
             return mock(FavoriteService.class);
         }
 
-        @Bean
-        public Converter<Favorite, FavoriteDto, FavoriteDto> converter() {
-            return mock(Converter.class);
-        }
+//        @Bean
+//        public Converter<Favorite, FavoriteDto, FavoriteDto> converter() {
+//            return mock(Converter.class);
+//        }
     }
 }
 

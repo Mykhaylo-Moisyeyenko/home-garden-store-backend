@@ -27,7 +27,7 @@ public class OrderController {
     private final OrderConverter converter;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<OrderResponseDto> create(@RequestBody @NotNull @Valid CreateOrderRequestDto orderRequestDTO) {
 
         Order order = orderService.create(orderRequestDTO);
@@ -48,7 +48,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<OrderResponseDto> getById(@PathVariable @Valid @Min(1) Long orderId) {
         Order order = orderService.getById(orderId);
         OrderResponseDto response = converter.toDto(order);
@@ -56,10 +56,10 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/history/{userId}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
-    public ResponseEntity<List<OrderResponseDto>> getAllByUserId(@PathVariable @Valid @Min(1) Long userId) {
-        List<OrderResponseDto> result = orderService.getAllByUser(userId)
+    @GetMapping("/history")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<List<OrderResponseDto>> getAllByUser() {
+        List<OrderResponseDto> result = orderService.getAllByUser()
                 .stream()
                 .map(converter::toDto)
                 .toList();
@@ -68,7 +68,7 @@ public class OrderController {
     }
 
     @PatchMapping("/{orderId}/cancel")
-    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<Void> cancel(@PathVariable @Valid @Min(1) Long orderId) {
         orderService.cancel(orderId);
 

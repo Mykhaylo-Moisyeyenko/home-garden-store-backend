@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface FavoriteService {
 
-    List<Favorite> getAll(Long userId);
+    List<Favorite> getAll();
 
     void addToFavorites(Favorite favorite);
 

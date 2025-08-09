@@ -36,7 +36,7 @@ public class PaymentController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<PaymentResponseDto> create(@RequestBody @Valid PaymentCreateDto dto) {
         Payment savedPayment = paymentService.create(converter.toEntity(dto));
         PaymentResponseDto paymentResponseDTO = converter.toDto(savedPayment);
@@ -56,7 +56,7 @@ public class PaymentController {
     }
 
     @GetMapping("/{paymentId}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<PaymentResponseDto> getById(@PathVariable Long paymentId) {
 
         Payment payment = paymentService.getById(paymentId);
@@ -65,7 +65,7 @@ public class PaymentController {
     }
 
     @GetMapping("/payments-by-order/{orderId}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<List<PaymentResponseDto>> getPaymentsByOrder(@PathVariable Long orderId) {
         List<PaymentResponseDto> paymentList = paymentService.getAllByOrder(orderId)
                 .stream()

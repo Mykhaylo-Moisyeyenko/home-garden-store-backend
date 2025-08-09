@@ -20,7 +20,7 @@ public interface OrderService {
 
     void cancel(Long id);
 
-    List<Order> getAllByUser(Long userId);
+    List<Order> getAllByUser();
 
     List<TopCancelledProductDto> getTopCancelledProducts();
 

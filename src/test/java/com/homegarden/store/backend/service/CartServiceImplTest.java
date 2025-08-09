@@ -28,9 +28,6 @@ class CartServiceImplTest {
     @Mock
     private UserService userServiceTest;
 
-    @Mock
-    private AccessCheckService accessCheckService;
-
     @InjectMocks
     private CartServiceImpl cartServiceImpl;
 
@@ -51,7 +48,6 @@ class CartServiceImplTest {
     @Test
     void createTestSuccessful() {
         when(userServiceTest.getById(1L)).thenReturn(user);
-        doNothing().when(accessCheckService).checkAccess(user);
         when(cartRepositoryTest.existsCartByUser(user)).thenReturn(false);
         when(cartRepositoryTest.save(cart)).thenReturn(cartSaved);
 
@@ -61,7 +57,6 @@ class CartServiceImplTest {
         verify(userServiceTest, times(1)).getById(1L);
         verify(cartRepositoryTest, times(1)).existsCartByUser(user);
         verify(cartRepositoryTest, times(1)).save(cart);
-        verify(accessCheckService, times(1)).checkAccess(user);
     }
 
     @Test
@@ -72,7 +67,6 @@ class CartServiceImplTest {
 
         verify(userServiceTest, times(1)).getById(1L);
         verify(cartRepositoryTest, never()).save(cart);
-        verify(accessCheckService, never()).checkAccess(user);
     }
 
     @Test

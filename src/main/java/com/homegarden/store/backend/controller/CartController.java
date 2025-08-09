@@ -27,7 +27,7 @@ public class CartController {
     private final Converter<CartItem, CreateCartItemRequestDto, CartItemResponseDto> cartItemConverter;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<CartResponseDto> create(@RequestBody @Valid CreateCartRequestDto dto) {
         Cart created = cartService.create(cartConverter.toEntity(dto));
         return ResponseEntity.status(HttpStatus.CREATED).body(cartConverter.toDto(created));
@@ -41,28 +41,31 @@ public class CartController {
                 .toList();
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
-    public ResponseEntity<Void> delete(@PathVariable @NotNull @Min(1) Long id) {
-        cartService.delete(id);
+    @DeleteMapping()
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> delete() {
+        cartService.delete();
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/item")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<CartResponseDto> addCartItem(@RequestBody @Valid CreateCartItemRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(cartConverter.toDto(cartService.addCartItem(cartItemConverter.toEntity(dto))));
     }
 
     @PutMapping("/item")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<CartResponseDto> updateCartItemQuantity(@RequestBody @Valid UpdateCartItemRequestDto dto) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(cartConverter.toDto(cartService.updateCartItemQuantity(dto.cartItemId(), dto.quantity())));
     }
 
     @DeleteMapping("/item/{id}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable @NotNull @Min(1) Long id) {
-        cartService.deleteCartItem(id);
-        return ResponseEntity.noContent().build();
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<CartResponseDto> deleteCartItem(@PathVariable @NotNull @Min(1) Long id) {
+        Cart updatedCart = cartService.deleteCartItem(id);
+        return ResponseEntity.status(HttpStatus.OK).body(cartConverter.toDto(updatedCart));
     }
 }

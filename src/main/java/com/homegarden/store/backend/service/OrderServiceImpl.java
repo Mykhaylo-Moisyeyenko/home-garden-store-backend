@@ -11,7 +11,7 @@ import com.homegarden.store.backend.exception.OrderUnableToCancelException;
 import com.homegarden.store.backend.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -31,12 +31,11 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemService orderItemService;
     private final UserService userService;
     private final CartService cartService;
-    private final AccessCheckService accessCheckService;
 
     @Override
     @Transactional
     public Order create(CreateOrderRequestDto createOrderRequestDto) {
-        User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getCurrentUser();
         Cart cart = cartService.getByUser(user);
 
         Order order = Order.builder()
@@ -99,12 +98,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getById(long id) {
+        User user = userService.getCurrentUser();
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
 
-        accessCheckService.checkAccess(order);
-
-        return order;
+        if (order.getUser().equals(user)) {
+            return order;
+        } else throw new AccessDeniedException("You are not allowed to access this resource");
     }
 
     @Override
@@ -119,9 +119,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllByUser(Long userId) {
-        User user = userService.getById(userId);
-        accessCheckService.checkAccess(user);
+    public List<Order> getAllByUser() {
+        User user = userService.getCurrentUser();
 
         return orderRepository.findAllByUser(user);
     }
@@ -149,6 +148,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void cancel(Long id) {
         Order order = getById(id);
+        User user = userService.getCurrentUser();
+
+        if (!order.getUser().equals(user)) {
+            throw new AccessDeniedException("You are not allowed to access this resource");
+        }
 
         if (!order.getStatus().equals(CREATED) && !order.getStatus().equals(AWAITING_PAYMENT)) {
             throw new OrderUnableToCancelException("Order with id " + id + " can't be cancelled");

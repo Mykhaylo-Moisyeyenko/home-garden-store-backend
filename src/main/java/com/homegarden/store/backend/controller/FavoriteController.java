@@ -5,7 +5,6 @@ import com.homegarden.store.backend.dto.FavoriteDto;
 import com.homegarden.store.backend.entity.Favorite;
 import com.homegarden.store.backend.service.FavoriteService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +23,9 @@ public class FavoriteController {
     private final FavoriteService favoriteService;
     private final Converter<Favorite, FavoriteDto, FavoriteDto> converter;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<FavoriteDto>> getAll(@PathVariable @Min(1) Long userId) {
-        List<FavoriteDto> response = favoriteService.getAll(userId)
+    @GetMapping()
+    public ResponseEntity<List<FavoriteDto>> getAll() {
+        List<FavoriteDto> response = favoriteService.getAll()
                 .stream()
                 .map(converter::toDto)
                 .collect(Collectors.toList());
