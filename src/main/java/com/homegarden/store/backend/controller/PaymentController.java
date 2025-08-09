@@ -23,7 +23,6 @@ public class PaymentController {
 
     private final PaymentService paymentService;
     private final Converter<Payment, PaymentCreateDto, PaymentResponseDto> converter;
-    private final OrderService orderService;
 
     @GetMapping
     public ResponseEntity<List<PaymentResponseDto>> getAllPayments() {
@@ -65,9 +64,8 @@ public class PaymentController {
 
     @GetMapping("/payments-by-order/{orderId}")
     public ResponseEntity<List<PaymentResponseDto>> getPaymentsByOrder(@PathVariable Long orderId) {
-        Order order = orderService.getById(orderId);
         List<PaymentResponseDto> paymentList = paymentService
-                .getPaymentsByOrder(order)
+                .getPaymentsByOrder(orderId)
                 .stream()
                 .map(converter::toDto)
                 .toList();

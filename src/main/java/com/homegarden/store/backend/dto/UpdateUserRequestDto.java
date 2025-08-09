@@ -9,5 +9,4 @@ public record UpdateUserRequestDto(
 
         @NotBlank(message = "Phone number can't be empty")
         String phoneNumber) {
-
 }

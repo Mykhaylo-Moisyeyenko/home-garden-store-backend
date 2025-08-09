@@ -69,7 +69,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public List<Payment> getPaymentsByOrder(Order order){
+    public List<Payment> getPaymentsByOrder(Long orderId){
+        Order order = orderService.getById(orderId);
         accessCheckService.checkAccess(order);
 
         return paymentRepository.findByOrder(order);
