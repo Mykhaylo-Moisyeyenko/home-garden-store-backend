@@ -67,8 +67,7 @@ public class PaymentController {
     @GetMapping("/payments-by-order/{orderId}")
     @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<List<PaymentResponseDto>> getPaymentsByOrder(@PathVariable Long orderId) {
-        List<PaymentResponseDto> paymentList = paymentService
-                .getAllByOrder(orderId)
+        List<PaymentResponseDto> paymentList = paymentService.getAllByOrder(orderId)
                 .stream()
                 .map(converter::toDto)
                 .toList();

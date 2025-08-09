@@ -25,7 +25,6 @@ public class UserController {
 
     private final UserService userService;
     private final Converter<User, CreateUserRequestDto, UserResponseDto> converter;
-    private final PasswordEncoder passwordEncoder;
 
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAll() {
@@ -41,11 +40,8 @@ public class UserController {
     @PostMapping("/register")
     @PreAuthorize("isAnonymous() or hasRole('ADMINISTRATOR')")
     public ResponseEntity<UserResponseDto> create(@RequestBody @Valid CreateUserRequestDto userRequestDTO) {
-        User entity = converter.toEntity(userRequestDTO);
-        entity.setPasswordHash(passwordEncoder.encode(userRequestDTO.password()));
-        UserResponseDto response = converter.toDto(userService.create(entity));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(converter.toDto(userService.create(converter.toEntity(userRequestDTO))));
     }
 
     @PutMapping("/{userId}")

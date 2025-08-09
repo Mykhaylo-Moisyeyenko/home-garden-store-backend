@@ -125,7 +125,6 @@ class FavoriteServiceImplTest {
         assertThrows(UserNotFoundException.class, () -> favoriteService.addToFavorites(favorite));
         verify(favoriteRepository, never()).save(any());
         verify(accessCheckService, never()).checkAccess(user);
-
     }
 
     @Test

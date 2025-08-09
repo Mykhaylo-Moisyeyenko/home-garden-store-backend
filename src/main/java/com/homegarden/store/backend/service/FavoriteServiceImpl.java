@@ -21,18 +21,13 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public List<Favorite> getAll(Long userId) {
         User user = userService.getById(userId);
-        accessCheckService.checkAccess(user);
 
         return favoriteRepository.findAllByUser(user);
     }
 
     @Override
     public void addToFavorites(Favorite favorite) {
-        User user = userService.getById(favorite.getUser().getUserId());
-        accessCheckService.checkAccess(user);
-
         productService.getById(favorite.getProduct().getProductId());
-
         if (!favoriteRepository
                 .existsByUser_AndProduct(favorite.getUser(), favorite.getProduct())) {
             favoriteRepository.save(favorite);
