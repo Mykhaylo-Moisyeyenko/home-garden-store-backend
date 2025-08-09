@@ -96,7 +96,7 @@ class UserControllerTest {
         UpdateUserRequestDto updateDto = new UpdateUserRequestDto("Updated", "9999999999");
         user.setName("Updated");
         user.setPhoneNumber("9999999999");
-        Mockito.when(userService.update(eq(1L), eq(updateDto))).thenReturn(user);
+        Mockito.when(userService.update(updateDto)).thenReturn(user);
         Mockito.when(converter.toDto(user)).thenReturn(userResponseDTO);
 
         mockMvc.perform(put("/v1/users/1")

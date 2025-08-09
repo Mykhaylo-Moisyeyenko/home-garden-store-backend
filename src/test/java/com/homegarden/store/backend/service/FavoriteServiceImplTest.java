@@ -21,7 +21,6 @@ class FavoriteServiceImplTest {
     private ProductService productService;
     private UserService userService;
     private FavoriteServiceImpl favoriteService;
-    private AccessCheckService accessCheckService;
 
     private final Long userId = 1L;
     private final Long productId = 101L;
@@ -35,12 +34,10 @@ class FavoriteServiceImplTest {
         favoriteRepository = mock(FavoriteRepository.class);
         productService = mock(ProductService.class);
         userService = mock(UserService.class);
-        accessCheckService = mock(AccessCheckService.class);
         favoriteService = new FavoriteServiceImpl(
                 favoriteRepository,
                 productService,
-                userService,
-                accessCheckService);
+                userService);
 
         user = User.builder()
                 .userId(userId)
@@ -60,17 +57,15 @@ class FavoriteServiceImplTest {
     @DisplayName("getAll: should return list of favorites when user exists")
     void getAll_whenUserExists_shouldReturnFavorites() {
         when(userService.getById(userId)).thenReturn(user);
-        doNothing().when(accessCheckService).checkAccess(user);
         when(favoriteRepository.findAllByUser(user)).thenReturn(List.of(favorite));
 
-        List<Favorite> result = favoriteService.getAll(userId);
+        List<Favorite> result = favoriteService.getAll();
 
         assertEquals(1, result.size());
         assertEquals(userId, result.get(0).getUser().getUserId());
         assertEquals(productId, result.get(0).getProduct().getProductId());
         verify(userService).getById(userId);
         verify(favoriteRepository).findAllByUser(user);
-        verify(accessCheckService, times(1)).checkAccess(user);
     }
 
     @Test
@@ -79,10 +74,9 @@ class FavoriteServiceImplTest {
         when(userService.getById(userId))
                 .thenThrow(new UserNotFoundException("User not found"));
 
-        assertThrows(UserNotFoundException.class, () -> favoriteService.getAll(userId));
+        assertThrows(UserNotFoundException.class, () -> favoriteService.getAll());
         verify(userService).getById(userId);
         verifyNoInteractions(favoriteRepository);
-        verifyNoInteractions(accessCheckService);
         verifyNoInteractions(productService);
     }
 
@@ -90,7 +84,6 @@ class FavoriteServiceImplTest {
     @DisplayName("addToFavorites: should save when not already exists")
     void addToFavorites_whenValid_shouldSave() {
         when(userService.getById(userId)).thenReturn(user);
-        doNothing().when(accessCheckService).checkAccess(user);
         when(productService.getById(productId)).thenReturn(product);
         when(favoriteRepository.existsByUser_AndProduct(favorite.getUser(), favorite.getProduct()))
                 .thenReturn(false);
@@ -98,14 +91,12 @@ class FavoriteServiceImplTest {
         favoriteService.addToFavorites(favorite);
 
         verify(favoriteRepository).save(favorite);
-        verify(accessCheckService, times(1)).checkAccess(user);
     }
 
     @Test
     @DisplayName("addToFavorites: should not save if already exists")
     void addToFavorites_whenAlreadyExists_shouldNotSave() {
         when(userService.getById(userId)).thenReturn(user);
-        doNothing().when(accessCheckService).checkAccess(user);
         when(productService.getById(productId)).thenReturn(product);
         when(favoriteRepository.existsByUser_AndProduct(favorite.getUser(), favorite.getProduct()))
                 .thenReturn(true);
@@ -113,7 +104,6 @@ class FavoriteServiceImplTest {
         favoriteService.addToFavorites(favorite);
 
         verify(favoriteRepository, never()).save(any());
-        verify(accessCheckService, times(1)).checkAccess(user);
     }
 
     @Test
@@ -124,20 +114,17 @@ class FavoriteServiceImplTest {
 
         assertThrows(UserNotFoundException.class, () -> favoriteService.addToFavorites(favorite));
         verify(favoriteRepository, never()).save(any());
-        verify(accessCheckService, never()).checkAccess(user);
     }
 
     @Test
     @DisplayName("addToFavorites: should throw if product not found")
     void addToFavorites_whenProductNotFound_shouldThrow() {
         when(userService.getById(userId)).thenReturn(user);
-        doNothing().when(accessCheckService).checkAccess(user);
         when(productService.getById(productId))
                 .thenThrow(new ProductNotFoundException("Product not found with id: " + productId));
 
         assertThrows(ProductNotFoundException.class, () -> favoriteService.addToFavorites(favorite));
         verify(favoriteRepository, never()).save(any());
-        verify(accessCheckService, times(1)).checkAccess(user);
     }
 
     @Test

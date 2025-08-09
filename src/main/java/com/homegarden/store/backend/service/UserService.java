@@ -10,11 +10,13 @@ public interface UserService {
 
     User create(User User);
 
-    User update(Long userId, UpdateUserRequestDto updateDto);
+    User update(UpdateUserRequestDto updateDto);
 
     User getById(Long id);
 
     void delete(Long id);
 
     User getByEmail(String email);
+
+    User getCurrentUser();
 }

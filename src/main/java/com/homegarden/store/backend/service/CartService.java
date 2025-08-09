@@ -12,7 +12,7 @@ public interface CartService {
 
     List<CartItem> getAllCartItems();
 
-    void delete(Long id);
+    void delete();
 
     Cart update(Cart cart);
 

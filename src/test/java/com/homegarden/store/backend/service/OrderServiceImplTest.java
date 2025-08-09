@@ -35,9 +35,6 @@ class OrderServiceImplTest {
     @Mock
     private OrderItemService orderItemService;
 
-    @Mock
-    private AccessCheckService accessCheckService;
-
     @InjectMocks
     private OrderServiceImpl orderService;
 
@@ -60,12 +57,10 @@ class OrderServiceImplTest {
     @Test
     void testGetByIdFound() {
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-        doNothing().when(accessCheckService).checkAccess(order);
         Order result = orderService.getById(1L);
 
         assertThat(result).isEqualTo(order);
         verify(orderRepository, times(1)).findById(1L);
-        verify(accessCheckService, times(1)).checkAccess(order);
     }
 
     @Test
@@ -74,7 +69,6 @@ class OrderServiceImplTest {
         assertThatThrownBy(() -> orderService.getById(1L))
                 .isInstanceOf(OrderNotFoundException.class);
         verify(orderRepository, times(1)).findById(1L);
-        verify(accessCheckService,never()).checkAccess(order);
     }
 
     @Test
@@ -102,14 +96,12 @@ class OrderServiceImplTest {
     @Test
     void testGetAllOrdersByUser_UserExists() {
         when(userService.getById(1L)).thenReturn(user);
-        doNothing().when(accessCheckService).checkAccess(user);
         when(orderRepository.findAllByUser(user)).thenReturn(List.of(order));
 
-        List<Order> result = orderService.getAllByUser(1L);
+        List<Order> result = orderService.getAllByUser();
 
         assertThat(result).containsExactly(order);
         verify(orderRepository, times(1)).findAllByUser(user);
-        verify(accessCheckService, times(1)).checkAccess(user);
     }
 
     @Test
@@ -117,10 +109,9 @@ class OrderServiceImplTest {
         when(userService.getById(1L))
                 .thenThrow(new UserNotFoundException("User not found"));
 
-        assertThatThrownBy(() -> orderService.getAllByUser(1L))
+        assertThatThrownBy(() -> orderService.getAllByUser())
                 .isInstanceOf(UserNotFoundException.class);
         verify(orderRepository, never()).findAllByUser(user);
-        verify(accessCheckService, never()).checkAccess(user);
     }
 
     @Test

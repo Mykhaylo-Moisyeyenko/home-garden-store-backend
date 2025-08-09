@@ -19,12 +19,9 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final UserService userService;
 
-    private final AccessCheckService accessCheckService;
-
     @Override
     public Cart create(Cart cart) {
-        User user = userService.getById(cart.getUser().getUserId());
-        accessCheckService.checkAccess(user);
+        User user = userService.getCurrentUser();
         if (cartRepository.existsCartByUser(user)) {
             throw new CartAlreadyExistsException("Cart already exists for this user");
         }
@@ -40,10 +37,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void delete(Long id) {
-        Cart cart = getCart();
-        accessCheckService.checkAccess(cart);
-        cartRepository.deleteById(id);
+    public void delete() {
+        cartRepository.delete(userService.getCurrentUser().getCart());
     }
 
     @Override
@@ -53,21 +48,21 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart update(Cart cart) {
-        Cart updatedCart = getCart();
+        Cart updatedCart = userService.getCurrentUser().getCart();
         updatedCart.setItems(cart.getItems());
         return cartRepository.save(updatedCart);
     }
 
     @Override
     public Cart addCartItem(CartItem cartItem) {
-        Cart cart = getCart();
+        Cart cart = userService.getCurrentUser().getCart();
         cart.getItems().add(cartItem);
         return cartRepository.save(cart);
     }
 
     @Override
     public Cart updateCartItemQuantity(Long id, Integer quantity) {
-        Cart cart = getCart();
+        Cart cart = userService.getCurrentUser().getCart();
         CartItem item = findCartItem(id);
         item.setQuantity(quantity);
         if (quantity.equals(0)) {
@@ -82,14 +77,11 @@ public class CartServiceImpl implements CartService {
         return updateCartItemQuantity(id, 0);
     }
 
-    private Cart getCart() {
-        User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        return cartRepository.getByUser(user);
-    }
-
     private CartItem findCartItem(Long id) {
-        Cart cart = getCart();
-        List<CartItem> item = cart.getItems().stream().filter((cartItem) -> cartItem.getCartItemId().equals(id)).toList();
+        Cart cart = userService.getCurrentUser().getCart();
+        List<CartItem> item = cart.getItems().stream()
+                .filter((cartItem) -> cartItem.getCartItemId().equals(id))
+                .toList();
         if (item.isEmpty()) {
             throw new CartItemNotFoundException("Cart Item is not found");
         }
