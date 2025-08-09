@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,13 +20,14 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/orders")
-
+@PreAuthorize("hasRole('ADMINISTRATOR')")
 public class OrderController {
 
     private final OrderService orderService;
     private final OrderConverter converter;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<OrderResponseDto> create(@RequestBody @NotNull @Valid CreateOrderRequestDto orderRequestDTO) {
 
         Order order = orderService.create(orderRequestDTO);
@@ -46,6 +48,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<OrderResponseDto> getById(@PathVariable @Valid @Min(1) Long orderId) {
         Order order = orderService.getById(orderId);
         OrderResponseDto response = converter.toDto(order);
@@ -54,10 +57,9 @@ public class OrderController {
     }
 
     @GetMapping("/history/{userId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<List<OrderResponseDto>> getAllByUserId(@PathVariable @Valid @Min(1) Long userId) {
-        List<OrderResponseDto> result = orderService
-
-                .getAllByUserId(userId)
+        List<OrderResponseDto> result = orderService.getAllByUser(userId)
                 .stream()
                 .map(converter::toDto)
                 .toList();
@@ -66,6 +68,7 @@ public class OrderController {
     }
 
     @PatchMapping("/{orderId}/cancel")
+    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<Void> cancel(@PathVariable @Valid @Min(1) Long orderId) {
         orderService.cancel(orderId);
 

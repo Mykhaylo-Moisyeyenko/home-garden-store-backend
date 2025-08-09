@@ -7,6 +7,7 @@ import com.homegarden.store.backend.enums.Role;
 import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.exception.OrderNotFoundException;
 import com.homegarden.store.backend.exception.OrderUnableToCancelException;
+import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.repository.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -99,26 +100,26 @@ class OrderServiceImplTest {
 //    }
 
     @Test
-    void testGetAllOrdersByUserId_UserExists() {
-        when(userService.existsById(1L)).thenReturn(true);
+    void testGetAllOrdersByUser_UserExists() {
         when(userService.getById(1L)).thenReturn(user);
         doNothing().when(accessCheckService).checkAccess(user);
-        when(orderRepository.findAllByUserUserId(1L)).thenReturn(List.of(order));
+        when(orderRepository.findAllByUser(user)).thenReturn(List.of(order));
 
-        List<Order> result = orderService.getAllByUserId(1L);
+        List<Order> result = orderService.getAllByUser(1L);
 
         assertThat(result).containsExactly(order);
-        verify(orderRepository, times(1)).findAllByUserUserId(1L);
+        verify(orderRepository, times(1)).findAllByUser(user);
         verify(accessCheckService, times(1)).checkAccess(user);
     }
 
     @Test
-    void testGetAllOrdersByUserId_UserNotFound() {
-        when(userService.existsById(1L)).thenReturn(false);
+    void testGetAllOrdersByUser_UserNotFound() {
+        when(userService.getById(1L))
+                .thenThrow(new UserNotFoundException("User not found"));
 
-        assertThatThrownBy(() -> orderService.getAllByUserId(1L))
-                .isInstanceOf(OrderNotFoundException.class);
-        verify(orderRepository, never()).findAllByUserUserId(1L);
+        assertThatThrownBy(() -> orderService.getAllByUser(1L))
+                .isInstanceOf(UserNotFoundException.class);
+        verify(orderRepository, never()).findAllByUser(user);
         verify(accessCheckService, never()).checkAccess(user);
     }
 

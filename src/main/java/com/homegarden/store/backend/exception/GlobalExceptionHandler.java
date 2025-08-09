@@ -44,7 +44,8 @@ public class GlobalExceptionHandler {
             OrderUnableToCancelException.class,
             ProductUsedInOrdersException.class,
             CartAlreadyExistsException.class,
-            FavoriteAlreadyExistsException.class})
+            FavoriteAlreadyExistsException.class,
+            DoublePaymentException.class})
     public String handleConflict(Exception exception) {
 
         return exception.getMessage();

@@ -57,16 +57,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    @Override
-    public boolean existsById(Long id) {
-        return userRepository.existsById(id);
-    }
-
-    @Override
     public User getByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));

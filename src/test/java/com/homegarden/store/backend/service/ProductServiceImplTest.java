@@ -167,14 +167,4 @@ class ProductServiceImplTest {
         verify(productRepositoryTest, times(1)).findById(1L);
         verify(productRepositoryTest, never()).save(any(Product.class));
     }
-
-    @Test
-    void existsByIdTest() {
-        when(productRepositoryTest.existsById(1L)).thenReturn(true);
-
-        boolean result = productServiceTest.existsById(1L);
-
-        assertTrue(result);
-        verify(productRepositoryTest, times(1)).existsById(1L);
-    }
 }

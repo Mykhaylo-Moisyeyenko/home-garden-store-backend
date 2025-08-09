@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
@@ -28,38 +30,13 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**")
-
                         .permitAll()
 
+                        .requestMatchers("/v1/users/register").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/categories/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/v1/users/register").anonymous()
-
-                        .requestMatchers(HttpMethod.POST, "/v1/carts").hasAnyRole("USER", "ADMINISTRATOR")
-                        .requestMatchers(HttpMethod.GET,"/v1/carts/{id}").hasAnyRole("USER", "ADMINISTRATOR")
-                        .requestMatchers(HttpMethod.DELETE,"/v1/carts/{id}").hasAnyRole("USER", "ADMINISTRATOR")
-                                       
-                        .requestMatchers(HttpMethod.POST, "/v1/cart-items").hasAnyRole("USER", "ADMINISTRATOR")
-                        .requestMatchers(HttpMethod.PUT, "/v1/cart-items/{id}").hasAnyRole("USER", "ADMINISTRATOR")
-                        .requestMatchers(HttpMethod.GET,"/v1/cart-items/{id}").hasAnyRole("USER", "ADMINISTRATOR")
-                        .requestMatchers(HttpMethod.DELETE,"/v1/cart-items/{id}").hasAnyRole("USER", "ADMINISTRATOR")
-                                       
-                        .requestMatchers("/v1/favorites/**").hasAnyRole("USER", "ADMINISTRATOR")
-                                       
-                        .requestMatchers(HttpMethod.POST, "/v1/orders").hasAnyRole("USER", "ADMINISTRATOR")
-                        .requestMatchers(HttpMethod.GET, "/v1/orders/{orderId}").hasAnyRole("USER", "ADMINISTRATOR")
-                        .requestMatchers(HttpMethod.GET, "/v1/orders/history/{userId}").hasAnyRole("USER", "ADMINISTRATOR")
-                        .requestMatchers(HttpMethod.PATCH, "/v1/orders/{orderId}/cancel").hasAnyRole("USER", "ADMINISTRATOR")
-                                       
-                        .requestMatchers(HttpMethod.POST, "/v1/payments").hasAnyRole("USER", "ADMINISTRATOR")
-                        .requestMatchers(HttpMethod.GET, "/v1/payments/{paymentId}").hasAnyRole("USER", "ADMINISTRATOR")
-                        .requestMatchers(HttpMethod.GET, "/v1/payments/payments-by-order/{orderId}").hasAnyRole("USER", "ADMINISTRATOR")
-                                       
-                        .requestMatchers(HttpMethod.PUT, "/v1/users/{userId}").hasAnyRole("USER", "ADMINISTRATOR")
-                        .requestMatchers(HttpMethod.GET, "/v1/users/id/{id}").hasAnyRole("USER", "ADMINISTRATOR")
-
-                        .requestMatchers("/**").hasRole("ADMINISTRATOR"))
+                        .anyRequest().authenticated())
 
                 .csrf(csrf -> csrf.disable())
 

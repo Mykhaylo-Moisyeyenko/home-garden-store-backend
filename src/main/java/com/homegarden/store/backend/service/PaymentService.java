@@ -15,5 +15,5 @@ public interface PaymentService {
 
     Payment getById(Long paymentId);
 
-    List<Payment> getPaymentsByOrder(Long orderId);
+    List<Payment> getAllByOrder(Long orderId);
 }

@@ -31,7 +31,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemService orderItemService;
     private final UserService userService;
     private final CartService cartService;
-
     private final AccessCheckService accessCheckService;
 
     @Override
@@ -43,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = Order.builder()
                 .user(user)
                 .deliveryAddress(createOrderRequestDto.deliveryAddress())
-                .contactPhone("")
+                .contactPhone(user.getPhoneNumber())
                 .deliveryMethod(createOrderRequestDto.deliveryMethod())
                 .build();
 
@@ -120,15 +119,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllByUserId(Long userId) {
-        if (!userService.existsById(userId)) {
-            throw new OrderNotFoundException("User with id " + userId + " not found");
-        }
-
+    public List<Order> getAllByUser(Long userId) {
         User user = userService.getById(userId);
         accessCheckService.checkAccess(user);
 
-        return orderRepository.findAllByUserUserId(userId);
+        return orderRepository.findAllByUser(user);
     }
 
     @Override
@@ -142,9 +137,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllByStatusAndUpdatedAtBefore
-            (Status status,
-             LocalDateTime updatedAtBefore) {
+    public List<Order> getAllByStatusAndUpdatedAtBefore(
+            Status status,
+            LocalDateTime updatedAtBefore) {
 
         return orderRepository.findByStatusAndUpdatedAtBefore(
                 status,
@@ -166,8 +161,7 @@ public class OrderServiceImpl implements OrderService {
     public List<TopCancelledProductDto> getTopCancelledProducts() {
         List<Object[]> data = orderItemService.getTopCancelledProducts();
 
-        return data
-                .stream()
+        return data.stream()
                 .map(obj -> new TopCancelledProductDto(
                         (Long) obj[0],
                         (String) obj[1],

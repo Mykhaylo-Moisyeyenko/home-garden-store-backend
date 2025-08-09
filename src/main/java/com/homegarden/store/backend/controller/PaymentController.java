@@ -3,15 +3,14 @@ package com.homegarden.store.backend.controller;
 import com.homegarden.store.backend.converter.Converter;
 import com.homegarden.store.backend.dto.PaymentCreateDto;
 import com.homegarden.store.backend.dto.PaymentResponseDto;
-import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.entity.Payment;
 import com.homegarden.store.backend.enums.PaymentStatus;
-import com.homegarden.store.backend.service.OrderService;
 import com.homegarden.store.backend.service.PaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/payments")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMINISTRATOR')")
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -36,6 +36,7 @@ public class PaymentController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<PaymentResponseDto> create(@RequestBody @Valid PaymentCreateDto dto) {
         Payment savedPayment = paymentService.create(converter.toEntity(dto));
         PaymentResponseDto paymentResponseDTO = converter.toDto(savedPayment);
@@ -55,6 +56,7 @@ public class PaymentController {
     }
 
     @GetMapping("/{paymentId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<PaymentResponseDto> getById(@PathVariable Long paymentId) {
 
         Payment payment = paymentService.getById(paymentId);
@@ -63,9 +65,9 @@ public class PaymentController {
     }
 
     @GetMapping("/payments-by-order/{orderId}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<List<PaymentResponseDto>> getPaymentsByOrder(@PathVariable Long orderId) {
-        List<PaymentResponseDto> paymentList = paymentService
-                .getPaymentsByOrder(orderId)
+        List<PaymentResponseDto> paymentList = paymentService.getAllByOrder(orderId)
                 .stream()
                 .map(converter::toDto)
                 .toList();

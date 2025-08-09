@@ -16,6 +16,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     private final FavoriteRepository favoriteRepository;
     private final ProductService productService;
     private final UserService userService;
+    private final AccessCheckService accessCheckService;
 
     @Override
     public List<Favorite> getAll(Long userId) {
@@ -27,12 +28,18 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public void addToFavorites(Favorite favorite) {
         productService.getById(favorite.getProduct().getProductId());
-        favoriteRepository.save(favorite);
+        if (!favoriteRepository
+                .existsByUser_AndProduct(favorite.getUser(), favorite.getProduct())) {
+            favoriteRepository.save(favorite);
+        }
     }
 
     @Override
     @Transactional
     public void removeFromFavorites(Favorite favorite) {
+        User user = userService.getById(favorite.getUser().getUserId());
+        accessCheckService.checkAccess(user);
+
         favoriteRepository.deleteByUserAndProduct(
                 favorite.getUser(),
                 favorite.getProduct());

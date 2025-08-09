@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/carts")
+@PreAuthorize("hasRole('ADMINISTRATOR')")
 public class CartController {
 
     private final CartService cartService;
@@ -25,6 +27,7 @@ public class CartController {
     private final Converter<CartItem, CreateCartItemRequestDto, CartItemResponseDto> cartItemConverter;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<CartResponseDto> create(@RequestBody @Valid CreateCartRequestDto dto) {
         Cart created = cartService.create(cartConverter.toEntity(dto));
         return ResponseEntity.status(HttpStatus.CREATED).body(cartConverter.toDto(created));
@@ -39,6 +42,7 @@ public class CartController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMINISTRATOR')")
     public ResponseEntity<Void> delete(@PathVariable @NotNull @Min(1) Long id) {
         cartService.delete(id);
         return ResponseEntity.noContent().build();
