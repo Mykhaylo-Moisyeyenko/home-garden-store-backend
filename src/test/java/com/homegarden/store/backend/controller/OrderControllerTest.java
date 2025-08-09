@@ -85,7 +85,7 @@ class OrderControllerTest {
 
     @Test
     void testGetOrdersByUser() throws Exception {
-        when(orderService.getAllByUserId(1L)).thenReturn(List.of(order));
+        when(orderService.getAllByUser(1L)).thenReturn(List.of(order));
         when(converter.toDto(order)).thenReturn(responseDTO);
 
         mockMvc.perform(get("/v1/orders/history/1"))
