@@ -46,8 +46,7 @@ public class UserServiceImpl implements UserService {
         User user = getCurrentUser();
 
         if (user.getRole().equals(Role.ROLE_USER)) {
-            return userRepository.findById(user.getUserId())
-                    .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+            return user;
         }
 
         return userRepository.findById(userId)

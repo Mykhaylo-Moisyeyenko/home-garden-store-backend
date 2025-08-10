@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,10 +36,10 @@ class OrderControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private OrderService orderService;
 
-    @MockBean
+    @MockitoBean
     private OrderConverter converter;
 
     @MockitoBean
@@ -88,7 +87,7 @@ class OrderControllerTest {
         when(orderService.getAllByUser()).thenReturn(List.of(order));
         when(converter.toDto(order)).thenReturn(responseDTO);
 
-        mockMvc.perform(get("/v1/orders/history/1"))
+        mockMvc.perform(get("/v1/orders/history"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].orderId", is(1)));

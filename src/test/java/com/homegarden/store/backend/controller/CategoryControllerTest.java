@@ -1,5 +1,6 @@
 package com.homegarden.store.backend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homegarden.store.backend.converter.CategoryConverter;
 import com.homegarden.store.backend.dto.CategoryDto;
 import com.homegarden.store.backend.entity.Category;
@@ -16,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -28,6 +29,9 @@ class CategoryControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @MockitoBean
     private CategoryService categoryServiceTest;
@@ -58,8 +62,8 @@ class CategoryControllerTest {
 
         mockMvc.perform(
                         post("/v1/categories")
-                                .contentType(APPLICATION_JSON_UTF8)
-                                .content("{\"categoryId\":1,\"name\":\"tools\"}")
+                                .contentType(APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(category1))
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -103,25 +107,25 @@ class CategoryControllerTest {
     void deleteTest() throws Exception {
         Mockito.doNothing().when(categoryServiceTest).delete(category1.getCategoryId());
 
-        mockMvc.perform(delete("/v1/categories/{id}",1L))
+        mockMvc.perform(delete("/v1/categories/{id}", 1L))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void updateCategoryTest() throws Exception {
         Category updatedCategory = new Category(1L, "flowers", null);
-        CategoryDto updatedCategoryDto = new CategoryDto(1L,"flowers");
+        CategoryDto updatedCategoryDto = new CategoryDto(1L, "flowers");
 
-        when(categoryServiceTest.update(category1.getCategoryId(),"flowers")).thenReturn(updatedCategory);
+        when(categoryServiceTest.update(category1.getCategoryId(), "flowers")).thenReturn(updatedCategory);
         when(categoryConverterTest.toDto(updatedCategory)).thenReturn(updatedCategoryDto);
 
-        mockMvc.perform(put("/v1/categories/{id}",1L).contentType(APPLICATION_JSON_UTF8)
-                .content("{\"categoryId\":1,\"name\":\"flowers\"}"))
+        mockMvc.perform(put("/v1/categories/{id}", 1L)
+                        .contentType(APPLICATION_JSON)
+                        .content("{\"categoryId\":1,\"name\":\"flowers\"}"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.categoryId").exists())
                 .andExpect(jsonPath("$.categoryId").value(1L))
                 .andExpect(jsonPath("$.name").value("flowers"));
-
     }
 }

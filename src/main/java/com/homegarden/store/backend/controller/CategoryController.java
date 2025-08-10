@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/categories")
-@PreAuthorize("hasAnyRole('ADMINISTRATOR','USER')")
+@PreAuthorize("hasAnyRole('ADMINISTRATOR')")
 public class CategoryController {
 
     private final CategoryService categoryService;

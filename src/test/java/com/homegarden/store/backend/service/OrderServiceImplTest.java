@@ -7,13 +7,13 @@ import com.homegarden.store.backend.enums.Role;
 import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.exception.OrderNotFoundException;
 import com.homegarden.store.backend.exception.OrderUnableToCancelException;
-import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.repository.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -36,6 +36,7 @@ class OrderServiceImplTest {
     private OrderItemService orderItemService;
 
     @InjectMocks
+    @Spy
     private OrderServiceImpl orderService;
 
     private Order order;
@@ -56,18 +57,26 @@ class OrderServiceImplTest {
 
     @Test
     void testGetByIdFound() {
+        doReturn(user).when(userService).getCurrentUser();
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        order.setUser(user);
+
         Order result = orderService.getById(1L);
 
         assertThat(result).isEqualTo(order);
+        verify(userService, times(1)).getCurrentUser();
         verify(orderRepository, times(1)).findById(1L);
     }
 
     @Test
     void testGetByIdNotFound() {
+        doReturn(user).when(userService).getCurrentUser();
         when(orderRepository.findById(1L)).thenReturn(Optional.empty());
+
         assertThatThrownBy(() -> orderService.getById(1L))
                 .isInstanceOf(OrderNotFoundException.class);
+
+        verify(userService, times(1)).getCurrentUser();
         verify(orderRepository, times(1)).findById(1L);
     }
 
@@ -78,56 +87,58 @@ class OrderServiceImplTest {
         assertThat(result).containsExactly(order);
     }
 
-//    @Test
-//    void testUpdateStatusPresent() {
-//        when(orderStatusChanger.getNext(order)).thenReturn(Optional.of(Status.SHIPPED));
-//        orderService.updateStatus(order);
-//        assertThat(order.getStatus()).isEqualTo(Status.SHIPPED);
-//        verify(orderRepository).save(order);
-//    }
-//
-//    @Test
-//    void testUpdateStatusNotPresent() {
-//        when(orderStatusChanger.getNext(order)).thenReturn(Optional.empty());
-//        orderService.updateStatus(order);
-//        verify(orderRepository, never()).save(order);
-//    }
+
+    @Test
+    void testUpdateStatusSuccess() {
+        Order orderChanged = Order.builder().orderId(1L).status(Status.DELIVERED).build();
+        when(orderRepository.save(order)).thenReturn(orderChanged);
+
+        orderService.updateStatus(order, Status.DELIVERED);
+
+        assertThat(orderChanged.getStatus()).isEqualTo(Status.DELIVERED);
+        verify(orderRepository, times(1)).save(order);
+
+    }
 
     @Test
     void testGetAllOrdersByUser_UserExists() {
-        when(userService.getById(1L)).thenReturn(user);
+        doReturn(user).when(userService).getCurrentUser();
         when(orderRepository.findAllByUser(user)).thenReturn(List.of(order));
 
         List<Order> result = orderService.getAllByUser();
 
         assertThat(result).containsExactly(order);
+        verify(userService, times(1)).getCurrentUser();
         verify(orderRepository, times(1)).findAllByUser(user);
-    }
-
-    @Test
-    void testGetAllOrdersByUser_UserNotFound() {
-        when(userService.getById(1L))
-                .thenThrow(new UserNotFoundException("User not found"));
-
-        assertThatThrownBy(() -> orderService.getAllByUser())
-                .isInstanceOf(UserNotFoundException.class);
-        verify(orderRepository, never()).findAllByUser(user);
     }
 
     @Test
     void testCancelOrderAllowed() {
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        doReturn(user).when(userService).getCurrentUser();
+        order.setUser(user);
+        doCallRealMethod().when(orderService).updateStatus(order, Status.CANCELLED);
+        Order orderCancelled = Order.builder().orderId(1L).status(Status.CANCELLED).build();
+        when(orderRepository.save(order)).thenReturn(orderCancelled);
+
         orderService.cancel(1L);
-        assertThat(order.getStatus()).isEqualTo(Status.CANCELLED);
-        verify(orderRepository).save(order);
+
+        assertThat(orderCancelled.getStatus()).isEqualTo(Status.CANCELLED);
+        verify(orderRepository, times(1)).findById(1L);
+        verify(userService, times(2)).getCurrentUser();
+        verify(orderService, times(1)).updateStatus(order, Status.CANCELLED);
     }
 
     @Test
     void testCancelOrderNotAllowed() {
         order.setStatus(Status.SHIPPED);
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        doReturn(user).when(userService).getCurrentUser();
+        order.setUser(user);
+
         assertThatThrownBy(() -> orderService.cancel(1L))
                 .isInstanceOf(OrderUnableToCancelException.class);
+        verify(orderService,never()).updateStatus(any(), any());
     }
 
     @Test

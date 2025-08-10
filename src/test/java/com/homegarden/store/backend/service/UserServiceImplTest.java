@@ -2,38 +2,45 @@ package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.dto.UpdateUserRequestDto;
 import com.homegarden.store.backend.entity.User;
+import com.homegarden.store.backend.enums.Role;
 import com.homegarden.store.backend.exception.UserAlreadyExistsException;
 import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
 
     @InjectMocks
+    @Spy
     private UserServiceImpl userService;
 
     private User user;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         user = User.builder()
                 .userId(1L)
                 .name("Test User")
                 .email("test@example.com")
                 .phoneNumber("1234567890")
+                .role(Role.ROLE_USER)
                 .build();
     }
 
@@ -71,26 +78,28 @@ class UserServiceImplTest {
 
     @Test
     void testGetUserById_UserExists() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        doReturn(user).when(userService).getCurrentUser();
 
         User found = userService.getById(1L);
 
         assertEquals(user, found);
-        verify(userRepository).findById(1L);
     }
 
     @Test
     void testGetUserById_UserNotFound() {
-        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        doReturn(user).when(userService).getCurrentUser();
+        user.setRole(Role.ROLE_ADMINISTRATOR);
+        when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.getById(1L));
-        verify(userRepository).findById(1L);
+        assertThrows(UserNotFoundException.class, () -> userService.getById(999L));
+        verify(userRepository).findById(999L);
     }
 
     @Test
     void testUpdateUser() {
         UpdateUserRequestDto updateDto = new UpdateUserRequestDto("Updated Name", "9876543210");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        doReturn(user).when(userService).getCurrentUser();
+
         when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
         User updated = userService.update(updateDto);
@@ -102,7 +111,7 @@ class UserServiceImplTest {
 
     @Test
     void testDeleteUser() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        doReturn(user).when(userService).getById(1L);
 
         userService.delete(1L);
 

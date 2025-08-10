@@ -5,7 +5,6 @@ import com.homegarden.store.backend.entity.CartItem;
 import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.exception.CartAlreadyExistsException;
-import com.homegarden.store.backend.exception.UserNotFoundException;
 import com.homegarden.store.backend.repository.CartRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,40 +46,30 @@ class CartServiceImplTest {
 
     @Test
     void createTestSuccessful() {
-        when(userServiceTest.getById(1L)).thenReturn(user);
+        doReturn(user).when(userServiceTest).getCurrentUser();
         when(cartRepositoryTest.existsCartByUser(user)).thenReturn(false);
         when(cartRepositoryTest.save(cart)).thenReturn(cartSaved);
 
         Cart result = cartServiceImpl.create(cart);
 
         assertEquals(cartSaved, result);
-        verify(userServiceTest, times(1)).getById(1L);
+        verify(userServiceTest, times(1)).getCurrentUser();
         verify(cartRepositoryTest, times(1)).existsCartByUser(user);
         verify(cartRepositoryTest, times(1)).save(cart);
     }
 
     @Test
-    void createTestWhenUserNotFound() {
-        doThrow(new UserNotFoundException("User not found")).when(userServiceTest).getById(1L);
-
-        assertThrows(UserNotFoundException.class, () -> cartServiceImpl.create(cart));
-
-        verify(userServiceTest, times(1)).getById(1L);
-        verify(cartRepositoryTest, never()).save(cart);
-    }
-
-    @Test
     void createTestWhenCartAlreadyExists() {
-        when(userServiceTest.getById(1L)).thenReturn(user);
+        doReturn(user).when(userServiceTest).getCurrentUser();
         when(cartRepositoryTest.existsCartByUser(user)).thenReturn(true);
 
         assertThrows(CartAlreadyExistsException.class, () -> cartServiceImpl.create(cart));
 
-        verify(userServiceTest, times(1)).getById(1L);
+        verify(userServiceTest, times(1)).getCurrentUser();
         verify(cartRepositoryTest, times(1)).existsCartByUser(user);
         verify(cartRepositoryTest, never()).save(cart);
     }
-}
+//}
 //
 //    @Test
 //    void getAllTest() {
@@ -92,15 +81,14 @@ class CartServiceImplTest {
 //        verify(cartRepositoryTest, times(1)).findAll();
 //    }
 //
-//    @Test
-//    void deleteTest() {
-//        when(cartRepositoryTest.findById(1L)).thenReturn(Optional.ofNullable(cartSaved));
-//        doNothing().when(accessCheckService).checkAccess(cartSaved);
-//        doNothing().when(cartRepositoryTest).deleteById(1L);
-//
-//        cartServiceImpl.delete(1L);
-//
-//        verify(cartRepositoryTest, times(1)).findById(1L);
-//        verify(cartRepositoryTest, times(1)).deleteById(1L);
-//    }
-//}
+    @Test
+    void deleteTest() {
+        doReturn(user).when(userServiceTest).getCurrentUser();
+        doNothing().when(cartRepositoryTest).delete(user.getCart());
+
+        cartServiceImpl.delete();
+
+        verify(userServiceTest, times(1)).getCurrentUser();
+        verify(cartRepositoryTest, times(1)).delete(user.getCart());
+    }
+}
