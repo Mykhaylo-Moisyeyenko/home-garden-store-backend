@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReportServiceImplTest {
@@ -30,5 +30,6 @@ class ReportServiceImplTest {
 
             assertThat(result).hasSize(1);
             assertThat(result.get(0).productId()).isEqualTo(1L);
+            verify(orderItemService, times(1)).getTopCancelledProducts();
     }
 }
