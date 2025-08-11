@@ -5,7 +5,6 @@ import com.homegarden.store.backend.converter.OrderConverter;
 import com.homegarden.store.backend.dto.CreateOrderItemRequestDto;
 import com.homegarden.store.backend.dto.CreateOrderRequestDto;
 import com.homegarden.store.backend.dto.OrderResponseDto;
-import com.homegarden.store.backend.dto.TopCancelledProductDto;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.service.OrderService;
@@ -117,18 +116,5 @@ class OrderControllerTest {
                         .content(new ObjectMapper().writeValueAsString(requestDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.orderId", is(1)));
-    }
-
-    @Test
-    void testGetTopCancelledProducts() throws Exception {
-        TopCancelledProductDto dto = new TopCancelledProductDto(10L, "Product Name", 5L);
-        when(orderService.getTopCancelledProducts()).thenReturn(List.of(dto));
-
-        mockMvc.perform(get("/v1/orders/report/top-cancelled-products"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].productId", is(10)))
-                .andExpect(jsonPath("$[0].productName", is("Product Name")))
-                .andExpect(jsonPath("$[0].cancelCount", is(5)));
     }
 }

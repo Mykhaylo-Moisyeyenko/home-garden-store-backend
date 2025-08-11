@@ -1,7 +1,6 @@
 package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.dto.CreateOrderRequestDto;
-import com.homegarden.store.backend.dto.TopCancelledProductDto;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.enums.Status;
 
@@ -21,8 +20,6 @@ public interface OrderService {
     void cancel(Long id);
 
     List<Order> getAllByUser();
-
-    List<TopCancelledProductDto> getTopCancelledProducts();
 
     boolean isProductUsedInOrders(Long productId);
 

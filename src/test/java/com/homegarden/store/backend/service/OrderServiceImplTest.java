@@ -1,6 +1,5 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.dto.TopCancelledProductDto;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.enums.Role;
@@ -139,15 +138,6 @@ class OrderServiceImplTest {
         assertThatThrownBy(() -> orderService.cancel(1L))
                 .isInstanceOf(OrderUnableToCancelException.class);
         verify(orderService,never()).updateStatus(any(), any());
-    }
-
-    @Test
-    void testGetTopCancelledProducts() {
-        Object[] data = new Object[]{1L, "Product Name", 5L};
-        when(orderItemService.getTopCancelledProducts()).thenReturn(List.<Object[]>of(data));
-        List<TopCancelledProductDto> result = orderService.getTopCancelledProducts();
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).productId()).isEqualTo(1L);
     }
 
     @Test
