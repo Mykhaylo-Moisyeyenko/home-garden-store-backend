@@ -2,7 +2,6 @@ package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.dto.CreateOrderItemRequestDto;
 import com.homegarden.store.backend.dto.CreateOrderRequestDto;
-import com.homegarden.store.backend.dto.TopCancelledProductDto;
 import com.homegarden.store.backend.entity.*;
 import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.exception.OrderItemsListIsEmptyException;
@@ -159,19 +158,6 @@ public class OrderServiceImpl implements OrderService {
         }
 
         updateStatus(order, CANCELLED);
-    }
-
-    @Override
-    public List<TopCancelledProductDto> getTopCancelledProducts() {
-        List<Object[]> data = orderItemService.getTopCancelledProducts();
-
-        return data.stream()
-                .map(obj -> new TopCancelledProductDto(
-                        (Long) obj[0],
-                        (String) obj[1],
-                        (Long) obj[2]
-                ))
-                .toList();
     }
 
     @Override

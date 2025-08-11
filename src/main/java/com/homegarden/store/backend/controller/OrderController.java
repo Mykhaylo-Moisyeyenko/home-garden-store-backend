@@ -3,7 +3,6 @@ package com.homegarden.store.backend.controller;
 import com.homegarden.store.backend.converter.OrderConverter;
 import com.homegarden.store.backend.dto.CreateOrderRequestDto;
 import com.homegarden.store.backend.dto.OrderResponseDto;
-import com.homegarden.store.backend.dto.TopCancelledProductDto;
 import com.homegarden.store.backend.entity.Order;
 import com.homegarden.store.backend.service.OrderService;
 import jakarta.validation.Valid;
@@ -73,12 +72,5 @@ public class OrderController {
         orderService.cancel(orderId);
 
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/report/top-cancelled-products")
-    public ResponseEntity<List<TopCancelledProductDto>> getTopCancelledProducts() {
-        orderService.getTopCancelledProducts();
-
-        return ResponseEntity.ok().body(orderService.getTopCancelledProducts());
     }
 }
