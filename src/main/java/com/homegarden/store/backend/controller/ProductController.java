@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/v1/products")
 @RequiredArgsConstructor
+@Validated
 @PreAuthorize("hasRole('ADMINISTRATOR')")
 public class ProductController {
 
@@ -75,5 +77,14 @@ public class ProductController {
         Product updated = productService.update(productToUpdate);
 
         return ResponseEntity.ok(converter.toDto(updated));
+    }
+
+    @PatchMapping
+    public ResponseEntity<ProductDto> setDiscountPrice(
+            @RequestParam @Min(1) Long productId,
+            @RequestParam @Positive BigDecimal newDiscountPrice) {
+        Product updatedProduct = productService.setDiscountPrice(productId, newDiscountPrice);
+
+        return ResponseEntity.ok().body(converter.toDto(updatedProduct));
     }
 }
