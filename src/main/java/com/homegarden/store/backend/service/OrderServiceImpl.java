@@ -164,4 +164,13 @@ public class OrderServiceImpl implements OrderService {
     public boolean isProductUsedInOrders(Long productId) {
         return orderItemService.isProductUsedInOrders(productId);
     }
+
+    @Override
+    public List<Object[]> getGroupedRevenue(
+            LocalDateTime startTime,
+            LocalDateTime endTime,
+            String timeCut) {
+
+        return orderRepository.findGroupedRevenue(startTime, endTime, timeCut);
+    }
 }
