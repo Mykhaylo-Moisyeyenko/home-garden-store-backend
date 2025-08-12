@@ -1,6 +1,6 @@
 package com.homegarden.store.backend.dto;
 
-public record TopCancelledProductDto(
+public record TopCancelledProductsReportDto(
 
         Long productId,
 

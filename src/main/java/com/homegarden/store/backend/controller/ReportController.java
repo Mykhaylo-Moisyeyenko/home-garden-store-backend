@@ -1,7 +1,8 @@
 package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.dto.ProfitReportDto;
-import com.homegarden.store.backend.dto.TopCancelledProductDto;
+import com.homegarden.store.backend.dto.TopCancelledProductsReportDto;
+import com.homegarden.store.backend.dto.TopTenSelledProductsReportDto;
 import com.homegarden.store.backend.exception.ReportBadRequestException;
 import com.homegarden.store.backend.service.ReportService;
 import jakarta.validation.constraints.PastOrPresent;
@@ -10,7 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,7 +29,7 @@ public class ReportController {
     private final ReportService reportService;
 
     @GetMapping("/top-cancelled-products")
-    public ResponseEntity<List<TopCancelledProductDto>> getTopCancelledProducts() {
+    public ResponseEntity<List<TopCancelledProductsReportDto>> getTopCancelledProducts() {
         reportService.getTopCancelledProducts();
 
         return ResponseEntity.ok().body(reportService.getTopCancelledProducts());
@@ -49,5 +53,12 @@ public class ReportController {
         }
 
         return ResponseEntity.ok(reportService.getProfitReport(startDate, endDate, groupBy));
+    }
+
+    @GetMapping("/top-ten-selled-products")
+    public ResponseEntity<List<TopTenSelledProductsReportDto>> getTopTenSelledProducts(
+            @RequestParam @Pattern(regexp = "quantity|sum") String sortBy) {
+
+        return ResponseEntity.ok(reportService.getTopTenSelledProducts(sortBy));
     }
 }

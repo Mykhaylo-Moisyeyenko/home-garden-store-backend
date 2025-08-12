@@ -1,6 +1,6 @@
 package com.homegarden.store.backend.controller;
 
-import com.homegarden.store.backend.dto.TopCancelledProductDto;
+import com.homegarden.store.backend.dto.TopCancelledProductsReportDto;
 import com.homegarden.store.backend.service.ReportService;
 import com.homegarden.store.backend.service.security.JwtFilter;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class ReportControllerTest {
 
     @Test
     void getTopCancelledProductsTest() throws Exception {
-        TopCancelledProductDto dto = new TopCancelledProductDto(10L, "Product Name", 5L);
+        TopCancelledProductsReportDto dto = new TopCancelledProductsReportDto(10L, "Product Name", 5L);
         when(reportService.getTopCancelledProducts()).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/reports/top-cancelled-products"))

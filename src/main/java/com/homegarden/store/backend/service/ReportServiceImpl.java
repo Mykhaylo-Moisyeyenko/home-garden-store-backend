@@ -1,8 +1,9 @@
 package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.dto.ProfitReportDto;
-import com.homegarden.store.backend.dto.TopCancelledProductDto;
-import com.homegarden.store.backend.exception.ReportBadRequestException;
+import com.homegarden.store.backend.dto.TopCancelledProductsReportDto;
+import com.homegarden.store.backend.dto.TopTenSelledProductsReportDto;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +19,14 @@ public class ReportServiceImpl implements ReportService{
 
     private final OrderItemService orderItemService;
     private final OrderService orderService;
+    private final EntityManager entityManager;
 
     @Override
-    public List<TopCancelledProductDto> getTopCancelledProducts() {
+    public List<TopCancelledProductsReportDto> getTopCancelledProducts() {
         List<Object[]> data = orderItemService.getTopCancelledProducts();
 
         return data.stream()
-                .map(obj -> new TopCancelledProductDto(
+                .map(obj -> new TopCancelledProductsReportDto(
                         (Long) obj[0],
                         (String) obj[1],
                         (Long) obj[2]
@@ -43,6 +45,35 @@ public class ReportServiceImpl implements ReportService{
                 .map(row -> new ProfitReportDto(
                         ((Timestamp) row[0]).toLocalDateTime(),
                         (BigDecimal) row[1]
+                ))
+                .toList();
+    }
+
+    @Override
+    public List<TopTenSelledProductsReportDto> getTopTenSelledProducts(String sortBy) {
+        String sortColumnBy = sortBy.equals("quantity") ? "totalQuantity" : "totalSum";
+
+        String query = """
+                SELECT  oi.product_id,
+                        SUM(oi.quantity) AS totalQuantity,
+                        SUM(oi.quantity * oi.price_at_purchase) AS totalSum
+                FROM order_items oi
+                JOIN orders o
+                    ON oi.order_id = o.order_id
+                WHERE o.status = 'DELIVERED'
+                GROUP BY oi.product_id
+                ORDER BY %s DESC
+                LIMIT 10
+                """.formatted(sortColumnBy);
+
+        @SuppressWarnings("unchecked")
+        List<Object[]> rowsFromDb = entityManager.createNativeQuery(query).getResultList();
+
+        return rowsFromDb.stream()
+                .map(row -> new TopTenSelledProductsReportDto(
+                        ((Number) row[0]).longValue(),
+                        ((Number) row[1]).longValue(),
+                        (BigDecimal) row[2]
                 ))
                 .toList();
     }
