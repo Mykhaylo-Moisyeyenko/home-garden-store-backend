@@ -41,7 +41,7 @@ public class ReportController {
             @PastOrPresent(message = "End date can't be in the future")
             LocalDate endDate,
 
-            @RequestParam @Pattern(regexp = "HOUR|DAY|WEEK|MONTH")
+            @RequestParam @Pattern(regexp = "hour|day|week|month")
             String groupBy) {
 
         if(startDate.isAfter(endDate)) {

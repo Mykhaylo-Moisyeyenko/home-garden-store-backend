@@ -37,14 +37,7 @@ public class ReportServiceImpl implements ReportService{
         LocalDateTime startTime = startDate.atStartOfDay();
         LocalDateTime endTime = endDate.plusDays(1).atStartOfDay();
 
-        List<Object[]> rowsFromDb =
-                switch (groupBy) {
-                    case "HOUR" -> orderService.getGroupedRevenue(startTime, endTime, "hour");
-                    case "DAY" -> orderService.getGroupedRevenue(startTime, endTime, "day");
-                    case "WEEK" -> orderService.getGroupedRevenue(startTime, endTime, "week");
-                    case "MONTH" -> orderService.getGroupedRevenue(startTime, endTime, "month");
-                    default -> throw new ReportBadRequestException("Wrong groupBy parameter");
-                };
+        List<Object[]> rowsFromDb = orderService.getGroupedRevenue(startTime, endTime, groupBy);
 
         return rowsFromDb.stream()
                 .map(row -> new ProfitReportDto(
