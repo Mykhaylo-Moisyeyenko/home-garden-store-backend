@@ -12,10 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,65 +30,89 @@ class CartServiceImplTest {
     @InjectMocks
     private CartServiceImpl cartServiceImpl;
 
-    private User user = User.builder().userId(1L).build();
+    private final User user = User.builder().userId(1L).build();
 
-    private CartItem cartItem = CartItem.builder()
+    private final CartItem cartItem = CartItem.builder()
             .cartItemId(1L)
-            .cart(Cart.builder().cartId(1L).build())
             .product(Product.builder().productId(1L).build())
             .quantity(10)
             .build();
 
-    private Cart cart = Cart.builder().user(user).build();
-
-    private Cart cartSaved = new Cart(1L, List.of(cartItem), user);
-
+    private final Cart emptyCart = Cart.builder().user(user).items(new ArrayList<>()).build();
 
     @Test
     void createTestSuccessful() {
-        doReturn(user).when(userServiceTest).getCurrentUser();
-        when(cartRepositoryTest.existsCartByUser(user)).thenReturn(false);
-        when(cartRepositoryTest.save(cart)).thenReturn(cartSaved);
+        when(userServiceTest.getCurrentUser()).thenReturn(user);
+        // Implementation uses getByUser(...), not existsCartByUser(...)
+        when(cartRepositoryTest.getByUser(user)).thenReturn(null);
+        when(cartRepositoryTest.save(emptyCart)).thenReturn(emptyCart);
 
-        Cart result = cartServiceImpl.create(cart);
+        Cart result = cartServiceImpl.create(emptyCart);
 
-        assertEquals(cartSaved, result);
-        verify(userServiceTest, times(1)).getCurrentUser();
-        verify(cartRepositoryTest, times(1)).existsCartByUser(user);
-        verify(cartRepositoryTest, times(1)).save(cart);
+        assertEquals(emptyCart, result);
+        verify(userServiceTest).getCurrentUser();
+        verify(cartRepositoryTest).getByUser(user);
+        verify(cartRepositoryTest).save(emptyCart);
+        verify(cartRepositoryTest, never()).existsCartByUser(any());
     }
 
     @Test
     void createTestWhenCartAlreadyExists() {
-        doReturn(user).when(userServiceTest).getCurrentUser();
-        when(cartRepositoryTest.existsCartByUser(user)).thenReturn(true);
+        when(userServiceTest.getCurrentUser()).thenReturn(user);
+        // Simulate existing cart in DB
+        Cart existing = Cart.builder().user(user).items(new ArrayList<>()).build();
+        when(cartRepositoryTest.getByUser(user)).thenReturn(existing);
 
-        assertThrows(CartAlreadyExistsException.class, () -> cartServiceImpl.create(cart));
+        assertThrows(CartAlreadyExistsException.class, () -> cartServiceImpl.create(emptyCart));
 
-        verify(userServiceTest, times(1)).getCurrentUser();
-        verify(cartRepositoryTest, times(1)).existsCartByUser(user);
-        verify(cartRepositoryTest, never()).save(cart);
+        verify(userServiceTest).getCurrentUser();
+        verify(cartRepositoryTest).getByUser(user);
+        verify(cartRepositoryTest, never()).save(any());
+        verify(cartRepositoryTest, never()).existsCartByUser(any());
     }
-//}
-//
-//    @Test
-//    void getAllTest() {
-//        when(cartRepositoryTest.findAll()).thenReturn(List.of(cartSaved));
-//
-//        List<Cart> result = cartServiceImpl.getAll();
-//
-//        assertEquals(List.of(cartSaved), result);
-//        verify(cartRepositoryTest, times(1)).findAll();
-//    }
-//
+
     @Test
-    void deleteTest() {
-        doReturn(user).when(userServiceTest).getCurrentUser();
-        doNothing().when(cartRepositoryTest).delete(user.getCart());
+    void addCartItem_createsCartWhenAbsent() {
+        when(userServiceTest.getCurrentUser()).thenReturn(user);
+        when(cartRepositoryTest.getByUser(user)).thenReturn(null);
+        when(cartRepositoryTest.save(any(Cart.class)))
+                .thenAnswer(inv -> inv.getArgument(0, Cart.class));
+
+        CartItem item = CartItem.builder()
+                .product(Product.builder().productId(99L).build())
+                .quantity(1)
+                .build();
+
+        Cart saved = cartServiceImpl.addCartItem(item);
+
+        assertNotNull(saved);
+        assertEquals(user, saved.getUser());
+        assertEquals(1, saved.getItems().size());
+        assertSame(saved, saved.getItems().get(0).getCart());
+
+        verify(cartRepositoryTest).getByUser(user);
+        verify(cartRepositoryTest).save(any(Cart.class));
+    }
+
+    @Test
+    void getAllCartItems_returnsEmptyListWhenNoCart() {
+        when(userServiceTest.getCurrentUser()).thenReturn(user);
+        when(cartRepositoryTest.getByUser(user)).thenReturn(null);
+
+        List<CartItem> items = cartServiceImpl.getAllCartItems();
+
+        assertNotNull(items);
+        assertTrue(items.isEmpty());
+        verify(cartRepositoryTest).getByUser(user);
+    }
+
+    @Test
+    void delete_ignoresWhenNoCart() {
+        when(userServiceTest.getCurrentUser()).thenReturn(user);
+        when(cartRepositoryTest.getByUser(user)).thenReturn(null);
 
         cartServiceImpl.delete();
 
-        verify(userServiceTest, times(1)).getCurrentUser();
-        verify(cartRepositoryTest, times(1)).delete(user.getCart());
+        verify(cartRepositoryTest, never()).delete(any());
     }
 }

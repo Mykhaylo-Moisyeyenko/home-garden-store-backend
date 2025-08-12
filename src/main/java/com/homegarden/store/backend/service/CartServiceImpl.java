@@ -7,9 +7,9 @@ import com.homegarden.store.backend.exception.CartAlreadyExistsException;
 import com.homegarden.store.backend.exception.CartItemNotFoundException;
 import com.homegarden.store.backend.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,7 +22,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart create(Cart cart) {
         User user = userService.getCurrentUser();
-        if (cartRepository.existsCartByUser(user)) {
+        Cart existing = cartRepository.getByUser(user);
+        if (existing != null) {
             throw new CartAlreadyExistsException("Cart already exists for this user");
         }
         cart.setUser(user);
@@ -31,14 +32,18 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<CartItem> getAllCartItems() {
-        User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getCurrentUser();
         Cart cart = cartRepository.getByUser(user);
-        return cart.getItems();
+        return cart != null ? cart.getItems() : List.of();
     }
 
     @Override
     public void delete() {
-        cartRepository.delete(userService.getCurrentUser().getCart());
+        User user = userService.getCurrentUser();
+        Cart cart = cartRepository.getByUser(user);
+        if (cart != null) {
+            cartRepository.delete(cart);
+        }
     }
 
     @Override
@@ -55,7 +60,17 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart addCartItem(CartItem cartItem) {
-        Cart cart = userService.getCurrentUser().getCart();
+        User user = userService.getCurrentUser();
+        Cart cart = cartRepository.getByUser(user);
+        if (cart == null) {
+
+            cart = Cart.builder()
+                    .user(user)
+                    .items(new ArrayList<>())
+                    .build();
+        }
+
+        cartItem.setCart(cart);
         cart.getItems().add(cartItem);
         return cartRepository.save(cart);
     }
@@ -79,12 +94,12 @@ public class CartServiceImpl implements CartService {
 
     private CartItem findCartItem(Long id) {
         Cart cart = userService.getCurrentUser().getCart();
-        List<CartItem> item = cart.getItems().stream()
-                .filter((cartItem) -> cartItem.getCartItemId().equals(id))
-                .toList();
-        if (item.isEmpty()) {
+        if (cart == null || cart.getItems() == null || cart.getItems().isEmpty()) {
             throw new CartItemNotFoundException("Cart Item is not found");
         }
-        return item.get(0);
+        return cart.getItems().stream()
+                .filter((cartItem) -> cartItem.getCartItemId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new CartItemNotFoundException("Cart Item is not found"));
     }
 }
