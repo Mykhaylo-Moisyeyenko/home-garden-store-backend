@@ -52,8 +52,9 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(OrderItemsListIsEmptyException.class)
-    public String handleOrderItemsListIsEmptyException(OrderItemsListIsEmptyException ex) {
+    @ExceptionHandler({OrderItemsListIsEmptyException.class,
+            ReportBadRequestException.class})
+    public String handleBadRequestException(Exception ex) {
 
         return ex.getMessage();
     }

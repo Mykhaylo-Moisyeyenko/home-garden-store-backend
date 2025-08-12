@@ -26,4 +26,6 @@ public interface OrderService {
     List<Order> getAllByStatusAndUpdatedAtBefore(Status status, LocalDateTime updatedAtBefore);
 
     List<Order> getAllByStatusAndUpdatedAtAfter(Status status, LocalDateTime updatedAtAfter);
+
+    List<Object[]> getGroupedRevenue(LocalDateTime startTime, LocalDateTime endTime, String timeCut);
 }

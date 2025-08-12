@@ -25,7 +25,6 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
                             ORDER BY COUNT(DISTINCT oi.order_id) DESC
                                     LIMIT 10
             """)
-
     List<Object[]> findTopCancelledProducts();
 
     boolean existsByProductProductId(Long productId);
