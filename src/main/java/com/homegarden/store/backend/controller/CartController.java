@@ -23,15 +23,8 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
-    private final Converter<Cart, CreateCartRequestDto, CartResponseDto> cartConverter;
+    private final Converter<Cart, Object, CartResponseDto> cartConverter;
     private final Converter<CartItem, CreateCartItemRequestDto, CartItemResponseDto> cartItemConverter;
-
-    @PostMapping
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<CartResponseDto> create(@RequestBody @Valid CreateCartRequestDto dto) {
-        Cart created = cartService.create(cartConverter.toEntity(dto));
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartConverter.toDto(created));
-    }
 
     @GetMapping
     public List<CartItemResponseDto> getAllCartItems() {
@@ -41,7 +34,7 @@ public class CartController {
                 .toList();
     }
 
-    @DeleteMapping()
+    @DeleteMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> delete() {
         cartService.delete();

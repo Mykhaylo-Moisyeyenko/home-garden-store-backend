@@ -43,7 +43,6 @@ class CartServiceImplTest {
     @Test
     void createTestSuccessful() {
         when(userServiceTest.getCurrentUser()).thenReturn(user);
-        // Implementation uses getByUser(...), not existsCartByUser(...)
         when(cartRepositoryTest.getByUser(user)).thenReturn(null);
         when(cartRepositoryTest.save(emptyCart)).thenReturn(emptyCart);
 
@@ -59,7 +58,6 @@ class CartServiceImplTest {
     @Test
     void createTestWhenCartAlreadyExists() {
         when(userServiceTest.getCurrentUser()).thenReturn(user);
-        // Simulate existing cart in DB
         Cart existing = Cart.builder().user(user).items(new ArrayList<>()).build();
         when(cartRepositoryTest.getByUser(user)).thenReturn(existing);
 
