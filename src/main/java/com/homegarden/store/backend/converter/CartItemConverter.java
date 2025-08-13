@@ -12,14 +12,11 @@ public class CartItemConverter implements Converter<CartItem, CreateCartItemRequ
 
     @Override
     public CartItem toEntity(CreateCartItemRequestDto dto) {
-        Cart cart = new Cart();
-        cart.setCartId(dto.cartId());
 
         Product product = new Product();
         product.setProductId(dto.productId());
 
         return CartItem.builder()
-                .cart(cart)
                 .product(product)
                 .quantity(dto.quantity())
                 .build();
