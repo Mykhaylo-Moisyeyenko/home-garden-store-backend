@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -45,26 +46,23 @@ public class OrderScheduler {
     @Async
     @Scheduled(cron = "${scheduler.orders.interval-in-cron}")
     public void processPaid() {
-        List<Order> createdOrders = orderService
-                .getAllByStatusAndUpdatedAtAfter(
-                        Status.PAID,
-                        LocalDateTime.now().minusMinutes(3));
-
-        for (Order order : createdOrders) {
-            orderService.updateStatus(order, Status.SHIPPED);
-        }
+        processOrderAfter(Status.PAID, Status.SHIPPED, 3);
     }
 
     @Async
     @Scheduled(cron = "${scheduler.orders.interval-in-cron}")
     public void processShipped() {
+        processOrderAfter(Status.SHIPPED, Status.DELIVERED, 3);
+    }
+
+    private void processOrderAfter(Status oldStatus, Status newStatus, long minutes) {
         List<Order> createdOrders = orderService
                 .getAllByStatusAndUpdatedAtAfter(
-                        Status.SHIPPED,
-                        LocalDateTime.now().minusMinutes(3));
+                        oldStatus,
+                        LocalDateTime.now().minusMinutes(minutes));
 
         for (Order order : createdOrders) {
-            orderService.updateStatus(order, Status.DELIVERED);
+            orderService.updateStatus(order, newStatus);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.homegarden.store.backend.repository;
 
 import com.homegarden.store.backend.entity.Order;
+import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
@@ -39,4 +41,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Object[]> findGroupedRevenue(@Param("startPeriod") LocalDateTime startTime,
                                       @Param("endPeriod") LocalDateTime endTime,
                                       @Param("timeCut") String timeCut);
+
+    Optional<Order> findByOrderIdAndUser(Long orderId, User user);
 }

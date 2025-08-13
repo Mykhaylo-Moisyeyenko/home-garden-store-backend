@@ -82,7 +82,7 @@ class FavoriteServiceImplTest {
     void addToFavorites_whenValid_shouldSave() {
         doReturn(user).when(userService).getCurrentUser();
         when(productService.getById(productId)).thenReturn(product);
-        when(favoriteRepository.existsByUser_AndProduct(favorite.getUser(), favorite.getProduct()))
+        when(favoriteRepository.existsByUserAndProduct(favorite.getUser(), favorite.getProduct()))
                 .thenReturn(false);
 
         favoriteService.addToFavorites(favorite);
@@ -97,7 +97,7 @@ class FavoriteServiceImplTest {
     void addToFavorites_whenAlreadyExists_shouldNotSave() {
         doReturn(user).when(userService).getCurrentUser();
         when(productService.getById(productId)).thenReturn(product);
-        when(favoriteRepository.existsByUser_AndProduct(favorite.getUser(), favorite.getProduct()))
+        when(favoriteRepository.existsByUserAndProduct(favorite.getUser(), favorite.getProduct()))
                 .thenReturn(true);
 
         favoriteService.addToFavorites(favorite);

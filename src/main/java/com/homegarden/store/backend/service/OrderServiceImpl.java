@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.homegarden.store.backend.enums.Status.*;
 
@@ -84,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
 
         BigDecimal orderTotalSum = orderItems.stream()
                 .map(orderItem -> orderItem.getPriceAtPurchase()
-                .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                        .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         order.setOrderTotalSum(orderTotalSum);
@@ -98,12 +95,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getById(long id) {
         User user = userService.getCurrentUser();
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
+        return findByOrderIdAndUser(id,user);
+    }
 
-        if (order.getUser().equals(user)) {
-            return order;
-        } else throw new AccessDeniedException("You are not allowed to access this resource");
+    private Order findByOrderIdAndUser(Long id, User user) {
+        return orderRepository.findByOrderIdAndUser(id, user)
+                .orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
     }
 
     @Override
@@ -146,12 +143,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void cancel(Long id) {
-        Order order = getById(id);
         User user = userService.getCurrentUser();
-
-        if (!order.getUser().equals(user)) {
-            throw new AccessDeniedException("You are not allowed to access this resource");
-        }
+        Order order = findByOrderIdAndUser(id, user);
 
         if (!order.getStatus().equals(CREATED) && !order.getStatus().equals(AWAITING_PAYMENT)) {
             throw new OrderUnableToCancelException("Order with id " + id + " can't be cancelled");

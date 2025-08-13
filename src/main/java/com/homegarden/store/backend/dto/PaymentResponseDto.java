@@ -7,17 +7,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
-public record PaymentResponseDto(
-
-        Long paymentId,
-
-        Long orderId,
-
-        BigDecimal amount,
-
-        PaymentStatus status,
-
-        LocalDateTime createdAt,
-
-        LocalDateTime updatedAt) {
+public record PaymentResponseDto(Long paymentId,
+                                 Long orderId,
+                                 BigDecimal amount,
+                                 PaymentStatus status,
+                                 LocalDateTime createdAt,
+                                 LocalDateTime updatedAt) {
 }

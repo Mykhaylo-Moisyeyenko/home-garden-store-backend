@@ -12,7 +12,6 @@ public class CartItemConverter implements Converter<CartItem, CreateCartItemRequ
 
     @Override
     public CartItem toEntity(CreateCartItemRequestDto dto) {
-
         Product product = new Product();
         product.setProductId(dto.productId());
 

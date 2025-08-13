@@ -70,7 +70,6 @@ public class CartServiceImpl implements CartService {
                     .build();
         }
 
-        cartItem.setCart(cart);
         cart.getItems().add(cartItem);
         return cartRepository.save(cart);
     }

@@ -12,7 +12,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     List<Favorite> findAllByUser(User user);
 
-    boolean existsByUser_AndProduct(User user, Product product);
+    boolean existsByUserAndProduct(User user, Product product);
 
     void deleteByUserAndProduct(User user, Product product);
 }

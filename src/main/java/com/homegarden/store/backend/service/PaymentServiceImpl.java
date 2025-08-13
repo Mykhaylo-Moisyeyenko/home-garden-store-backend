@@ -40,19 +40,25 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         if (!order.getStatus().equals(Status.CREATED)) {
-                throw new OrderNotFoundException("Unable create payment for order");
+            throw new OrderNotFoundException("Unable create payment for order");
         }
+
+//        if (order.getStatus() == Status.AWAITING_PAYMENT) {
+//            throw new DoublePaymentException("Order id" + order.getOrderId()
+//                    + " already has unpaid payment");
+//        }
         List<Payment> payments = order.getPayment();
         for (Payment p : payments) {
-            if(p.getStatus().equals(PaymentStatus.PENDING))
+            if (p.getStatus().equals(PaymentStatus.PENDING)) {
                 throw new DoublePaymentException("Order id" + order.getOrderId()
                         + " already has unpaid payment: id" + p.getId());
+            }
         }
 
         payment.setOrder(order);
         payment.setAmount(order.getOrderTotalSum());
         order.setStatus(Status.AWAITING_PAYMENT);
-    
+
         return paymentRepository.save(payment);
     }
 
@@ -63,12 +69,8 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus(status);
 
         Order order = payment.getOrder();
-        if (status == PaymentStatus.SUCCESS) {
-            order.setStatus(Status.PAID);
-        } else {
-            order.setStatus(Status.CREATED);
-        }
-      
+        order.setStatus(status == PaymentStatus.SUCCESS ? Status.PAID : Status.CREATED);
+
         return paymentRepository.save(payment);
     }
 

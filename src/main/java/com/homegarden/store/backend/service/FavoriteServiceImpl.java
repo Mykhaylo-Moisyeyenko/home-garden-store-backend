@@ -1,6 +1,7 @@
 package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.entity.Favorite;
+import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.repository.FavoriteRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +28,9 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public void addToFavorites(Favorite favorite) {
         User user = userService.getCurrentUser();
-        productService.getById(favorite.getProduct().getProductId());
-        if (!favoriteRepository.existsByUser_AndProduct(user, favorite.getProduct())) {
+        Product product = productService.getById(favorite.getProduct().getProductId());
+
+        if (!favoriteRepository.existsByUserAndProduct(user, product)) {
             favoriteRepository.save(favorite);
         }
     }
