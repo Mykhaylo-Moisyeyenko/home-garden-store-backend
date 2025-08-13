@@ -1,6 +1,6 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.dto.TopCancelledProductDto;
+import com.homegarden.store.backend.dto.TopCancelledProductsReportDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,7 +26,7 @@ class ReportServiceImplTest {
             Object[] data = new Object[]{1L, "Product Name", 5L};
             when(orderItemService.getTopCancelledProducts()).thenReturn(List.<Object[]>of(data));
 
-            List<TopCancelledProductDto> result = reportService.getTopCancelledProducts();
+            List<TopCancelledProductsReportDto> result = reportService.getTopCancelledProducts();
 
             assertThat(result).hasSize(1);
             assertThat(result.get(0).productId()).isEqualTo(1L);
