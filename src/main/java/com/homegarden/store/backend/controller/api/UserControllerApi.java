@@ -4,8 +4,6 @@ import com.homegarden.store.backend.dto.CreateUserRequestDto;
 import com.homegarden.store.backend.dto.UpdateUserRequestDto;
 import com.homegarden.store.backend.dto.UserResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.links.Link;
-import io.swagger.v3.oas.annotations.links.LinkParameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,14 +29,14 @@ public interface UserControllerApi {
                             value = """
                                       [
                                         {
-                                          \"userId\": 99,
-                                          \"name\": \"Dunya Smirnova\",
-                                          \"email\": \"dunya@qi.com\",
-                                          \"phoneNumber\": \"+491607654321\",
-                                          \"passwordHash\": \"Password2\",
-                                          \"role\": \"CLIENT\",
-                                          \"favorites\": null,
-                                          \"cart\": null
+                                          "userId": 99,
+                                          "name": "Dunya Smirnova",
+                                          "email": "dunya@qi.com",
+                                          "phoneNumber": "+491607654321",
+                                          "passwordHash": "Password2",
+                                          "role": "CLIENT",
+                                          "favorites": null,
+                                          "cart": null
                                         }
                                       ]
                                     """
@@ -63,14 +61,14 @@ public interface UserControllerApi {
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(
                             value = """
                                       {
-                                        \"userId\": 100,
-                                        \"name\": \"Anna Petrova\",
-                                        \"email\": \"anna@qi.com\",
-                                        \"phoneNumber\": \"+491609999999\",
-                                        \"passwordHash\": \"AnnaPass1\",
-                                        \"role\": \"CLIENT\",
-                                        \"favorites\": null,
-                                        \"cart\": null
+                                        "userId": 100,
+                                        "name": "Anna Petrova",
+                                        "email": "anna@qi.com",
+                                        "phoneNumber": "+491609999999",
+                                        "passwordHash": "AnnaPass1",
+                                        "role": "CLIENT",
+                                        "favorites": null,
+                                        "cart": null
                                       }
                                     """
                     ))),
@@ -95,14 +93,14 @@ public interface UserControllerApi {
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(
                             value = """
                                       {
-                                        \"userId\": 99,
-                                        \"name\": \"Dunya Updated\",
-                                        \"email\": \"dunya@qi.com\",
-                                        \"phoneNumber\": \"+491607654321\",
-                                        \"passwordHash\": \"PasswordNew\",
-                                        \"role\": \"CLIENT\",
-                                        \"favorites\": null,
-                                        \"cart\": null
+                                        "userId": 99,
+                                        "name": "Dunya Updated",
+                                        "email": "dunya@qi.com",
+                                        "phoneNumber": "+491607654321",
+                                        "passwordHash": "PasswordNew",
+                                        "role": "CLIENT",
+                                        "favorites": null,
+                                        "cart": null
                                       }
                                     """
                     ))),
@@ -127,14 +125,14 @@ public interface UserControllerApi {
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(
                             value = """
                                       {
-                                        \"userId\": 99,
-                                        \"name\": \"Dunya Smirnova\",
-                                        \"email\": \"dunya@qi.com\",
-                                        \"phoneNumber\": \"+491607654321\",
-                                        \"passwordHash\": \"Password2\",
-                                        \"role\": \"CLIENT\",
-                                        \"favorites\": null,
-                                        \"cart\": null
+                                        "userId": 99,
+                                        "name": "Dunya Smirnova",
+                                        "email": "dunya@qi.com",
+                                        "phoneNumber": "+491607654321",
+                                        "passwordHash": "Password2",
+                                        "role": "CLIENT",
+                                        "favorites": null,
+                                        "cart": null
                                       }
                                     """
                     ))),
@@ -153,6 +151,7 @@ public interface UserControllerApi {
             description = "Deletes a user by their ID"
     )
     @ApiResponses({
+
             @ApiResponse(responseCode = "204", description = "User successfully deleted"),
             @ApiResponse(responseCode = "400", description = "Invalid ID format",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "User ID must be positive"))),
