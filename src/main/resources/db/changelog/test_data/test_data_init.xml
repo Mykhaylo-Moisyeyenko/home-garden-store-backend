@@ -308,4 +308,27 @@
                 (26, 393.17, 'PENDING', NOW(), NOW());
         </sql>
     </changeSet>
+
+    <changeSet id="insert-orders-for-reports" author="Sofia" runAlways="true">
+        <sql>
+            INSERT INTO orders (user_id, delivery_address, contact_phone, delivery_method, status, created_at, updated_at, order_total_sum)
+            VALUES
+                (1, 'Delivery address for User-1', '+11111111111', 'Courier', 'AWAITING_PAYMENT', NOW()-INTERVAL '2 DAY', NOW()-INTERVAL '2 DAY', 31.46),
+                (1, 'Delivery address for User-1', '+11111111111', 'Courier', 'AWAITING_PAYMENT', NOW()-INTERVAL '3 DAY', NOW()-INTERVAL '3 DAY', 5.13),
+                (2, 'Delivery address for User-2', '+11111111112', 'Courier', 'DELIVERED', NOW()-INTERVAL '20 DAY', NOW()-INTERVAL '20 DAY', 83.02),
+                (2, 'Delivery address for User-2', '+11111111112', 'Courier', 'DELIVERED', NOW()-INTERVAL '10 DAY', NOW()-INTERVAL '10 DAY', 122.99)
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-order-items-for-reports" author="Sofia" runAlways="true">
+        <sql>
+            INSERT INTO order_items (order_id, product_id, quantity, price_at_purchase)
+            VALUES
+                (41, 1, 1, 31.46),
+                (42, 2, 1, 5.13),
+                (43, 3, 1, 83.02),
+                (44, 1, 1, 31.46),
+                (44, 4, 1, 91.53)
+        </sql>
+    </changeSet>
 </databaseChangeLog>

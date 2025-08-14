@@ -1,8 +1,10 @@
 package com.homegarden.store.backend.service;
 
+import com.homegarden.store.backend.dto.OrderResponseDto;
 import com.homegarden.store.backend.dto.ProfitReportDto;
 import com.homegarden.store.backend.dto.TopCancelledProductsReportDto;
 import com.homegarden.store.backend.dto.TopTenSelledProductsReportDto;
+import com.homegarden.store.backend.entity.Order;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ReportServiceImpl implements ReportService{
+public class ReportServiceImpl implements ReportService {
 
     private final OrderItemService orderItemService;
     private final OrderService orderService;
@@ -76,5 +78,23 @@ public class ReportServiceImpl implements ReportService{
                         (BigDecimal) row[2]
                 ))
                 .toList();
+    }
+
+    public List<Order> getAwaitingPaymentOrders(int days) {
+
+        String query = """
+                SELECT o.*
+                FROM orders o
+                JOIN order_items oi
+                    ON o.order_id = oi.order_id
+                WHERE o.status = 'AWAITING_PAYMENT' AND o.updated_at < NOW() - INTERVAL '%s day'
+                ORDER BY o.updated_at ASC
+                """.formatted(days);
+
+        List<Order> orders = entityManager
+                .createNativeQuery(query, Order.class)
+                .getResultList();
+
+        return orders;
     }
 }
