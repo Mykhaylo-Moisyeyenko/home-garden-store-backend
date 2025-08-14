@@ -34,25 +34,13 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment create(Payment payment) {
         Order order = orderService.getById(payment.getOrder().getOrderId());
 
-        User user = userService.getCurrentUser();
-        if (!order.getUser().equals(user)) {
-            throw new AccessDeniedException("You are not allowed to access this resource");
+        if (order.getStatus().equals(Status.AWAITING_PAYMENT)) {
+            throw new DoublePaymentException("Order id" + order.getOrderId()
+                    + " already has unpaid payment");
         }
 
         if (!order.getStatus().equals(Status.CREATED)) {
             throw new OrderNotFoundException("Unable create payment for order");
-        }
-
-//        if (order.getStatus() == Status.AWAITING_PAYMENT) {
-//            throw new DoublePaymentException("Order id" + order.getOrderId()
-//                    + " already has unpaid payment");
-//        }
-        List<Payment> payments = order.getPayment();
-        for (Payment p : payments) {
-            if (p.getStatus().equals(PaymentStatus.PENDING)) {
-                throw new DoublePaymentException("Order id" + order.getOrderId()
-                        + " already has unpaid payment: id" + p.getId());
-            }
         }
 
         payment.setOrder(order);
