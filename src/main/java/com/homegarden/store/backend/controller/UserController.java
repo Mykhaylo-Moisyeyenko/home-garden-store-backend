@@ -1,5 +1,6 @@
 package com.homegarden.store.backend.controller;
 
+import com.homegarden.store.backend.controller.api.UserControllerApi;
 import com.homegarden.store.backend.converter.Converter;
 import com.homegarden.store.backend.dto.CreateUserRequestDto;
 import com.homegarden.store.backend.dto.UpdateUserRequestDto;
@@ -21,15 +22,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/v1/users")
 @PreAuthorize("hasRole('ADMINISTRATOR')")
-public class UserController {
+
+public class UserController implements UserControllerApi {
 
     private final UserService userService;
     private final Converter<User, CreateUserRequestDto, UserResponseDto> converter;
 
-    @GetMapping
+    @Override
     public ResponseEntity<List<UserResponseDto>> getAll() {
-        List<UserResponseDto> response = userService
-                .getAll()
+        List<UserResponseDto> response = userService.getAll()
                 .stream()
                 .map(converter::toDto)
                 .collect(Collectors.toList());
@@ -37,31 +38,33 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/register")
+    @Override
     @PreAuthorize("isAnonymous() or hasRole('ADMINISTRATOR')")
     public ResponseEntity<UserResponseDto> create(@RequestBody @Valid CreateUserRequestDto userRequestDTO) {
+        User user = userService.create(converter.toEntity(userRequestDTO));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(converter.toDto(userService.create(converter.toEntity(userRequestDTO))));
+        return ResponseEntity.status(HttpStatus.CREATED).body(converter.toDto(user));
     }
 
-    @PutMapping()
+    @Override
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<UserResponseDto> update(
-            @RequestBody @Valid UpdateUserRequestDto updateDto) {
+    public ResponseEntity<UserResponseDto> update(@RequestBody @Valid UpdateUserRequestDto updateDto) {
         User updatedUser = userService.update(updateDto);
 
         return ResponseEntity.ok(converter.toDto(updatedUser));
     }
 
-    @GetMapping("/id/{id}")
+    @Override
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<UserResponseDto> getById(@PathVariable @Min(1) Long id) {
-        return ResponseEntity.ok(converter.toDto(userService.getById(id)));
+    public ResponseEntity<UserResponseDto> getById(@PathVariable @Min(1) Long userId) {
+        User user = userService.getById(userId);
+
+        return ResponseEntity.ok(converter.toDto(user));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable @Min(1) Long id) {
-        userService.delete(id);
+    @Override
+    public ResponseEntity<Void> delete(@PathVariable @Min(1) Long userId) {
+        userService.delete(userId);
 
         return ResponseEntity.noContent().build();
     }
