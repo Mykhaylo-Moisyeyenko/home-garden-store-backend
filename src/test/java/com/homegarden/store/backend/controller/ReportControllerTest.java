@@ -1,6 +1,5 @@
 package com.homegarden.store.backend.controller;
 
-import com.homegarden.store.backend.converter.OrderConverter;
 import com.homegarden.store.backend.dto.TopCancelledProductsReportDto;
 import com.homegarden.store.backend.service.ReportService;
 import com.homegarden.store.backend.service.security.JwtFilter;
@@ -28,9 +27,6 @@ class ReportControllerTest {
 
     @MockitoBean
     private ReportService reportService;
-
-    @MockitoBean
-    private OrderConverter converter;
 
     @MockitoBean
     private JwtFilter jwtFilter;
