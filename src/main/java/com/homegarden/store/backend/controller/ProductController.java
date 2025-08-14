@@ -87,4 +87,11 @@ public class ProductController {
 
         return ResponseEntity.ok().body(converter.toDto(updatedProduct));
     }
+
+    @GetMapping("/product-of-the-day")
+    public ResponseEntity<ProductDto> getProductOfTheDay(){
+        Product result = productService.getProductOfTheDay();
+
+        return ResponseEntity.ok(converter.toDto(result));
+    }
 }

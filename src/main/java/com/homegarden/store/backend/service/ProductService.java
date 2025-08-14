@@ -22,4 +22,6 @@ public interface ProductService {
     Product update(Product product);
 
     Product setDiscountPrice(Long productId, BigDecimal newDiscountPrice);
+
+    Product getProductOfTheDay();
 }
