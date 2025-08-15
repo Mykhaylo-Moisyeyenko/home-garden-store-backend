@@ -88,17 +88,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductOfTheDay() {
         String query = """
-                WITH discount_data AS (SELECT p.product_id,
-                                              (1 - p.discount_price / p.price) AS discountRate
-                                       FROM products AS p
-                                       WHERE p.discount_price IS NOT NULL),
-                    max_discount AS (SELECT MAX (discountRate) AS maxRate
-                                     FROM discount_data)
                 SELECT p.*
                 FROM products AS p
-                JOIN discount_data AS d
-                    ON p.product_id = d.product_id
-                WHERE d.discountRate = (SELECT maxRate FROM max_discount)
+                WHERE (1 - p.discount_price / p.price) = (SELECT
+                                         MAX(1 - pr.discount_price / pr.price)
+                                         FROM products AS pr
+                                         WHERE pr.discount_price IS NOT NULL)
                 ORDER BY random()
                 LIMIT 1;
                 """;
