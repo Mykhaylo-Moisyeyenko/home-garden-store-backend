@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .permitAll()
 
                         .requestMatchers("/v1/users/register").permitAll()
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/v1/users/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/categories/**").permitAll()
                         .anyRequest().authenticated())

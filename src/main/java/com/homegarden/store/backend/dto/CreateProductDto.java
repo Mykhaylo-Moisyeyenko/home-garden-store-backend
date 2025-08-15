@@ -19,7 +19,7 @@ public class CreateProductDto {
     private String description;
 
     @NotNull(message = "Price cannot be null")
-    @PositiveOrZero(message = "Price cannot be negative")
+    @Positive(message = "Price cannot be zero or negative")
     private BigDecimal price;
 
     @NotNull(message = "Category Id can't be empty")
@@ -28,6 +28,6 @@ public class CreateProductDto {
 
     private String imageUrl;
 
-    @PositiveOrZero(message = "Price cannot be negative")
+    @Positive(message = "Price cannot be zero or negative")
     private BigDecimal discountPrice;
 }

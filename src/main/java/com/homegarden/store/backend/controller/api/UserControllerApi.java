@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,7 +84,7 @@ public interface UserControllerApi {
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "User with this email already exists")))
     })
     @PostMapping("/register")
-    ResponseEntity<UserResponseDto> create(@RequestBody CreateUserRequestDto userRequestDTO);
+    ResponseEntity<UserResponseDto> create(@RequestBody @Valid CreateUserRequestDto userRequestDTO);
 
     @Operation(
             summary = "Update user",
@@ -114,7 +116,7 @@ public interface UserControllerApi {
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "Email already in use")))
     })
     @PutMapping
-    ResponseEntity<UserResponseDto> update(@RequestBody UpdateUserRequestDto updateDto);
+    ResponseEntity<UserResponseDto> update(@RequestBody @Valid UpdateUserRequestDto updateDto);
 
     @Operation(
             summary = "Get user by ID",
@@ -144,7 +146,7 @@ public interface UserControllerApi {
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "No user found with id 99")))
     })
     @GetMapping("/id/{userId}")
-    ResponseEntity<UserResponseDto> getById(@PathVariable Long userId);
+    ResponseEntity<UserResponseDto> getById(@PathVariable @Min(1) Long userId);
 
     @Operation(
             summary = "Delete user",
@@ -163,5 +165,5 @@ public interface UserControllerApi {
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "Cannot delete user with active cart")))
     })
     @DeleteMapping("/{userId}")
-    ResponseEntity<Void> delete(@PathVariable Long userId);
+    ResponseEntity<Void> delete(@PathVariable @Min(1) Long userId);
 }
