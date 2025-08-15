@@ -20,27 +20,13 @@ public class OrderScheduler {
     @Async
     @Scheduled(cron = "${scheduler.orders.interval-in-cron}")
     public void processCreatedOrders() {
-        List<Order> createdOrders = orderService
-                .getAllByStatusAndUpdatedAtBefore(
-                        Status.CREATED,
-                        LocalDateTime.now().minusMinutes(5));
-
-        for (Order order : createdOrders) {
-            orderService.updateStatus(order, Status.CANCELLED);
-        }
+        processOrderBefore(Status.CREATED, Status.CANCELLED, LocalDateTime.now().minusMinutes(5));
     }
 
     @Async
     @Scheduled(cron = "${scheduler.orders.interval-in-cron}")
     public void processAwaitingPayment() {
-        List<Order> createdOrders = orderService
-                .getAllByStatusAndUpdatedAtBefore(
-                        Status.AWAITING_PAYMENT,
-                        LocalDateTime.now().minusMinutes(5));
-
-        for (Order order : createdOrders) {
-            orderService.updateStatus(order, Status.CANCELLED);
-        }
+        processOrderBefore(Status.AWAITING_PAYMENT, Status.CANCELLED, LocalDateTime.now().minusDays(5));
     }
 
     @Async
@@ -60,6 +46,17 @@ public class OrderScheduler {
                 .getAllByStatusAndUpdatedAtAfter(
                         oldStatus,
                         LocalDateTime.now().minusMinutes(minutes));
+
+        for (Order order : createdOrders) {
+            orderService.updateStatus(order, newStatus);
+        }
+    }
+
+    private void processOrderBefore(Status oldStatus, Status newStatus, LocalDateTime before) {
+        List<Order> createdOrders = orderService
+                .getAllByStatusAndUpdatedAtBefore(
+                        oldStatus,
+                        before);
 
         for (Order order : createdOrders) {
             orderService.updateStatus(order, newStatus);

@@ -1,5 +1,7 @@
 package com.homegarden.store.backend.controller;
 
+import com.homegarden.store.backend.converter.OrderConverter;
+import com.homegarden.store.backend.dto.OrderResponseDto;
 import com.homegarden.store.backend.dto.ProfitReportDto;
 import com.homegarden.store.backend.dto.TopCancelledProductsReportDto;
 import com.homegarden.store.backend.dto.TopTenSelledProductsReportDto;
@@ -7,6 +9,7 @@ import com.homegarden.store.backend.exception.ReportBadRequestException;
 import com.homegarden.store.backend.service.ReportService;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.List;
 
+import static java.util.Arrays.stream;
+
 @RestController
 @RequestMapping("/v1/reports")
 @RequiredArgsConstructor
@@ -27,6 +32,7 @@ import java.util.List;
 public class ReportController {
 
     private final ReportService reportService;
+    private final OrderConverter converter;
 
     @GetMapping("/top-cancelled-products")
     public ResponseEntity<List<TopCancelledProductsReportDto>> getTopCancelledProducts() {
@@ -60,5 +66,13 @@ public class ReportController {
             @RequestParam @Pattern(regexp = "quantity|sum") String sortBy) {
 
         return ResponseEntity.ok(reportService.getTopTenSelledProducts(sortBy));
+    }
+
+    @GetMapping("/orders-awaiting-payment")
+    public ResponseEntity<List<OrderResponseDto>> getOrdersAwaitingPayment(
+            @RequestParam @Positive int days){
+        return ResponseEntity.ok(reportService.getAwaitingPaymentOrders(days).stream()
+                .map(converter::toDto)
+                .toList());
     }
 }
