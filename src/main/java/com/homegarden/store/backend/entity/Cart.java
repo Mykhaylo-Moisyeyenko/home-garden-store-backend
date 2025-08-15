@@ -22,8 +22,7 @@ public class Cart {
     private Long cartId;
 
     @Builder.Default
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "cart_id")
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<CartItem> items = new ArrayList<>();
 

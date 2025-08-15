@@ -5,6 +5,7 @@ import com.homegarden.store.backend.exception.ProductNotFoundException;
 import com.homegarden.store.backend.exception.ProductUsedInOrdersException;
 import com.homegarden.store.backend.repository.ProductRepository;
 import com.homegarden.store.backend.utils.ProductFilterSpecification;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final OrderService orderService;
+    private final EntityManager entityManager;
 
     @Override
     public Product create(Product product) {
@@ -81,5 +83,25 @@ public class ProductServiceImpl implements ProductService {
         product.setDiscountPrice(newDiscountPrice);
 
         return productRepository.save(product);
+    }
+
+    @Override
+    public Product getProductOfTheDay() {
+        String query = """
+                WITH discount_data AS (SELECT p.product_id,
+                                              (1 - p.discount_price / p.price) AS discountRate
+                                       FROM products AS p
+                                       WHERE p.discount_price IS NOT NULL),
+                    max_discount AS (SELECT MAX (discountRate) AS maxRate
+                                     FROM discount_data)
+                SELECT p.*
+                FROM products AS p
+                JOIN discount_data AS d
+                    ON p.product_id = d.product_id
+                WHERE d.discountRate = (SELECT maxRate FROM max_discount)
+                ORDER BY random()
+                LIMIT 1;
+                """;
+        return (Product) entityManager.createNativeQuery(query, Product.class).getSingleResult();
     }
 }
