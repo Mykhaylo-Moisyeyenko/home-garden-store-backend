@@ -1,5 +1,6 @@
 package com.homegarden.store.backend.controller;
 
+import com.homegarden.store.backend.controller.api.OrderControllerApi;
 import com.homegarden.store.backend.converter.OrderConverter;
 import com.homegarden.store.backend.dto.CreateOrderRequestDto;
 import com.homegarden.store.backend.dto.OrderResponseDto;
@@ -12,63 +13,54 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/orders")
-@PreAuthorize("hasRole('ADMINISTRATOR')")
-public class OrderController {
+public class OrderController implements OrderControllerApi {
 
     private final OrderService orderService;
     private final OrderConverter converter;
 
-    @PostMapping
+    @Override
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<OrderResponseDto> create(@RequestBody @NotNull @Valid CreateOrderRequestDto orderRequestDTO) {
-
+    public ResponseEntity<OrderResponseDto> create(@Valid @NotNull CreateOrderRequestDto orderRequestDTO) {
         Order order = orderService.create(orderRequestDTO);
-        OrderResponseDto response = converter.toDto(order);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(converter.toDto(order));
     }
 
-    @GetMapping
+    @Override
     public ResponseEntity<List<OrderResponseDto>> getAll() {
-        List<OrderResponseDto> response = orderService
-
-                .getAll().stream()
-                .map(converter::toDto)
-                .toList();
-
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/{orderId}")
-    @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<OrderResponseDto> getById(@PathVariable @Valid @Min(1) Long orderId) {
-        Order order = orderService.getById(orderId);
-        OrderResponseDto response = converter.toDto(order);
-
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/history")
-    @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<List<OrderResponseDto>> getAllByUser() {
-        List<OrderResponseDto> result = orderService.getAllByUser()
-                .stream()
-                .map(converter::toDto)
-                .toList();
+        List<Order> orders = orderService.getAll();
+        List<OrderResponseDto> result = orders.stream().map(converter::toDto).collect(Collectors.toList());
 
         return ResponseEntity.ok(result);
     }
 
-    @PatchMapping("/{orderId}/cancel")
+    @Override
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<Void> cancel(@PathVariable @Valid @Min(1) Long orderId) {
+    public ResponseEntity<OrderResponseDto> getById(@Min(1) Long orderId) {
+        Order order = orderService.getById(orderId);
+
+        return ResponseEntity.ok(converter.toDto(order));
+    }
+
+    @Override
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<List<OrderResponseDto>> getAllByUser() {
+        List<Order> orders = orderService.getAllByUser();
+        List<OrderResponseDto> result = orders.stream().map(converter::toDto).collect(Collectors.toList());
+
+        return ResponseEntity.ok(result);
+    }
+
+    @Override
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<Void> cancel(@Min(1) Long orderId) {
         orderService.cancel(orderId);
 
         return ResponseEntity.ok().build();
