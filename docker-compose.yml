@@ -33,12 +33,24 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "8081:8081"
     restart: unless-stopped
     networks:
       - backend
     pull_policy: always
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/html:/usr/share/nginx/html:ro
+      - ./nginx/logs:/var/log/nginx
+    networks:
+      - backend
+    restart: unless-stopped
 
 volumes:
   pg_data:
