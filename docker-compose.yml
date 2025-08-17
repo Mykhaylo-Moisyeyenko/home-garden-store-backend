@@ -24,7 +24,7 @@ services:
 
 
   app:
-    image: ghcr.io/mykhaylo-moisyeyenko/home-garden-store-backend:latest
+    image: ghcr.io/mykhaylo-moisyeyenko/home-garden-store-backend:sha-19a95e5
     container_name: hgs-backend
     environment:
       TZ: Europe/Berlin
