@@ -3,6 +3,7 @@ package com.homegarden.store.backend.controller.api;
 import com.homegarden.store.backend.dto.CreateOrderRequestDto;
 import com.homegarden.store.backend.dto.OrderResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,9 +11,6 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,15 +18,9 @@ import java.util.List;
 
 @Tag(name = "Orders", description = "Operations related to orders")
 @RequestMapping("/v1/orders")
-
 public interface OrderControllerApi {
 
-    @Operation(summary = "Create a new order", description = "Allows a user to create a new order",
-            requestBody = @RequestBody(
-                    required = true,
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CreateOrderRequestDto.class),
-                            examples = @ExampleObject(name = "New Order", value = "{\"userId\": 1, \"productIds\": [1, 2], \"totalPrice\": 3000}"))))
+    @Operation(summary = "Create a new order", description = "Allows a user to create a new order")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Order successfully created",
                     content = @Content(mediaType = "application/json",
@@ -39,7 +31,15 @@ public interface OrderControllerApi {
             @ApiResponse(responseCode = "409", description = "Conflict", content = @Content(examples = @ExampleObject(value = "Order conflict occurred")))
     })
     @PostMapping
-    ResponseEntity<OrderResponseDto> create(@RequestBody @Valid @NotNull CreateOrderRequestDto orderRequestDTO);
+    ResponseEntity<OrderResponseDto> create(
+            @RequestBody(
+                    required = true,
+                    description = "Data to create a new order",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CreateOrderRequestDto.class),
+                            examples = @ExampleObject(value = "{\"userId\": 1, \"productIds\": [1, 2], \"totalPrice\": 3000}"))
+            )
+            CreateOrderRequestDto orderRequestDTO);
 
     @Operation(summary = "Get all orders", description = "Retrieve all orders placed in the system")
     @ApiResponses(value = {
@@ -65,7 +65,9 @@ public interface OrderControllerApi {
             @ApiResponse(responseCode = "409", description = "Conflict", content = @Content(examples = @ExampleObject(value = "Conflict while fetching order")))
     })
     @GetMapping("/{orderId}")
-    ResponseEntity<OrderResponseDto> getById(@PathVariable @Min(1) Long orderId);
+    ResponseEntity<OrderResponseDto> getById(
+            @Parameter(description = "Order ID", example = "1")
+            @PathVariable Long orderId);
 
     @Operation(summary = "Get all orders of current user", description = "Retrieve all orders placed by the currently authenticated user")
     @ApiResponses(value = {
@@ -88,5 +90,7 @@ public interface OrderControllerApi {
             @ApiResponse(responseCode = "409", description = "Conflict", content = @Content(examples = @ExampleObject(value = "Cannot cancel this order")))
     })
     @PatchMapping("/{orderId}/cancel")
-    ResponseEntity<Void> cancel(@PathVariable @Min(1) Long orderId);
+    ResponseEntity<Void> cancel(
+            @Parameter(description = "Order ID to cancel", example = "1")
+            @PathVariable Long orderId);
 }
