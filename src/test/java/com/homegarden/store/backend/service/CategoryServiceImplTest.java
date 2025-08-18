@@ -1,6 +1,7 @@
 package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.entity.Category;
+import com.homegarden.store.backend.exception.CategoryNotFoundException;
 import com.homegarden.store.backend.repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,11 +51,19 @@ public class CategoryServiceImplTest {
     }
 
     @Test
+    void getByIdTestWhenNotFound() throws Exception {
+        when(categoryRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThrows(CategoryNotFoundException.class, () -> categoryService.getById(999L));
+    }
+
+    @Test
     void updateTest() throws Exception {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category1));
 
         Category category2 = new Category(1L, "trees", List.of());
         when(categoryRepository.save(category2)).thenReturn(category2);
+
         Category actual = categoryService.update(1L, category2.getName());
         assertEquals(category2, actual);
     }
@@ -61,5 +72,6 @@ public class CategoryServiceImplTest {
     void deleteTest() throws Exception {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category1));
         categoryService.delete(1L);
+        verify(categoryRepository).delete(category1);
     }
 }

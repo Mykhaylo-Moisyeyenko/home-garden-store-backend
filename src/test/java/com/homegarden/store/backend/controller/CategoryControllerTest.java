@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homegarden.store.backend.converter.CategoryConverter;
 import com.homegarden.store.backend.dto.CategoryDto;
 import com.homegarden.store.backend.entity.Category;
+import com.homegarden.store.backend.exception.CategoryNotFoundException;
 import com.homegarden.store.backend.service.CategoryService;
 import com.homegarden.store.backend.service.security.JwtFilter;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -63,7 +64,7 @@ class CategoryControllerTest {
         mockMvc.perform(
                         post("/v1/categories")
                                 .contentType(APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(category1))
+                                .content(objectMapper.writeValueAsString(categoryDto1))
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -101,6 +102,18 @@ class CategoryControllerTest {
                 .andExpect(jsonPath("$.categoryId").exists())
                 .andExpect(jsonPath("$.categoryId").value(1L))
                 .andExpect(jsonPath("$.name").value("tools"));
+    }
+
+    @Test
+    void getByIdTestWhenIdNotFound() throws Exception {
+        when(categoryServiceTest.getById(999L))
+                .thenThrow(new CategoryNotFoundException("Category not found"));
+
+        mockMvc.perform(get("/v1/categories/{id}", 999L))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        verify(categoryConverterTest, never()).toDto(any());
     }
 
     @Test
