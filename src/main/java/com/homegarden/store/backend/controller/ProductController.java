@@ -1,5 +1,6 @@
 package com.homegarden.store.backend.controller;
 
+import com.homegarden.store.backend.controller.api.ProductControllerApi;
 import com.homegarden.store.backend.converter.Converter;
 import com.homegarden.store.backend.dto.CreateProductDto;
 import com.homegarden.store.backend.dto.ProductDto;
@@ -26,19 +27,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Validated
 @PreAuthorize("hasRole('ADMINISTRATOR')")
-public class ProductController {
+public class ProductController implements ProductControllerApi {
 
     private final ProductService productService;
     private final Converter<Product, CreateProductDto, ProductDto> converter;
 
-    @PostMapping
+    @Override
     public ResponseEntity<ProductDto> create(@RequestBody @Valid CreateProductDto productDto) {
         Product created = productService.create(converter.toEntity(productDto));
-
         return ResponseEntity.status(HttpStatus.CREATED).body(converter.toDto(created));
     }
 
-    @GetMapping
+    @Override
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<ProductDto>> getAll(
             @RequestParam(required = false) @Min(1) Long categoryId,
@@ -50,48 +50,42 @@ public class ProductController {
                 .stream()
                 .map(converter::toDto)
                 .collect(Collectors.toList());
-
         return ResponseEntity.ok(dtos);
     }
 
-    @GetMapping("/{id}")
+    @Override
     @PreAuthorize("permitAll()")
     public ResponseEntity<ProductDto> getById(@PathVariable @Min(1) Long id) {
-
         return ResponseEntity.ok(converter.toDto(productService.getById(id)));
     }
 
-    @DeleteMapping("/{id}")
+    @Override
     public ResponseEntity<Void> delete(@PathVariable @Min(1) Long id) {
         productService.delete(id);
-
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
+    @Override
     public ResponseEntity<ProductDto> updateProduct(
             @PathVariable("id") Long id,
             @RequestBody @Valid CreateProductDto productDto) {
         Product productToUpdate = converter.toEntity(productDto);
         productToUpdate.setProductId(id);
         Product updated = productService.update(productToUpdate);
-
         return ResponseEntity.ok(converter.toDto(updated));
     }
 
-    @PatchMapping
+    @Override
     public ResponseEntity<ProductDto> setDiscountPrice(
             @RequestParam @Min(1) Long productId,
             @RequestParam @Positive BigDecimal newDiscountPrice) {
         Product updatedProduct = productService.setDiscountPrice(productId, newDiscountPrice);
-
         return ResponseEntity.ok().body(converter.toDto(updatedProduct));
     }
 
-    @GetMapping("/product-of-the-day")
-    public ResponseEntity<ProductDto> getProductOfTheDay(){
+    @Override
+    public ResponseEntity<ProductDto> getProductOfTheDay() {
         Product result = productService.getProductOfTheDay();
-
         return ResponseEntity.ok(converter.toDto(result));
     }
 }
