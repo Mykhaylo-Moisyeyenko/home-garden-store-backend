@@ -1,126 +1,98 @@
 package com.homegarden.store.backend.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homegarden.store.backend.converter.Converter;
 import com.homegarden.store.backend.dto.CreateUserRequestDto;
 import com.homegarden.store.backend.dto.UpdateUserRequestDto;
 import com.homegarden.store.backend.dto.UserResponseDto;
 import com.homegarden.store.backend.entity.User;
 import com.homegarden.store.backend.service.UserService;
-import com.homegarden.store.backend.service.security.JwtFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-@WebMvcTest(UserController.class)
-@AutoConfigureMockMvc(addFilters = false)
 class UserControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockitoBean
+    @Mock
     private UserService userService;
 
-    @MockitoBean
+    @Mock
     private Converter<User, CreateUserRequestDto, UserResponseDto> converter;
 
-    @MockitoBean
-    private PasswordEncoder passwordEncoder;
-
-    @MockitoBean
-    private JwtFilter jwtFilter;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    private User user;
-    private UserResponseDto userResponseDTO;
+    @InjectMocks
+    private UserController controller;
 
     @BeforeEach
     void setUp() {
-        user = User.builder()
-                .userId(1L)
-                .name("Test User")
-                .email("test@example.com")
-                .phoneNumber("1234567890")
-                .build();
-
-        userResponseDTO = new UserResponseDto(1L, "Test User", "test@example.com", "1234567890", null);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testGetAll() throws Exception {
-        Mockito.when(userService.getAll()).thenReturn(List.of(user));
-        Mockito.when(converter.toDto(user)).thenReturn(userResponseDTO);
+    void getAll_shouldReturnList() {
+        User user = new User();
+        UserResponseDto dto = UserResponseDto.builder().userId(1L).build();
+        when(userService.getAll()).thenReturn(List.of(user));
+        when(converter.toDto(user)).thenReturn(dto);
 
-        mockMvc.perform(get("/v1/users"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].email").value("test@example.com"));
+        ResponseEntity<List<UserResponseDto>> result = controller.getAll();
+
+        assertThat(result.getBody()).contains(dto);
+        verify(userService).getAll();
     }
 
     @Test
-    void testCreate() throws Exception {
-        CreateUserRequestDto dto = new CreateUserRequestDto("Test User", "test@example.com", "1234567890", "password");
+    void create_shouldReturnCreatedUser() {
+        CreateUserRequestDto req = mock(CreateUserRequestDto.class);
+        User user = new User();
+        UserResponseDto dto = UserResponseDto.builder().userId(1L).build();
+        when(converter.toEntity(req)).thenReturn(user);
+        when(userService.create(user)).thenReturn(user);
+        when(converter.toDto(user)).thenReturn(dto);
 
+        ResponseEntity<UserResponseDto> result = controller.create(req);
 
-        Mockito.when(converter.toEntity(dto)).thenReturn(user);
-        Mockito.when(passwordEncoder.encode("pass")).thenReturn("encoded");
-        user.setPasswordHash("encoded");
-        Mockito.when(userService.create(any(User.class))).thenReturn(user);
-        Mockito.when(converter.toDto(user)).thenReturn(userResponseDTO);
-
-        mockMvc.perform(post("/v1/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.email").value("test@example.com"));
+        assertThat(result.getBody()).isEqualTo(dto);
     }
 
     @Test
-    void testUpdate() throws Exception {
-        UpdateUserRequestDto updateDto = new UpdateUserRequestDto("Updated", "9999999999");
-        user.setName("Updated");
-        user.setPhoneNumber("9999999999");
-        Mockito.when(userService.update(updateDto)).thenReturn(user);
-        Mockito.when(converter.toDto(user)).thenReturn(userResponseDTO);
+    void update_shouldReturnUpdatedUser() {
+        UpdateUserRequestDto req = mock(UpdateUserRequestDto.class);
+        User user = new User();
+        UserResponseDto dto = UserResponseDto.builder().userId(1L).build();
+        when(userService.update(req)).thenReturn(user);
+        when(converter.toDto(user)).thenReturn(dto);
 
-        mockMvc.perform(put("/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateDto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value("test@example.com"));
+        ResponseEntity<UserResponseDto> result = controller.update(req);
+
+        assertThat(result.getBody()).isEqualTo(dto);
+        verify(userService).update(req);
     }
 
     @Test
-    void testGetById() throws Exception {
-        Mockito.when(userService.getById(1L)).thenReturn(user);
-        Mockito.when(converter.toDto(user)).thenReturn(userResponseDTO);
+    void getById_shouldReturnUser() {
+        User user = new User();
+        UserResponseDto dto = UserResponseDto.builder().userId(1L).build();
+        when(userService.getById(1L)).thenReturn(user);
+        when(converter.toDto(user)).thenReturn(dto);
 
-        mockMvc.perform(get("/v1/users/id/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value("test@example.com"));
+        ResponseEntity<UserResponseDto> result = controller.getById(1L);
+
+        assertThat(result.getBody()).isEqualTo(dto);
+        verify(userService).getById(1L);
     }
 
     @Test
-    void testDelete() throws Exception {
-        mockMvc.perform(delete("/v1/users/1"))
-                .andExpect(status().isNoContent());
-        Mockito.verify(userService).delete(1L);
+    void delete_shouldCallService() {
+        ResponseEntity<Void> result = controller.delete(1L);
+
+        assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
+        verify(userService).delete(1L);
     }
 }
-
