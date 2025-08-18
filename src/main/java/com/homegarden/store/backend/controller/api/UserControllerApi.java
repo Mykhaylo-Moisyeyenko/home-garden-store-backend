@@ -4,13 +4,14 @@ import com.homegarden.store.backend.dto.CreateUserRequestDto;
 import com.homegarden.store.backend.dto.UpdateUserRequestDto;
 import com.homegarden.store.backend.dto.UserResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,9 +56,7 @@ public interface UserControllerApi {
     @GetMapping
     ResponseEntity<List<UserResponseDto>> getAll();
 
-    @Operation(
-            summary = "Create a new user",
-            description = "Creates a new user and returns the created user")
+    @Operation(summary = "Create a new user", description = "Creates a new user and returns the created user")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "User created successfully",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(
@@ -84,12 +83,17 @@ public interface UserControllerApi {
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "User with this email already exists")))
     })
     @PostMapping("/register")
-    ResponseEntity<UserResponseDto> create(@RequestBody @Valid CreateUserRequestDto userRequestDTO);
+    ResponseEntity<UserResponseDto> create(
+            @RequestBody(description = "User to create",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CreateUserRequestDto.class),
+                            examples = @ExampleObject(value = "{\"name\":\"Anna\",\"email\":\"anna@qi.com\"}")
+                    ))
+            CreateUserRequestDto userRequestDTO);
 
-    @Operation(
-            summary = "Update user",
-            description = "Updates an existing user by userId"
-    )
+    @Operation(summary = "Update user", description = "Updates an existing user by userId")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User updated successfully",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(
@@ -116,12 +120,17 @@ public interface UserControllerApi {
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "Email already in use")))
     })
     @PutMapping
-    ResponseEntity<UserResponseDto> update(@RequestBody @Valid UpdateUserRequestDto updateDto);
+    ResponseEntity<UserResponseDto> update(
+            @RequestBody(description = "User update data",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = UpdateUserRequestDto.class),
+                            examples = @ExampleObject(value = "{\"userId\":99,\"name\":\"New Name\"}")
+                    ))
+            UpdateUserRequestDto updateDto);
 
-    @Operation(
-            summary = "Get user by ID",
-            description = "Returns a user by their unique identifier"
-    )
+    @Operation(summary = "Get user by ID", description = "Returns a user by their unique identifier")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User found",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(
@@ -143,17 +152,17 @@ public interface UserControllerApi {
             @ApiResponse(responseCode = "403", description = "Forbidden",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "You do not have permission"))),
             @ApiResponse(responseCode = "404", description = "User not found",
-                    content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "No user found with id 99")))
+                    content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "No user found with id 99"))),
+            @ApiResponse(responseCode = "409", description = "Conflict",
+                    content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "User data is inconsistent")))
     })
     @GetMapping("/id/{userId}")
-    ResponseEntity<UserResponseDto> getById(@PathVariable @Min(1) Long userId);
+    ResponseEntity<UserResponseDto> getById(
+            @Parameter(description = "ID of the user", example = "99")
+            @PathVariable Long userId);
 
-    @Operation(
-            summary = "Delete user",
-            description = "Deletes a user by their ID"
-    )
+    @Operation(summary = "Delete user", description = "Deletes a user by their ID")
     @ApiResponses({
-
             @ApiResponse(responseCode = "204", description = "User successfully deleted"),
             @ApiResponse(responseCode = "400", description = "Invalid ID format",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "User ID must be positive"))),
@@ -165,5 +174,7 @@ public interface UserControllerApi {
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "Cannot delete user with active cart")))
     })
     @DeleteMapping("/{userId}")
-    ResponseEntity<Void> delete(@PathVariable @Min(1) Long userId);
+    ResponseEntity<Void> delete(
+            @Parameter(description = "ID of the user to delete", example = "99")
+            @PathVariable Long userId);
 }

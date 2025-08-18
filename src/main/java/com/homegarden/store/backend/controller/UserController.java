@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,14 +42,14 @@ public class UserController implements UserControllerApi {
 
     @Override
     @PreAuthorize("isAnonymous() or hasRole('ADMINISTRATOR')")
-    public ResponseEntity<UserResponseDto> create(@RequestBody CreateUserRequestDto userRequestDTO) {
+    public ResponseEntity<UserResponseDto> create(@Valid @RequestBody CreateUserRequestDto userRequestDTO) {
         User user = userService.create(converter.toEntity(userRequestDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(converter.toDto(user));
     }
 
     @Override
     @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<UserResponseDto> update(@RequestBody UpdateUserRequestDto updateDto) {
+    public ResponseEntity<UserResponseDto> update(@Valid @RequestBody UpdateUserRequestDto updateDto) {
         User updatedUser = userService.update(updateDto);
         return ResponseEntity.ok(converter.toDto(updatedUser));
     }
