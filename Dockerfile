@@ -31,4 +31,4 @@ COPY --from=builder /app/extracted/application/             /app/application/
 
 EXPOSE 8081
 
-ENTRYPOINT ["java", "-cp", "app:app/dependencies/*:app/snapshot-dependencies/*:app/spring-boot-loader/*:app/application/*", "org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java", "-cp", "/app:/app/dependencies/*:/app/snapshot-dependencies/*:/app/spring-boot-loader/*:/app/application/*", "org.springframework.boot.loader.JarLauncher"]
