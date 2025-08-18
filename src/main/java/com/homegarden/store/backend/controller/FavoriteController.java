@@ -1,48 +1,46 @@
 package com.homegarden.store.backend.controller;
 
-import com.homegarden.store.backend.converter.Converter;
+import com.homegarden.store.backend.controller.api.FavoriteControllerApi;
+import com.homegarden.store.backend.converter.FavoriteConverter;
 import com.homegarden.store.backend.dto.FavoriteDto;
 import com.homegarden.store.backend.entity.Favorite;
 import com.homegarden.store.backend.service.FavoriteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/v1/favorites")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('ADMINISTRATOR','USER')")
-public class FavoriteController {
+public class FavoriteController implements FavoriteControllerApi {
 
     private final FavoriteService favoriteService;
-    private final Converter<Favorite, FavoriteDto, FavoriteDto> converter;
+    private final FavoriteConverter favoriteConverter;
 
-    @GetMapping()
+    @Override
     public ResponseEntity<List<FavoriteDto>> getAll() {
-        List<FavoriteDto> response = favoriteService.getAll()
-                .stream()
-                .map(converter::toDto)
+        List<FavoriteDto> favorites = favoriteService.getAll().stream()
+                .map(favoriteConverter::toDto)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(favorites);
     }
 
-    @PostMapping
-    public ResponseEntity<Void> addToFavorites(@Valid @RequestBody FavoriteDto favoriteDto) {
-        favoriteService.addToFavorites(converter.toEntity(favoriteDto));
+    @Override
+    public ResponseEntity<Void> addToFavorites(@Valid FavoriteDto favoriteDto) {
+        Favorite favorite = favoriteConverter.toEntity(favoriteDto);
+        favoriteService.addToFavorites(favorite);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(201).build();
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> removeFromFavorites(@RequestBody @Valid FavoriteDto favoriteDto) {
-        favoriteService.removeFromFavorites(converter.toEntity(favoriteDto));
+    @Override
+    public ResponseEntity<Void> removeFromFavorites(@Valid FavoriteDto favoriteDto) {
+        Favorite favorite = favoriteConverter.toEntity(favoriteDto);
+        favoriteService.removeFromFavorites(favorite);
 
         return ResponseEntity.noContent().build();
     }
