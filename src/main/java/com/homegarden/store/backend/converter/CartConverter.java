@@ -1,13 +1,14 @@
 package com.homegarden.store.backend.converter;
 
 import com.homegarden.store.backend.dto.CartResponseDto;
+import com.homegarden.store.backend.dto.CreateCartItemRequestDto;
 import com.homegarden.store.backend.entity.Cart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CartConverter implements Converter<Cart, Object, CartResponseDto> {
+public class CartConverter implements Converter<Cart, CreateCartItemRequestDto, CartResponseDto> {
 
     private final CartItemConverter converter;
 
@@ -22,7 +23,7 @@ public class CartConverter implements Converter<Cart, Object, CartResponseDto> {
     }
 
     @Override
-    public Cart toEntity(Object dto) {
+    public Cart toEntity(CreateCartItemRequestDto dto) {
         throw new UnsupportedOperationException("Conversion from DTO to Cart is not supported anymore.");
     }
 }

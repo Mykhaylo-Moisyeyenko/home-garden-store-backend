@@ -8,20 +8,18 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 @Tag(name = "Carts", description = "Operations with user's shopping cart")
-@RequestMapping("v1/carts")
 public interface CartControllerApi {
 
     @Operation(summary = "Get all cart items", description = "Return all items in the current user's cart")
@@ -32,8 +30,8 @@ public interface CartControllerApi {
                             examples = @ExampleObject(name = "Items",
                                     value = """
                                             [
-                                              { "productId": 101, 
-                                              "productName": "Garden Shovel", 
+                                              { "productId": 101,
+                                              "productName": "Garden Shovel",
                                               "quantity": 2 },
                                               { "productId": 202, 
                                               "productName": "Terracotta Pot", 
@@ -53,7 +51,6 @@ public interface CartControllerApi {
                             examples = @ExampleObject(name = "Conflict",
                                     value = "{\"error\": \"Conflict while fetching cart items\"}")))
     })
-    @GetMapping
     List<CartItemResponseDto> getAllCartItems();
 
     @Operation(summary = "Delete cart", description = "Delete the current user's cart with all items")
@@ -72,27 +69,27 @@ public interface CartControllerApi {
                             examples = @ExampleObject(name = "Conflict",
                                     value = "{\"error\": \"Conflict while deleting cart\"}")))
     })
-    @DeleteMapping
     ResponseEntity<Void> delete();
 
     @Operation(summary = "Add item to cart",
             description = "Add a product to the current user's cart",
-            requestBody = @RequestBody(required = true,
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true,
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CreateCartItemRequestDto.class),
                             examples = @ExampleObject(name = "AddItem",
-                                    value = "{\"productId\": 101, \"quantity\": 2}"))))
+                                    value = "{\"productId\": 101, \"quantity\": 2}")))
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Item added",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CartResponseDto.class),
                             examples = @ExampleObject(name = "Cart",
                                     value = """
-                                            { "cartId": 77, 
+                                            { "cartId": 77,
                                             "userId": 5,
                                               "items": [
-                                                { "productId": 101, 
-                                                "productName": "Garden Shovel", 
+                                                { "productId": 101,
+                                                "productName": "Garden Shovel",
                                                 "quantity": 2 }
                                               ]
                                             }
@@ -110,16 +107,16 @@ public interface CartControllerApi {
                             examples = @ExampleObject(name = "Cannot add",
                                     value = "{\"error\": \"Cannot add item to cart\"}")))
     })
-    @PostMapping("item")
-    ResponseEntity<CartResponseDto> addCartItem(@RequestBody @Valid @NotNull CreateCartItemRequestDto dto);
+    ResponseEntity<CartResponseDto> addCartItem(@RequestBody @Valid CreateCartItemRequestDto dto);
 
     @Operation(summary = "Update cart item quantity",
             description = "Update quantity for a specific cart item",
-            requestBody = @RequestBody(required = true,
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true,
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UpdateCartItemRequestDto.class),
                             examples = @ExampleObject(name = "UpdateItem",
-                                    value = "{\"cartItemId\": 555, \"quantity\": 3}"))))
+                                    value = "{\"cartItemId\": 555, \"quantity\": 3}")))
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cart updated",
                     content = @Content(mediaType = "application/json",
@@ -128,8 +125,8 @@ public interface CartControllerApi {
                                     value = """
                                         { "cartId": 77, "userId": 5,
                                           "items": [
-                                            { "productId": 101, 
-                                            "productName": "Garden Shovel", 
+                                            { "productId": 101,
+                                            "productName": "Garden Shovel",
                                             "quantity": 3 }
                                           ]
                                         }
@@ -147,8 +144,7 @@ public interface CartControllerApi {
                             examples = @ExampleObject(name = "Cannot update",
                                     value = "{\"error\": \"Cannot update item in current state\"}")))
     })
-    @PutMapping("item")
-    ResponseEntity<CartResponseDto> updateCartItemQuantity(@RequestBody @Valid @NotNull UpdateCartItemRequestDto dto);
+    ResponseEntity<CartResponseDto> updateCartItemQuantity(@RequestBody @Valid UpdateCartItemRequestDto dto);
 
     @Operation(summary = "Delete cart item", description = "Delete a specific cart item by ID")
     @ApiResponses(value = {
@@ -157,7 +153,7 @@ public interface CartControllerApi {
                             schema = @Schema(implementation = CartResponseDto.class),
                             examples = @ExampleObject(name = "Cart",
                                     value = """
-                                            { "cartId": 77, 
+                                            { "cartId": 77,
                                             "userId": 5,
                                               "items": []
                                             }
@@ -175,7 +171,5 @@ public interface CartControllerApi {
                             examples = @ExampleObject(name = "Cannot delete",
                                     value = "{\"error\": \"Cannot delete item in current state\"}")))
     })
-    @DeleteMapping("item/{id}")
-    ResponseEntity<CartResponseDto> deleteCartItem(@PathVariable("id") @NotNull @Min(1) Long cartItemId);
+    ResponseEntity<CartResponseDto> deleteCartItem(@PathVariable("id") @Min(1) Long cartItemId);
 }
-
