@@ -118,6 +118,37 @@
                     </layers>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.13</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/homegarden/store/backend/config/BackendApplication.class</exclude>
+                        <exclude>com/homegarden/store/backend/config/**</exclude>
+                        <exclude>com/homegarden/store/backend/dto/**</exclude>
+                        <exclude>com/homegarden/store/backend/entity/**</exclude>
+                        <exclude>com/homegarden/store/backend/enums/**</exclude>
+                        <exclude>com/homegarden/store/backend/exception/**</exclude>
+                        <exclude>com/homegarden/store/backend/repository/**</exclude>
+                        <exclude>com/homegarden/store/backend/service/security/**</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
