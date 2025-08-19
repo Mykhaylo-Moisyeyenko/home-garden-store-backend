@@ -12,12 +12,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 @Tag(name = "Users", description = "Controller for working with users")
-@RequestMapping("/v1/users")
 public interface UserControllerApi {
 
     @Operation(
@@ -32,10 +32,10 @@ public interface UserControllerApi {
                                       [
                                         {
                                           "userId": 99,
-                                          "name": "Dunya Smirnova",
+                                          "username": "Dunya Smirnova",
                                           "email": "dunya@qi.com",
                                           "phoneNumber": "+491607654321",
-                                          "passwordHash": "Password2",
+                                          "password": "Password2",
                                           "role": "CLIENT",
                                           "favorites": null,
                                           "cart": null
@@ -52,22 +52,26 @@ public interface UserControllerApi {
             @ApiResponse(responseCode = "409", description = "Conflict",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "Conflict occurred while retrieving users")))
     })
-    @GetMapping
     ResponseEntity<List<UserResponseDto>> getAll();
 
     @Operation(
             summary = "Create a new user",
-            description = "Creates a new user and returns the created user")
+            description = "Creates a new user and returns the created user",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    content = @Content(mediaType = "application/json")
+            )
+    )
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "User created successfully",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(
                             value = """
                                       {
                                         "userId": 100,
-                                        "name": "Anna Petrova",
+                                        "username": "Anna Petrova",
                                         "email": "anna@qi.com",
                                         "phoneNumber": "+491609999999",
-                                        "passwordHash": "AnnaPass1",
+                                        "password": "AnnaPass1",
                                         "role": "CLIENT",
                                         "favorites": null,
                                         "cart": null
@@ -75,7 +79,7 @@ public interface UserControllerApi {
                                     """
                     ))),
             @ApiResponse(responseCode = "400", description = "Bad Request",
-                    content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "Invalid email format or missing name"))),
+                    content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "Invalid email format or missing username"))),
             @ApiResponse(responseCode = "403", description = "Forbidden",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "Access denied"))),
             @ApiResponse(responseCode = "404", description = "Not Found",
@@ -83,12 +87,15 @@ public interface UserControllerApi {
             @ApiResponse(responseCode = "409", description = "Conflict",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "User with this email already exists")))
     })
-    @PostMapping("/register")
     ResponseEntity<UserResponseDto> create(@RequestBody @Valid CreateUserRequestDto userRequestDTO);
 
     @Operation(
             summary = "Update user",
-            description = "Updates an existing user by userId"
+            description = "Updates an existing user by userId",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    content = @Content(mediaType = "application/json")
+            )
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User updated successfully",
@@ -96,10 +103,10 @@ public interface UserControllerApi {
                             value = """
                                       {
                                         "userId": 99,
-                                        "name": "Dunya Updated",
+                                        "username": "Dunya Updated",
                                         "email": "dunya@qi.com",
                                         "phoneNumber": "+491607654321",
-                                        "passwordHash": "PasswordNew",
+                                        "password": "PasswordNew",
                                         "role": "CLIENT",
                                         "favorites": null,
                                         "cart": null
@@ -115,7 +122,6 @@ public interface UserControllerApi {
             @ApiResponse(responseCode = "409", description = "Conflict",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "Email already in use")))
     })
-    @PutMapping
     ResponseEntity<UserResponseDto> update(@RequestBody @Valid UpdateUserRequestDto updateDto);
 
     @Operation(
@@ -128,10 +134,10 @@ public interface UserControllerApi {
                             value = """
                                       {
                                         "userId": 99,
-                                        "name": "Dunya Smirnova",
+                                        "username": "Dunya Smirnova",
                                         "email": "dunya@qi.com",
                                         "phoneNumber": "+491607654321",
-                                        "passwordHash": "Password2",
+                                        "password": "Password2",
                                         "role": "CLIENT",
                                         "favorites": null,
                                         "cart": null
@@ -143,9 +149,10 @@ public interface UserControllerApi {
             @ApiResponse(responseCode = "403", description = "Forbidden",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "You do not have permission"))),
             @ApiResponse(responseCode = "404", description = "User not found",
-                    content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "No user found with id 99")))
+                    content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "No user found with id 99"))),
+            @ApiResponse(responseCode = "409", description = "Conflict",
+                    content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "User data is inconsistent")))
     })
-    @GetMapping("/id/{userId}")
     ResponseEntity<UserResponseDto> getById(@PathVariable @Min(1) Long userId);
 
     @Operation(
@@ -153,7 +160,6 @@ public interface UserControllerApi {
             description = "Deletes a user by their ID"
     )
     @ApiResponses({
-
             @ApiResponse(responseCode = "204", description = "User successfully deleted"),
             @ApiResponse(responseCode = "400", description = "Invalid ID format",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "User ID must be positive"))),
@@ -164,6 +170,5 @@ public interface UserControllerApi {
             @ApiResponse(responseCode = "409", description = "Conflict",
                     content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "Cannot delete user with active cart")))
     })
-    @DeleteMapping("/{userId}")
     ResponseEntity<Void> delete(@PathVariable @Min(1) Long userId);
 }
