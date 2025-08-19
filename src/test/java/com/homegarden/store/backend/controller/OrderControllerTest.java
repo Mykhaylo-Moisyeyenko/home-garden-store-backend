@@ -22,7 +22,6 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -107,8 +106,7 @@ class OrderControllerTest {
                 "Test Address",
                 "Courier");
 
-
-        when(orderService.create(any(CreateOrderRequestDto.class))).thenReturn(order);
+        when(orderService.create(requestDTO)).thenReturn(order);
         when(converter.toDto(order)).thenReturn(responseDTO);
 
         mockMvc.perform(post("/v1/orders")
