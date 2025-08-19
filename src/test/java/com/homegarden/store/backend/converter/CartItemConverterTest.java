@@ -1,30 +1,48 @@
 package com.homegarden.store.backend.converter;
 
-import com.homegarden.store.backend.dto.CartResponseDto;
-import com.homegarden.store.backend.entity.Cart;
-import com.homegarden.store.backend.entity.User;
+import com.homegarden.store.backend.dto.CartItemResponseDto;
+import com.homegarden.store.backend.dto.CreateCartItemRequestDto;
+import com.homegarden.store.backend.entity.CartItem;
+import com.homegarden.store.backend.entity.Product;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CartConverterTest {
+class CartItemConverterTest {
 
     private final CartItemConverter cartItemConverter = new CartItemConverter();
-    private final CartConverter cartConverter = new CartConverter(cartItemConverter);
+
+    CartItem cartItem1 = CartItem.builder()
+            .product(Product.builder()
+                    .productId(1L)
+                    .build())
+            .quantity(10)
+            .build();
+
+    CartItem cartItem2 = CartItem.builder()
+            .cartItemId(2L)
+            .product(Product.builder()
+                    .productId(2L)
+                    .name("Pillow")
+                    .build())
+            .quantity(20)
+            .build();
+
+    CreateCartItemRequestDto dto = new CreateCartItemRequestDto(1L, 10);
+
+    @Test
+    void toEntityTest() {
+        CartItem actual = cartItemConverter.toEntity(dto);
+
+        assertEquals(cartItem1, actual);
+    }
 
     @Test
     void toDtoTest() {
-        Cart cart = new Cart(
-                1L,
-                new ArrayList<>(),
-                User.builder().userId(1L).build());
+        CartItemResponseDto actual = cartItemConverter.toDto(cartItem2);
 
-        CartResponseDto actual = cartConverter.toDto(cart);
-
-        assertEquals(1L, actual.cartId());
-        assertEquals(1L, actual.userId());
-        assertEquals(0, actual.items().size());
+        assertEquals(2L, actual.productId());
+        assertEquals("Pillow", actual.productName());
+        assertEquals(20, actual.quantity());
     }
 }
