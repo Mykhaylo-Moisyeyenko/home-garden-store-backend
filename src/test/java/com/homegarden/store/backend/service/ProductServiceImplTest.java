@@ -5,6 +5,8 @@ import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.exception.ProductNotFoundException;
 import com.homegarden.store.backend.exception.ProductUsedInOrdersException;
 import com.homegarden.store.backend.repository.ProductRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +33,9 @@ class ProductServiceImplTest {
 
     @Mock
     private OrderService orderServiceTest;
+
+    @Mock
+    private EntityManager entityManagerTest;
 
     @InjectMocks
     private ProductServiceImpl productServiceTest;
@@ -166,5 +171,35 @@ class ProductServiceImplTest {
 
         verify(productRepositoryTest, times(1)).findById(1L);
         verify(productRepositoryTest, never()).save(any(Product.class));
+    }
+
+    @Test
+    void testSetDiscountPriceSuccessful() {
+        when(productRepositoryTest.findById(1L)).thenReturn(Optional.of(productSaved));
+        when(productRepositoryTest.save(any(Product.class))).thenReturn(productSaved);
+
+        Product result = productServiceTest.setDiscountPrice(1L, new BigDecimal("4.99"));
+
+        assertNotNull(result);
+        assertEquals(productSaved, result);
+        verify(productRepositoryTest, times(1)).findById(1L);
+        verify(productRepositoryTest, times(1)).save(any(Product.class));
+    }
+
+    @Test
+    void testGetProductOfTheDay() {
+        Product productOfTheDay = productSaved;
+
+        Query queryMock = mock(Query.class);
+        when(entityManagerTest.createNativeQuery(anyString(), eq(Product.class))).thenReturn(queryMock);
+        when(queryMock.getSingleResult()).thenReturn(productOfTheDay);
+
+        Product result = productServiceTest.getProductOfTheDay();
+
+        assertNotNull(result);
+        assertEquals(productOfTheDay, result);
+
+        verify(entityManagerTest, times(1)).createNativeQuery(anyString(), eq(Product.class));
+        verify(queryMock, times(1)).getSingleResult();
     }
 }
