@@ -81,8 +81,9 @@ The project is built with **Java Spring Boot** and follows modern software desig
 # Clone the repository
 git clone https://github.com/Mykhaylo-Moisyeyenko/home-garden-store-backend.git
 
-# Navigate into the project folder
+# Navigate into the project folder on server
 cd /srv/home-garden-store
 
 # Build and start with Docker
+docker compose pull up
 docker compose up -d app
