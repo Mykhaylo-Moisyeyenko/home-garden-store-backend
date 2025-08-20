@@ -52,7 +52,8 @@ public class PaymentController implements PaymentControllerApi {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<PaymentResponseDto> confirm(@PathVariable @Min(1) Long paymentId,
+    @PostMapping("/{paymentId}/confirmation")
+    public ResponseEntity<PaymentResponseDto> confirm(@PathVariable("paymentId") @Min(1) Long paymentId) {
                                                       @RequestParam(defaultValue = "SUCCESS") PaymentStatus status) {
         Payment updated = paymentService.confirm(paymentId, status);
         return ResponseEntity.ok(converter.toDto(updated));
@@ -60,6 +61,7 @@ public class PaymentController implements PaymentControllerApi {
 
     @Override
     @PreAuthorize("hasAnyRole('USER','ADMINISTRATOR')")
+    @GetMapping("/{paymentId}")    
     public ResponseEntity<PaymentResponseDto> getById(@PathVariable("paymentId") @Min(1) Long paymentId) {
         Payment payment = paymentService.getById(paymentId);
         return ResponseEntity.ok(converter.toDto(payment));
@@ -67,6 +69,7 @@ public class PaymentController implements PaymentControllerApi {
 
     @Override
     @PreAuthorize("hasAnyRole('USER','ADMINISTRATOR')")
+    @GetMapping("/payments-by-order/{orderId}")
     public ResponseEntity<List<PaymentResponseDto>> getPaymentsByOrder(@PathVariable("orderId") @Min(1) Long orderId) {
         List<Payment> payments = paymentService.getAllByOrder(orderId);
         List<PaymentResponseDto> result = payments.stream()
