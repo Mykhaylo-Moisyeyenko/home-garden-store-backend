@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.controller.api.OrderControllerApi;
-import com.homegarden.store.backend.converter.OrderConverter; // <— ВАЖНО: конкретный конвертер
+import com.homegarden.store.backend.converter.OrderConverter;
 import com.homegarden.store.backend.dto.CreateOrderRequestDto;
 import com.homegarden.store.backend.dto.OrderResponseDto;
 import com.homegarden.store.backend.entity.Order;
