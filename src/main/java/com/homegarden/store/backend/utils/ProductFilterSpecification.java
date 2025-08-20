@@ -21,7 +21,7 @@ public class ProductFilterSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             if (categoryId != null) {
-                predicates.add(criteriaBuilder.equal(root.get("categoryId"), categoryId));
+                predicates.add(criteriaBuilder.equal(root.get("category").get("categoryId"), categoryId));
             }
 
             if (minPrice != null) {
