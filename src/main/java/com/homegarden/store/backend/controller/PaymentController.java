@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Validated 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("v1/payments")
