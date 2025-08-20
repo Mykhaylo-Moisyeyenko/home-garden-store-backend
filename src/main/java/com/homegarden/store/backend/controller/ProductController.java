@@ -26,13 +26,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/v1/products")
 @RequiredArgsConstructor
 @Validated
-@PreAuthorize("hasRole('ADMINISTRATOR')")
 public class ProductController implements ProductControllerApi {
 
     private final ProductService productService;
     private final Converter<Product, CreateProductDto, ProductDto> converter;
 
     @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PostMapping
     public ResponseEntity<ProductDto> create(@RequestBody @Valid CreateProductDto productDto) {
         Product created = productService.create(converter.toEntity(productDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(converter.toDto(created));
@@ -40,50 +41,65 @@ public class ProductController implements ProductControllerApi {
 
     @Override
     @PreAuthorize("permitAll()")
+    @GetMapping
     public ResponseEntity<List<ProductDto>> getAll(
             @RequestParam(required = false) @Min(1) Long categoryId,
             @RequestParam(required = false) @PositiveOrZero BigDecimal minPrice,
             @RequestParam(required = false) @Positive BigDecimal maxPrice,
             @RequestParam(required = false) Boolean discount,
             @RequestParam(required = false) @Pattern(regexp = "ASC|DESC") String sort) {
+
         List<ProductDto> dtos = productService.getAll(categoryId, minPrice, maxPrice, discount, sort)
                 .stream()
                 .map(converter::toDto)
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(dtos);
     }
 
     @Override
     @PreAuthorize("permitAll()")
-    public ResponseEntity<ProductDto> getById(@PathVariable @Min(1) Long id) {
-        return ResponseEntity.ok(converter.toDto(productService.getById(id)));
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDto> getById(@PathVariable("id") @Min(1) Long productId) {
+        return ResponseEntity.ok(converter.toDto(productService.getById(productId)));
     }
 
     @Override
-    public ResponseEntity<Void> delete(@PathVariable @Min(1) Long id) {
-        productService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PutMapping("/{id}")
     public ResponseEntity<ProductDto> updateProduct(
-            @PathVariable("id") Long id,
+            @PathVariable("id") @Min(1) Long productId,
             @RequestBody @Valid CreateProductDto productDto) {
-        Product productToUpdate = converter.toEntity(productDto);
-        productToUpdate.setProductId(id);
-        Product updated = productService.update(productToUpdate);
+
+        Product toUpdate = converter.toEntity(productDto);
+        toUpdate.setProductId(productId);
+
+        Product updated = productService.update(toUpdate);
         return ResponseEntity.ok(converter.toDto(updated));
     }
 
     @Override
-    public ResponseEntity<ProductDto> setDiscountPrice(
-            @RequestParam @Min(1) Long productId,
-            @RequestParam @Positive BigDecimal newDiscountPrice) {
-        Product updatedProduct = productService.setDiscountPrice(productId, newDiscountPrice);
-        return ResponseEntity.ok().body(converter.toDto(updatedProduct));
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") @Min(1) Long productId) {
+        productService.delete(productId);
+        return ResponseEntity.noContent().build();
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PatchMapping
+    public ResponseEntity<ProductDto> setDiscountPrice(
+            @RequestParam(name = "productId") @Min(1) Long productId,
+            @RequestParam(name = "newDiscountPrice") @Positive BigDecimal newDiscountPrice) {
+
+        Product updated = productService.setDiscountPrice(productId, newDiscountPrice);
+        return ResponseEntity.ok(converter.toDto(updated));
+    }
+
+    @Override
+    @PreAuthorize("permitAll()")
+    @GetMapping("/product-of-the-day")
     public ResponseEntity<ProductDto> getProductOfTheDay() {
         Product result = productService.getProductOfTheDay();
         return ResponseEntity.ok(converter.toDto(result));
