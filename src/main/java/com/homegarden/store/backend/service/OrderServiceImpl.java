@@ -10,12 +10,14 @@ import com.homegarden.store.backend.exception.OrderUnableToCancelException;
 import com.homegarden.store.backend.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.homegarden.store.backend.enums.Status.*;
 
@@ -95,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getById(long id) {
         User user = userService.getCurrentUser();
-        return findByOrderIdAndUser(id,user);
+        return findByOrderIdAndUser(id, user);
     }
 
     private Order findByOrderIdAndUser(Long id, User user) {

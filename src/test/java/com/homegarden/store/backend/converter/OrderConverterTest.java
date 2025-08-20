@@ -63,5 +63,3 @@ class OrderConverterTest {
         assertEquals(BigDecimal.valueOf(100.00), itemDTOs.get(0).priceAtPurchase());
     }
 }
-
-

@@ -1,7 +1,8 @@
 package com.homegarden.store.backend.service;
 
-import com.homegarden.store.backend.entity.Order;
-import com.homegarden.store.backend.entity.User;
+import com.homegarden.store.backend.dto.CreateOrderItemRequestDto;
+import com.homegarden.store.backend.dto.CreateOrderRequestDto;
+import com.homegarden.store.backend.entity.*;
 import com.homegarden.store.backend.enums.Role;
 import com.homegarden.store.backend.enums.Status;
 import com.homegarden.store.backend.exception.OrderNotFoundException;
@@ -14,6 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,26 +36,74 @@ class OrderServiceImplTest {
     private UserService userService;
 
     @Mock
-    private OrderItemService orderItemService;
+    private CartService cartService;
 
     @InjectMocks
     private OrderServiceImpl orderService;
 
     private Order order;
     private User user;
+    private Product product;
+    private CartItem cartItem;
+    private Cart cart;
+    private CreateOrderItemRequestDto createOrderItemRequestDto;
+    private CreateOrderRequestDto createOrderRequestDto;
+    private Order order2;
+    private OrderItem orderItem;
+    private List<OrderItem> orderItems;
 
     @BeforeEach
     void setUp() {
         order = Order.builder().orderId(1L).status(Status.CREATED).build();
-        user = User.builder().userId(1L).role(Role.ROLE_USER).build();
+        user = User.builder().userId(1L).cart(cart).phoneNumber("1111111").role(Role.ROLE_USER).build();
+
+        product = Product.builder().productId(1L).price(new BigDecimal("100.00")).build();
+        cartItem = CartItem.builder().cartItemId(1L).cart(cart).product(product).quantity(10).build();
+        List<CartItem> cartItems = new ArrayList<>();
+        cartItems.add(cartItem);
+        cart = Cart.builder().user(user).items(cartItems).build();
+
+        createOrderItemRequestDto = new CreateOrderItemRequestDto(1L, 5);
+        List<CreateOrderItemRequestDto> items = new ArrayList<>(List.of(createOrderItemRequestDto));
+        createOrderRequestDto = new CreateOrderRequestDto(items,
+                "delivery address",
+                "delivery method");
+
+        order2 = Order.builder()
+                .user(user)
+                .deliveryAddress(createOrderRequestDto.deliveryAddress())
+                .contactPhone(user.getPhoneNumber())
+                .deliveryMethod(createOrderRequestDto.deliveryMethod())
+                .status(Status.CREATED)
+                .updatedAt(LocalDateTime.now().minusMinutes(5))
+                .build();
+        orderItem = OrderItem.builder()
+                .product(product)
+                .quantity(5)
+                .priceAtPurchase(product.getDiscountPrice() != null ? product.getDiscountPrice() : product.getPrice())
+                .order(order2)
+                .build();
+        orderItems = List.of(orderItem);
+        order2.setOrderTotalSum(new BigDecimal("500.00"));
+        order2.setItems(orderItems);
     }
 
-//    @Test
-//    void testCreate() {
-//        when(orderRepository.save(order)).thenReturn(order);
-//        Order saved = orderService.create(order);
-//        assertThat(saved).isEqualTo(order);
-//    }
+
+    @Test
+    void createTest() {
+        when(userService.getCurrentUser()).thenReturn(user);
+        when(cartService.getByUser(user)).thenReturn(cart);
+        cart.getItems().get(0).setQuantity(5);
+        when(cartService.update(cart)).thenReturn(cart);
+        when(orderRepository.save(order2)).thenReturn(order2);
+
+        Order actual = orderService.create(createOrderRequestDto);
+
+        assertThat(actual).isEqualTo(order2);
+        assertThat(actual.getOrderTotalSum()).isEqualTo(order2.getOrderTotalSum());
+        assertThat(actual.getItems()).hasSize(orderItems.size());
+        assertThat(actual.getItems().get(0).getQuantity()).isEqualTo(5);
+    }
 
     @Test
     void testGetByIdFound() {
@@ -85,7 +138,6 @@ class OrderServiceImplTest {
         assertThat(result).containsExactly(order);
     }
 
-
     @Test
     void testUpdateStatusSuccess() {
         Order orderChanged = Order.builder().orderId(1L).status(Status.DELIVERED).build();
@@ -95,7 +147,6 @@ class OrderServiceImplTest {
 
         assertThat(orderChanged.getStatus()).isEqualTo(Status.DELIVERED);
         verify(orderRepository, times(1)).save(order);
-
     }
 
     @Test
@@ -129,17 +180,52 @@ class OrderServiceImplTest {
     void testCancelOrderNotAllowed() {
         doReturn(user).when(userService).getCurrentUser();
         order.setStatus(Status.SHIPPED);
-        when(orderRepository.findByOrderIdAndUser(1L,user)).thenReturn(Optional.of(order));
+        when(orderRepository.findByOrderIdAndUser(1L, user)).thenReturn(Optional.of(order));
 
         assertThatThrownBy(() -> orderService.cancel(1L))
                 .isInstanceOf(OrderUnableToCancelException.class);
-        verify(orderRepository,never()).save(any());
+        verify(orderRepository, never()).save(any());
     }
 
     @Test
-    void testIsProductUsedInOrders() {
-        when(orderItemService.isProductUsedInOrders(1L)).thenReturn(true);
-        boolean used = orderService.isProductUsedInOrders(1L);
-        assertThat(used).isTrue();
+    void getAllByStatusAndUpdatedAtAfter() {
+        LocalDateTime time = LocalDateTime.now().minusMinutes(10);
+        when(orderRepository.findByStatusAndUpdatedAtAfter(Status.CREATED, time))
+                .thenReturn(List.of(order2));
+
+        List<Order> actual = orderService.getAllByStatusAndUpdatedAtAfter(
+                Status.CREATED,
+                time);
+        assertThat(actual).containsExactly(order2);
+        verify(orderRepository).findByStatusAndUpdatedAtAfter(any(Status.class), any(LocalDateTime.class));
+    }
+
+    @Test
+    void getAllByStatusAndUpdatedAtBefore() {
+        LocalDateTime time = LocalDateTime.now().minusMinutes(1);
+        when(orderRepository.findByStatusAndUpdatedAtAfter(Status.CREATED, time))
+                .thenReturn(List.of(order2));
+
+        List<Order> actual = orderService.getAllByStatusAndUpdatedAtAfter(
+                Status.CREATED,
+                time);
+        assertThat(actual).containsExactly(order2);
+        verify(orderRepository).findByStatusAndUpdatedAtAfter(any(Status.class), any(LocalDateTime.class));
+    }
+
+    @Test
+    void getGroupedRevenueTest() {
+        LocalDateTime start = LocalDateTime.of(2025, 1, 1, 0, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2025, 1, 12, 0, 0, 0);
+        String timeCut = "month";
+
+        List<Object[]> expected = List.<Object[]>of(
+                new Object[]{LocalDate.of(2025, 1, 1), BigDecimal.valueOf(2000)});
+
+        when(orderRepository.findGroupedRevenue(start, end, timeCut)).thenReturn(expected);
+
+        List<Object[]> actual = orderService.getGroupedRevenue(start, end, timeCut);
+        assertThat(actual).isEqualTo(expected);
+        verify(orderRepository).findGroupedRevenue(start, end, timeCut);
     }
 }
