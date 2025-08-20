@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,7 +42,7 @@ public interface PaymentControllerApi {
                                                 "paymentId": 1,
                                                 "orderId": 42,
                                                 "amount": 3500.00,
-                                                "status": "CREATED",
+                                                "status": "PENDING",
                                                 "createdAt": "2025-08-18T10:15:30",
                                                 "updatedAt": null
                                               }
@@ -68,28 +67,29 @@ public interface PaymentControllerApi {
     @Operation(
             summary = "Create a new payment",
             description = "Create a new payment for an order",
-            requestBody = @RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     required = true,
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PaymentCreateDto.class),
                             examples = @ExampleObject(name = "CreatePayment",
-                                    value = "{\"orderId\": 42}")))
+                                    value = "{\"orderId\": 42}"))
+            )
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Payment created",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PaymentResponseDto.class),
                             examples = @ExampleObject(name = "Created",
-                                    value = "{\"paymentId\": 10, \"orderId\": 42, \"amount\": 3500.00, \"status\": \"CREATED\", \"createdAt\": \"2025-08-18T10:20:00\"}"))),
+                                    value = "{\"paymentId\": 10, \"orderId\": 42, \"amount\": 3500.00, \"status\": \"PENDING\", \"createdAt\": \"2025-08-18T10:20:00\"}"))),
             @ApiResponse(responseCode = "400", description = "Invalid input",
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(name = "Validation error",
                                     value = "{\"error\": \"Order ID must be more than 0\"}"))),
-            @ApiResponse(responseCode = "404", description = "Order not found",
+            @ApiResponse(responseCode = "404", description = "Order not found / wrong state",
                     content = @Content(mediaType = "application/json",
-                            examples = @ExampleObject(name = "Order not found",
+                            examples = @ExampleObject(name = "Order not acceptable",
                                     value = "{\"error\": \"Unable create payment for order\"}"))),
-            @ApiResponse(responseCode = "409", description = "Conflict",
+            @ApiResponse(responseCode = "409", description = "Conflict (duplicate unpaid payment)",
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(name = "Duplicate",
                                     value = "{\"error\": \"Order id 42 already has unpaid payment\"}")))
@@ -126,7 +126,7 @@ public interface PaymentControllerApi {
                                     value = "{\"error\": \"Cannot confirm payment in current state\"}")))
     })
     @PostMapping("{paymentId}/confirmation")
-    ResponseEntity<PaymentResponseDto> confirm(@PathVariable Long paymentId,
+    ResponseEntity<PaymentResponseDto> confirm(@PathVariable @Min(1) Long paymentId,
                                                @RequestParam(defaultValue = "SUCCESS") PaymentStatus status);
 
     @Operation(
@@ -141,7 +141,7 @@ public interface PaymentControllerApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PaymentResponseDto.class),
                             examples = @ExampleObject(name = "Payment",
-                                    value = "{\"paymentId\": 10, \"orderId\": 42, \"amount\": 3500.00, \"status\": \"CREATED\"}"))),
+                                    value = "{\"paymentId\": 10, \"orderId\": 42, \"amount\": 3500.00, \"status\": \"PENDING\"}"))),
             @ApiResponse(responseCode = "400", description = "Bad request",
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(name = "Invalid ID",
@@ -156,7 +156,7 @@ public interface PaymentControllerApi {
                                     value = "{\"error\": \"Conflict while fetching payment\"}")))
     })
     @GetMapping("{paymentId}")
-    ResponseEntity<PaymentResponseDto> getById(@PathVariable @Min(1) Long paymentId);
+    ResponseEntity<PaymentResponseDto> getById(@PathVariable("paymentId") @Min(1) Long paymentId);
 
     @Operation(
             summary = "Get payments by Order ID",
@@ -182,7 +182,7 @@ public interface PaymentControllerApi {
                                                 "paymentId": 12,
                                                 "orderId": 42,
                                                 "amount": 2300.00,
-                                                "status": "CREATED"
+                                                "status": "PENDING"
                                               }
                                             ]
                                             """))),
@@ -200,6 +200,5 @@ public interface PaymentControllerApi {
                                     value = "{\"error\": \"Conflict while fetching payments by order\"}")))
     })
     @GetMapping("payments-by-order/{orderId}")
-    ResponseEntity<List<PaymentResponseDto>> getPaymentsByOrder(@PathVariable @Min(1) Long orderId);
+    ResponseEntity<List<PaymentResponseDto>> getPaymentsByOrder(@PathVariable("orderId") @Min(1) Long orderId);
 }
-

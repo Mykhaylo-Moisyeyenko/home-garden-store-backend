@@ -8,6 +8,7 @@ import com.homegarden.store.backend.service.FavoriteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class FavoriteController implements FavoriteControllerApi {
     private final FavoriteConverter favoriteConverter;
 
     @Override
+    @PreAuthorize("hasAnyRole('USER','ADMINISTRATOR')")
     public ResponseEntity<List<FavoriteDto>> getAll() {
         List<FavoriteDto> favorites = favoriteService.getAll().stream()
                 .map(favoriteConverter::toDto)
@@ -30,6 +32,7 @@ public class FavoriteController implements FavoriteControllerApi {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('USER','ADMINISTRATOR')")
     public ResponseEntity<Void> addToFavorites(@Valid FavoriteDto favoriteDto) {
         Favorite favorite = favoriteConverter.toEntity(favoriteDto);
         favoriteService.addToFavorites(favorite);
@@ -38,6 +41,7 @@ public class FavoriteController implements FavoriteControllerApi {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('USER','ADMINISTRATOR')")
     public ResponseEntity<Void> removeFromFavorites(@Valid FavoriteDto favoriteDto) {
         Favorite favorite = favoriteConverter.toEntity(favoriteDto);
         favoriteService.removeFromFavorites(favorite);
