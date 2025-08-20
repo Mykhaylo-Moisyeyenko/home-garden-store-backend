@@ -29,6 +29,7 @@ public class ReportController implements ReportControllerApi {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @GetMapping("/top-cancelled-products")
     public ResponseEntity<List<TopCancelledProductsReportDto>> getTopCancelledProducts() {
         return ResponseEntity.ok(reportService.getTopCancelledProducts());
     }
@@ -45,6 +46,7 @@ public class ReportController implements ReportControllerApi {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @GetMapping("/top-ten-selled-products")
     public ResponseEntity<List<TopTenSelledProductsReportDto>> getTopTenSelledProducts(
             @RequestParam String sortBy) {
         return ResponseEntity.ok(reportService.getTopTenSelledProducts(sortBy));
@@ -52,6 +54,7 @@ public class ReportController implements ReportControllerApi {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @GetMapping("/awaiting-payment-orders")
     public ResponseEntity<List<OrderResponseDto>> getOrdersAwaitingPayment(@RequestParam @Positive int days) {
         List<Order> orders = reportService.getAwaitingPaymentOrders(days);
         List<OrderResponseDto> dtos = orders.stream()
