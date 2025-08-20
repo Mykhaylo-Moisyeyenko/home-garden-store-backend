@@ -31,6 +31,7 @@ public class PaymentController implements PaymentControllerApi {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @GetMapping
     public ResponseEntity<List<PaymentResponseDto>> getAllPayments() {
         List<Payment> payments = paymentService.getAllPayments();
         List<PaymentResponseDto> result = payments.stream()
@@ -40,8 +41,9 @@ public class PaymentController implements PaymentControllerApi {
         return ResponseEntity.ok(result);
     }
 
-    @Override
+    @Override   
     @PreAuthorize("hasAnyRole('USER','ADMINISTRATOR')")
+    @PostMapping
     public ResponseEntity<PaymentResponseDto> create(@RequestBody @Valid PaymentCreateDto dto) {
         Payment entity = converter.toEntity(dto);
         Payment saved = paymentService.create(entity);
