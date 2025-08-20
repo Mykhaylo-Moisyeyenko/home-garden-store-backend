@@ -67,6 +67,6 @@ public interface AuthentificationControllerApi {
                                     value = "{\"error\":\"Too many failed login attempts. Try again later.\"}"
                             )))
     })
-    @PostMapping
+    @PostMapping("/login")
     ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto);
 }
