@@ -18,6 +18,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -130,15 +131,15 @@ public interface ProductControllerApi {
     })
     ResponseEntity<List<ProductDto>> getAll(
             @Parameter(description = "Filter by category id", example = "3")
-            @Min(1) Long categoryId,
+            @RequestParam(required = false) @Min(1) Long categoryId,
             @Parameter(description = "Minimal price", example = "1.00")
-            @PositiveOrZero BigDecimal minPrice,
+            @RequestParam(required = false) @PositiveOrZero BigDecimal minPrice,
             @Parameter(description = "Maximal price", example = "100.00")
-            @Positive BigDecimal maxPrice,
+            @RequestParam(required = false) @Positive BigDecimal maxPrice,
             @Parameter(description = "Only discounted products", example = "true")
-            Boolean discount,
+            @RequestParam(required = false) Boolean discount,
             @Parameter(description = "Sort by price ASC or DESC", example = "ASC")
-            @Pattern(regexp = "ASC|DESC") String sort
+            @RequestParam(required = false) @Pattern(regexp = "ASC|DESC") String sort
     );
 
     @Operation(
@@ -294,8 +295,10 @@ public interface ProductControllerApi {
                             examples = @ExampleObject(value = "{\"error\":\"Product already has this discount price\"}")))
     })
     ResponseEntity<ProductDto> setDiscountPrice(
-            @Parameter(description = "Product ID", example = "1") @Min(1) Long productId,
-            @Parameter(description = "New discount price", example = "9.99") @Positive BigDecimal newDiscountPrice
+            @Parameter(description = "Product ID", example = "1")
+            @RequestParam(name = "productId") @Min(1) Long productId,
+            @Parameter(description = "New discount price", example = "9.99")
+            @RequestParam(name = "newDiscountPrice") @Positive BigDecimal newDiscountPrice
     );
 
     @Operation(
