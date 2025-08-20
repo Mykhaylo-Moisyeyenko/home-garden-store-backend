@@ -1,10 +1,7 @@
 package com.homegarden.store.backend.utils;
 
 import com.homegarden.store.backend.entity.Product;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -22,6 +19,10 @@ class ProductFilterSpecificationTest {
     private Root<Product> root;
     @Mock
     private CriteriaQuery<?> query;
+    @Mock
+    private Path<Object> categoryPath;
+    @Mock
+    private Path<Object> categoryIdPath;
     @Mock
     private CriteriaBuilder cb;
     @Mock
@@ -45,7 +46,8 @@ class ProductFilterSpecificationTest {
     @Test
     void whenCategoryIdProvided_thenPredicateIncludesCategoryId() {
         Specification<Product> spec = ProductFilterSpecification.filter(10L, null, null, null, null);
-        when(root.get("category")).thenReturn(null);
+        when(root.get("category")).thenReturn(categoryPath);
+        when(categoryPath.get("categoryId")).thenReturn(categoryIdPath);
         when(cb.equal(any(), eq(10L))).thenReturn(predicate);
         when(cb.and(any(Predicate[].class))).thenReturn(predicate);
 
