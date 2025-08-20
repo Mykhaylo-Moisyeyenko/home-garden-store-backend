@@ -1,7 +1,7 @@
 package com.homegarden.store.backend.controller;
 
 import com.homegarden.store.backend.controller.api.OrderControllerApi;
-import com.homegarden.store.backend.converter.OrderConverter; // <— ВАЖНО: конкретный конвертер
+import com.homegarden.store.backend.converter.OrderConverter;
 import com.homegarden.store.backend.dto.CreateOrderRequestDto;
 import com.homegarden.store.backend.dto.OrderResponseDto;
 import com.homegarden.store.backend.entity.Order;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class OrderController implements OrderControllerApi {
 
     private final OrderService orderService;
-    private final OrderConverter converter; // <— было: Converter<Order, CreateOrderRequestDto, OrderResponseDto>
+    private final OrderConverter converter;
 
     @Override
     @PreAuthorize("isAuthenticated()")

@@ -3,7 +3,6 @@ package com.homegarden.store.backend.service;
 import com.homegarden.store.backend.entity.Category;
 import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.exception.ProductNotFoundException;
-import com.homegarden.store.backend.exception.ProductUsedInOrdersException;
 import com.homegarden.store.backend.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -117,25 +116,11 @@ class ProductServiceImplTest {
     @Test
     void testDeleteProductSuccessful() {
         when(productRepositoryTest.findById(1L)).thenReturn(Optional.of(productSaved));
-        when(orderServiceTest.isProductUsedInOrders(1L)).thenReturn(false);
 
         productServiceTest.delete(1L);
 
         verify(productRepositoryTest, times(1)).findById(1L);
         verify(productRepositoryTest, times(1)).deleteById(1L);
-        verify(orderServiceTest, times(1)).isProductUsedInOrders(1L);
-    }
-
-    @Test
-    void testDeleteProductNotFound() {
-        when(productRepositoryTest.findById(1L)).thenReturn(Optional.of(productSaved));
-        when(orderServiceTest.isProductUsedInOrders(1L)).thenReturn(true);
-
-        assertThrows(ProductUsedInOrdersException.class, () -> productServiceTest.delete(1L));
-
-        verify(productRepositoryTest, times(1)).findById(1L);
-        verify(productRepositoryTest, never()).deleteById(1L);
-        verify(orderServiceTest, times(1)).isProductUsedInOrders(1L);
     }
 
     @Test

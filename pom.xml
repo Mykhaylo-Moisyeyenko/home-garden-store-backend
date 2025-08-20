@@ -124,7 +124,7 @@
                 <version>0.8.13</version>
                 <configuration>
                     <excludes>
-                        <exclude>com/homegarden/store/backend/config/BackendApplication.class</exclude>
+                        <exclude>com/homegarden/store/backend/BackendApplication.class</exclude>
                         <exclude>com/homegarden/store/backend/config/**</exclude>
                         <exclude>com/homegarden/store/backend/dto/**</exclude>
                         <exclude>com/homegarden/store/backend/entity/**</exclude>

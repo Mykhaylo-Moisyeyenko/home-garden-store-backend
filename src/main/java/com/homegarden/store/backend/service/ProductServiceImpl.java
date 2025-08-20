@@ -2,7 +2,6 @@ package com.homegarden.store.backend.service;
 
 import com.homegarden.store.backend.entity.Product;
 import com.homegarden.store.backend.exception.ProductNotFoundException;
-import com.homegarden.store.backend.exception.ProductUsedInOrdersException;
 import com.homegarden.store.backend.repository.ProductRepository;
 import com.homegarden.store.backend.utils.ProductFilterSpecification;
 import jakarta.persistence.EntityManager;
@@ -18,7 +17,6 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final OrderService orderService;
     private final EntityManager entityManager;
 
     @Override
@@ -53,9 +51,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(Long id) {
         getById(id);
-        if (orderService.isProductUsedInOrders(id)) {
-            throw new ProductUsedInOrdersException("Unable to delete product with id: " + id + " because it is used in Orders");
-        }
         productRepository.deleteById(id);
     }
 
