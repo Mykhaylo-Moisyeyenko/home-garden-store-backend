@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class OrderController implements OrderControllerApi {
 
     private final OrderService orderService;
-    private final OrderConverter converter; // <— было: Converter<Order, CreateOrderRequestDto, OrderResponseDto>
+    private final OrderConverter converter;
 
     @Override
     @PreAuthorize("isAuthenticated()")
