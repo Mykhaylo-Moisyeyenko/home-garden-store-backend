@@ -8,6 +8,7 @@ import com.homegarden.store.backend.entity.Payment;
 import com.homegarden.store.backend.enums.PaymentStatus;
 import com.homegarden.store.backend.service.PaymentService;
 import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
