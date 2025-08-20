@@ -26,7 +26,6 @@ import static com.homegarden.store.backend.enums.Status.*;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderItemService orderItemService;
     private final UserService userService;
     private final CartService cartService;
 
@@ -153,11 +152,6 @@ public class OrderServiceImpl implements OrderService {
         }
 
         updateStatus(order, CANCELLED);
-    }
-
-    @Override
-    public boolean isProductUsedInOrders(Long productId) {
-        return orderItemService.isProductUsedInOrders(productId);
     }
 
     @Override

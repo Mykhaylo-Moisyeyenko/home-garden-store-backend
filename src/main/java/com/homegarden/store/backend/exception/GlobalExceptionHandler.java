@@ -42,7 +42,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {
             UserAlreadyExistsException.class,
             OrderUnableToCancelException.class,
-            ProductUsedInOrdersException.class,
             CartAlreadyExistsException.class,
             FavoriteAlreadyExistsException.class,
             DoublePaymentException.class})

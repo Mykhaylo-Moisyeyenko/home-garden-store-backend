@@ -35,15 +35,4 @@ class OrderItemServiceImplTest {
         assertEquals(listOfProducts.size(), result.size());
         verify(orderItemRepositoryTest, times(1)).findTopCancelledProducts();
     }
-
-    @Test
-    void isProductUsedInOrdersTest() {
-        when(orderItemRepositoryTest.existsByProductProductId(1L))
-                .thenReturn(Boolean.TRUE);
-
-        boolean result = orderItemServiceImplTest.isProductUsedInOrders(1L);
-
-        assertTrue(result);
-        verify(orderItemRepositoryTest, times(1)).existsByProductProductId(1L);
-    }
 }

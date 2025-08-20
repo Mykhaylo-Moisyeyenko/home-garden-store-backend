@@ -21,8 +21,6 @@ public interface OrderService {
 
     List<Order> getAllByUser();
 
-    boolean isProductUsedInOrders(Long productId);
-
     List<Order> getAllByStatusAndUpdatedAtBefore(Status status, LocalDateTime updatedAtBefore);
 
     List<Order> getAllByStatusAndUpdatedAtAfter(Status status, LocalDateTime updatedAtAfter);
