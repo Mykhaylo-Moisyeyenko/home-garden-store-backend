@@ -50,6 +50,7 @@ public interface ReportControllerApi {
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(name = "Conflict", value = "{\"error\": \"Unable to generate top cancelled products report\"}")))
     })
+     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("top-cancelled-products")
     ResponseEntity<List<TopCancelledProductsReportDto>> getTopCancelledProducts();
 
@@ -85,6 +86,7 @@ public interface ReportControllerApi {
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(name = "Conflict", value = "{\"error\": \"Unable to compute profit report\"}")))
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("profit-report")
     ResponseEntity<List<ProfitReportDto>> getProfitReport(
             @RequestParam @PastOrPresent @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -118,6 +120,7 @@ public interface ReportControllerApi {
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(name = "Conflict", value = "{\"error\": \"Unable to generate top products report\"}")))
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("top-ten-selled-products")
     ResponseEntity<List<TopTenSelledProductsReportDto>> getTopTenSelledProducts(@RequestParam String sortBy);
 
@@ -150,6 +153,7 @@ public interface ReportControllerApi {
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(name = "Conflict", value = "{\"error\": \"Unable to retrieve orders awaiting payment\"}")))
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("orders-awaiting-payment")
     ResponseEntity<List<OrderResponseDto>> getOrdersAwaitingPayment(@RequestParam @Positive int days);
 }
