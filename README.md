@@ -79,10 +79,11 @@ The project is built with **Java Spring Boot** and follows modern software desig
 ## 🚀 How to Run
 ```bash
 # Clone the repository
-git clone https://github.com/username/home-garden-store.git
+git clone https://github.com/Mykhaylo-Moisyeyenko/home-garden-store-backend.git
 
-# Navigate into the project folder
-cd home-garden-store
+# Navigate into the project folder on server
+cd /srv/home-garden-store
 
 # Build and start with Docker
-docker-compose up --build
+docker compose pull up
+docker compose up -d app
