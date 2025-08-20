@@ -19,6 +19,7 @@ public class AuthentificationController implements AuthentificationControllerApi
     private final AuthenticationService authenticationService;
 
     @Override
+    @PostMapping
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
         return ResponseEntity.ok(authenticationService.authenticate(loginRequestDto));
     }
