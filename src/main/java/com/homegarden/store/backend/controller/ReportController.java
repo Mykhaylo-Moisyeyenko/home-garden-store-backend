@@ -35,6 +35,7 @@ public class ReportController implements ReportControllerApi {
 
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @GetMapping("/profit-report")
     public ResponseEntity<List<ProfitReportDto>> getProfitReport(
             @RequestParam @PastOrPresent @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @PastOrPresent @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
