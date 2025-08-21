@@ -26,7 +26,7 @@ public interface AuthentificationControllerApi {
                             schema = @Schema(implementation = LoginRequestDto.class),
                             examples = @ExampleObject(
                                     name = "Login request",
-                                    value = "{\"username\":\"user@example.com\",\"password\":\"strongpassword\"}"
+                                    value = "{\"userEmail\":\"user-1@example.com\",\"password\":\"password1\"}"
                             )
                     )
             )
