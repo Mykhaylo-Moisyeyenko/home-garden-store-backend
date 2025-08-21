@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Tag(name = "Authentication", description = "Login endpoint for users")
-@RequestMapping("/v1/users/login")
 public interface AuthentificationControllerApi {
 
     @Operation(
@@ -67,6 +66,5 @@ public interface AuthentificationControllerApi {
                                     value = "{\"error\":\"Too many failed login attempts. Try again later.\"}"
                             )))
     })
-    @PostMapping("/login")
     ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto);
 }
