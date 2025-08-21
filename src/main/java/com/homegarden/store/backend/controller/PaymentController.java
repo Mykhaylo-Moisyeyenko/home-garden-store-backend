@@ -13,11 +13,7 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -56,7 +52,7 @@ public class PaymentController implements PaymentControllerApi {
     @Override
     @PreAuthorize("hasRole('ADMINISTRATOR')")
     @PostMapping("/{paymentId}/confirmation")
-    public ResponseEntity<PaymentResponseDto> confirm(@PathVariable("paymentId") @Min(1) Long paymentId) {
+    public ResponseEntity<PaymentResponseDto> confirm(@PathVariable("paymentId") @Min(1) Long paymentId,
                                                       @RequestParam(defaultValue = "SUCCESS") PaymentStatus status) {
         Payment updated = paymentService.confirm(paymentId, status);
         return ResponseEntity.ok(converter.toDto(updated));
