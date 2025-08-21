@@ -23,7 +23,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "Reports", description = "Endpoints for analytical and financial reporting")
-@RequestMapping("v1/reports")
 public interface ReportControllerApi {
 
     @Operation(summary = "Get top cancelled products", description = "Returns products most frequently cancelled by users")
@@ -50,8 +49,6 @@ public interface ReportControllerApi {
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(name = "Conflict", value = "{\"error\": \"Unable to generate top cancelled products report\"}")))
     })
-     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("top-cancelled-products")
     ResponseEntity<List<TopCancelledProductsReportDto>> getTopCancelledProducts();
 
     @Operation(summary = "Get profit report", description = "Returns profit report for a given date range")
@@ -86,8 +83,6 @@ public interface ReportControllerApi {
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(name = "Conflict", value = "{\"error\": \"Unable to compute profit report\"}")))
     })
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("profit-report")
     ResponseEntity<List<ProfitReportDto>> getProfitReport(
             @RequestParam @PastOrPresent @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @PastOrPresent @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
@@ -120,8 +115,6 @@ public interface ReportControllerApi {
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(name = "Conflict", value = "{\"error\": \"Unable to generate top products report\"}")))
     })
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("top-ten-selled-products")
     ResponseEntity<List<TopTenSelledProductsReportDto>> getTopTenSelledProducts(@RequestParam String sortBy);
 
     @Operation(summary = "Get orders awaiting payment", description = "Returns list of orders not yet paid after given number of days")
@@ -153,7 +146,5 @@ public interface ReportControllerApi {
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(name = "Conflict", value = "{\"error\": \"Unable to retrieve orders awaiting payment\"}")))
     })
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("orders-awaiting-payment")
     ResponseEntity<List<OrderResponseDto>> getOrdersAwaitingPayment(@RequestParam @Positive int days);
 }
