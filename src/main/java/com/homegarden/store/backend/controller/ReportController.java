@@ -13,47 +13,53 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-
+@RequestMapping("v1/reports")
 public class ReportController implements ReportControllerApi {
 
     private final ReportService reportService;
     private final OrderConverter orderConverter;
 
     @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @GetMapping("/top-cancelled-products")
     public ResponseEntity<List<TopCancelledProductsReportDto>> getTopCancelledProducts() {
-
         return ResponseEntity.ok(reportService.getTopCancelledProducts());
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @GetMapping("/profit-report")
     public ResponseEntity<List<ProfitReportDto>> getProfitReport(
-            @PastOrPresent @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @PastOrPresent @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            String groupBy) {
-
+            @RequestParam @PastOrPresent @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @PastOrPresent @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam String groupBy) {
         return ResponseEntity.ok(reportService.getProfitReport(startDate, endDate, groupBy));
     }
 
     @Override
-    public ResponseEntity<List<TopTenSelledProductsReportDto>> getTopTenSelledProducts(String sortBy) {
-
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @GetMapping("/top-ten-selled-products")
+    public ResponseEntity<List<TopTenSelledProductsReportDto>> getTopTenSelledProducts(
+            @RequestParam String sortBy) {
         return ResponseEntity.ok(reportService.getTopTenSelledProducts(sortBy));
     }
 
     @Override
-    public ResponseEntity<List<OrderResponseDto>> getOrdersAwaitingPayment(@Positive int days) {
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    @GetMapping("/awaiting-payment-orders")
+    public ResponseEntity<List<OrderResponseDto>> getOrdersAwaitingPayment(@RequestParam @Positive int days) {
         List<Order> orders = reportService.getAwaitingPaymentOrders(days);
         List<OrderResponseDto> dtos = orders.stream()
                 .map(orderConverter::toDto)
                 .toList();
-
         return ResponseEntity.ok(dtos);
     }
 }

@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,7 @@ public class FavoriteController implements FavoriteControllerApi {
         List<FavoriteDto> favorites = favoriteService.getAll().stream()
                 .map(favoriteConverter::toDto)
                 .collect(Collectors.toList());
+      
         return ResponseEntity.ok(favorites);
     }
 
@@ -40,6 +42,7 @@ public class FavoriteController implements FavoriteControllerApi {
     public ResponseEntity<Void> addToFavorites(@RequestBody @Valid FavoriteDto favoriteDto) {
         Favorite favorite = favoriteConverter.toEntity(favoriteDto);
         favoriteService.addToFavorites(favorite);
+      
         return ResponseEntity.status(201).build();
     }
 
@@ -49,6 +52,7 @@ public class FavoriteController implements FavoriteControllerApi {
     public ResponseEntity<Void> removeFromFavorites(@RequestBody @Valid FavoriteDto favoriteDto) {
         Favorite favorite = favoriteConverter.toEntity(favoriteDto);
         favoriteService.removeFromFavorites(favorite);
+      
         return ResponseEntity.noContent().build();
     }
 }
