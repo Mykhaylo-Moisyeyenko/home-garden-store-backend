@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="0" author="admin" runAlways="true" context="dev">
+        <sql>
+            TRUNCATE TABLE users RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE carts RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE categories RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE products RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE favorites RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE cart_items RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE orders RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE order_items RESTART IDENTITY CASCADE;
+            TRUNCATE TABLE payments RESTART IDENTITY CASCADE;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

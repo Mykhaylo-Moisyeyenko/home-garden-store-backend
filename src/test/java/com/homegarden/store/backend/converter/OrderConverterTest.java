@@ -1,0 +1,65 @@
+package com.homegarden.store.backend.converter;
+
+import com.homegarden.store.backend.dto.OrderItemResponseDto;
+import com.homegarden.store.backend.dto.OrderResponseDto;
+import com.homegarden.store.backend.entity.Order;
+import com.homegarden.store.backend.entity.OrderItem;
+import com.homegarden.store.backend.entity.Product;
+import com.homegarden.store.backend.entity.User;
+import com.homegarden.store.backend.enums.Status;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+class OrderConverterTest {
+
+    private OrderConverter orderConverter;
+
+    @BeforeEach
+    void setUp() {
+        orderConverter = new OrderConverter();
+    }
+
+    @Test
+    void testToDto() {
+        Product product = Product.builder()
+                .productId(1L)
+                .build();
+
+        OrderItem item = new OrderItem();
+        item.setProduct(product);
+        item.setQuantity(2);
+        item.setPriceAtPurchase(BigDecimal.valueOf(100.00));
+
+        Order order = Order.builder()
+                .orderId(1L)
+                .user(User.builder().userId(42L).build())
+                .deliveryAddress("Pushkina Street")
+                .deliveryMethod("Pickup")
+                .contactPhone("1234567890")
+                .status(Status.CREATED)
+                .items(List.of(item))
+                .build();
+
+        OrderResponseDto dto = orderConverter.toDto(order);
+
+        assertNotNull(dto);
+        assertEquals(1L, dto.orderId());
+        assertEquals(42L, dto.userId());
+        assertEquals("Pushkina Street", dto.deliveryAddress());
+        assertEquals("Pickup", dto.deliveryMethod());
+        assertEquals("1234567890", dto.contactPhone());
+        assertEquals(Status.CREATED, dto.status());
+
+        List<OrderItemResponseDto> itemDTOs = dto.items();
+        assertEquals(1, itemDTOs.size());
+        assertEquals(1L, itemDTOs.get(0).productId());
+        assertEquals(2, itemDTOs.get(0).quantity());
+        assertEquals(BigDecimal.valueOf(100.00), itemDTOs.get(0).priceAtPurchase());
+    }
+}

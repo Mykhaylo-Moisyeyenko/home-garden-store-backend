@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="insert-users" author="Sofia" runAlways="true" context="dev">
+        <sql>
+            INSERT INTO users (name, email, phone_number, password_hash, role)
+            VALUES
+                ('User-1', 'user-1@example.com', '+11111111111', '$2a$10$iuX/bVrjbvKQJSZbzr8v/.K2F44ARWEEUvWxLvfEA/eCCgDS.oZvO', 'ROLE_USER'),
+                ('User-2', 'user-2@example.com', '+11111111112', '$2a$10$EoWXs3JUxCgmE2lpb.egCe5JSji/Qhf/3SQ4Qfh5xEjv5.r2im0Eu', 'ROLE_USER'),
+                ('User-3', 'user-3@example.com', '+11111111113', '$2a$10$6RepRNu.sjV3Hm.DiwS2yOOk7Ts3LW3dJX2yNSQpZC7tnFpEKr6fK', 'ROLE_USER'),
+                ('User-4', 'user-4@example.com', '+11111111114', '$2a$10$yRX.Y9neeapY0sXVys3rge4TQ8K2tgpaMLBcEGBdTjTh91Rj0h50a', 'ROLE_USER'),
+                ('User-5', 'user-5@example.com', '+11111111115', '$2a$10$961ZBtEaj6mWfoqWTehA4.xtVYLTS/PYObS3U5WKdFZCOdesRLbsS', 'ROLE_USER'),
+                ('Admin', 'admin@example.com', '+11111111116', '$2a$10$n7Q/3W7iJd7As2WfELf1bObxyQU.84LVfiNJnIXIXfy1GXHlRfbTC', 'ROLE_ADMINISTRATOR');
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-categories" author="Sofia" runAlways="true" context="dev">
+        <sql>
+            INSERT INTO categories (name)
+            VALUES
+                ('Category-1'),
+                ('Category-2'),
+                ('Category-3'),
+                ('Category-4'),
+                ('Category-5');
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-products" author="Sofia" runAlways="true" context="dev">
+        <sql>
+            INSERT INTO products (name, description, price, category_id, image_url, discount_price)
+            VALUES
+                ('Product-1', 'Description of product 1', 31.46, 2, NULL, NULL),
+                ('Product-2', 'Description of product 2', 5.13, 3, NULL, 4.50),
+                ('Product-3', 'Description of product 3', 83.02, 4, NULL, NULL),
+                ('Product-4', 'Description of product 4', 91.53, 5, NULL, 80.47),
+                ('Product-5', 'Description of product 5', 87.98, 1, NULL, 77.41),
+                ('Product-6', 'Description of product 6', 17.98, 2, NULL, 16.09),
+                ('Product-7', 'Description of product 7', 97.10, 3, NULL, 82.71),
+                ('Product-8', 'Description of product 8', 25.68, 4, NULL, 22.23),
+                ('Product-9', 'Description of product 9', 85.56, 5, NULL, NULL),
+                ('Product-10', 'Description of product 10', 80.31, 1, NULL, 69.44),
+                ('Product-11', 'Description of product 11', 96.99, 2, NULL, 84.13),
+                ('Product-12', 'Description of product 12', 84.02, 3, NULL, NULL),
+                ('Product-13', 'Description of product 13', 89.03, 4, NULL, 78.17),
+                ('Product-14', 'Description of product 14', 85.06, 5, NULL, NULL),
+                ('Product-15', 'Description of product 15', 33.43, 1, NULL, NULL),
+                ('Product-16', 'Description of product 16', 98.60, 2, NULL, NULL),
+                ('Product-17', 'Description of product 17', 16.17, 3, NULL, NULL),
+                ('Product-18', 'Description of product 18', 17.13, 4, NULL, 14.92),
+                ('Product-19', 'Description of product 19', 56.35, 5, NULL, NULL),
+                ('Product-20', 'Description of product 20', 45.56, 1, NULL, NULL);
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-favorites" author="Sofia" runAlways="true" context="dev">
+        <sql>
+            INSERT INTO favorites (user_id, product_id)
+            VALUES
+                (1, 17),
+                (2, 14),
+                (3, 7),
+                (4, 15),
+                (5, 4);
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-carts" author="Sofia" runAlways="true" context="dev">
+        <sql>
+            INSERT INTO carts (user_id)
+            VALUES
+                (1),
+                (2),
+                (3),
+                (4),
+                (5);
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-cart-items" author="Sofia" runAlways="true" context="dev">
+        <sql>
+            INSERT INTO cart_items (cart_id, product_id, quantity)
+            VALUES
+                (1, 11, 2),
+                (1, 2, 1),
+                (2, 12, 3),
+                (2, 10, 3),
+                (3, 7, 1),
+                (3, 19, 2),
+                (4, 5, 1),
+                (4, 11, 3),
+                (5, 11, 1),
+                (5, 20, 1);
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-orders" author="Sofia" runAlways="true" context="dev">
+        <sql>
+            INSERT INTO orders (user_id, delivery_address, contact_phone, delivery_method, status, created_at, updated_at, order_total_sum)
+            VALUES
+                (1, 'Delivery address for User-1', '+11111111111', 'Courier', 'CREATED', NOW(), NOW(), 452.52),
+                (1, 'Delivery address for User-1', '+11111111111', 'Courier', 'AWAITING_PAYMENT', NOW(), NOW(), 913.53),
+                (1, 'Delivery address for User-1', '+11111111111', 'Courier', 'PAID', NOW(), NOW(), 295.63),
+                (1, 'Delivery address for User-1', '+11111111111', 'Courier', 'SHIPPED', NOW(), NOW(), 367.18),
+                (1, 'Delivery address for User-1', '+11111111111', 'Courier', 'DELIVERED', NOW(), NOW(), 440.55),
+                (1, 'Delivery address for User-1', '+11111111111', 'Courier', 'CANCELLED', NOW(), NOW(), 454.65),
+                (2, 'Delivery address for User-2', '+11111111112', 'Courier', 'CREATED', NOW(), NOW(), 677.89),
+                (2, 'Delivery address for User-2', '+11111111112', 'Courier', 'AWAITING_PAYMENT', NOW(), NOW(), 651.49),
+                (2, 'Delivery address for User-2', '+11111111112', 'Courier', 'PAID', NOW(), NOW(), 195.53),
+                (2, 'Delivery address for User-2', '+11111111112', 'Courier', 'SHIPPED', NOW(), NOW(), 369.71),
+                (2, 'Delivery address for User-2', '+11111111112', 'Courier', 'DELIVERED', NOW(), NOW(), 82.86),
+                (2, 'Delivery address for User-2', '+11111111112', 'Courier', 'CANCELLED', NOW(), NOW(), 541.84),
+                (3, 'Delivery address for User-3', '+11111111113', 'Courier', 'CREATED', NOW(), NOW(), 169.05),
+                (3, 'Delivery address for User-3', '+11111111113', 'Courier', 'AWAITING_PAYMENT', NOW(), NOW(), 349.58),
+                (3, 'Delivery address for User-3', '+11111111113', 'Courier', 'PAID', NOW(), NOW(), 420.18),
+                (3, 'Delivery address for User-3', '+11111111113', 'Courier', 'SHIPPED', NOW(), NOW(), 620.17),
+                (3, 'Delivery address for User-3', '+11111111113', 'Courier', 'DELIVERED', NOW(), NOW(), 474.26),
+                (3, 'Delivery address for User-3', '+11111111113', 'Courier', 'CANCELLED', NOW(), NOW(), 9.00),
+                (4, 'Delivery address for User-4', '+11111111114', 'Courier', 'CREATED', NOW(), NOW(), 31.23),
+                (4, 'Delivery address for User-4', '+11111111114', 'Courier', 'AWAITING_PAYMENT', NOW(), NOW(), 329.53),
+                (4, 'Delivery address for User-4', '+11111111114', 'Courier', 'PAID', NOW(), NOW(), 443.01),
+                (4, 'Delivery address for User-4', '+11111111114', 'Courier', 'SHIPPED', NOW(), NOW(), 56.35),
+                (4, 'Delivery address for User-4', '+11111111114', 'Courier', 'DELIVERED', NOW(), NOW(), 331.50),
+                (4, 'Delivery address for User-4', '+11111111114', 'Courier', 'CANCELLED', NOW(), NOW(), 618.42),
+                (5, 'Delivery address for User-5', '+11111111115', 'Courier', 'CREATED', NOW(), NOW(), 490.61),
+                (5, 'Delivery address for User-5', '+11111111115', 'Courier', 'AWAITING_PAYMENT', NOW(), NOW(), 393.17),
+                (5, 'Delivery address for User-5', '+11111111115', 'Courier', 'PAID', NOW(), NOW(), 549.46),
+                (5, 'Delivery address for User-5', '+11111111115', 'Courier', 'SHIPPED', NOW(), NOW(), 373.08),
+                (5, 'Delivery address for User-5', '+11111111115', 'Courier', 'DELIVERED', NOW(), NOW(), 48.51),
+                (5, 'Delivery address for User-5', '+11111111115', 'Courier', 'CANCELLED', NOW(), NOW(), 563.92),
+                (1, 'Delivery address for User-1', '+11111111111', 'Courier', 'CANCELLED', NOW(), NOW(), 668.94),
+                (1, 'Delivery address for User-1', '+11111111111', 'Courier', 'CANCELLED', NOW(), NOW(), 95.10),
+                (2, 'Delivery address for User-2', '+11111111112', 'Courier', 'CANCELLED', NOW(), NOW(), 373.62),
+                (2, 'Delivery address for User-2', '+11111111112', 'Courier', 'CANCELLED', NOW(), NOW(), 207.80),
+                (3, 'Delivery address for User-3', '+11111111113', 'Courier', 'CANCELLED', NOW(), NOW(), 158.63),
+                (3, 'Delivery address for User-3', '+11111111113', 'Courier', 'CANCELLED', NOW(), NOW(), 283.02),
+                (4, 'Delivery address for User-4', '+11111111114', 'Courier', 'CANCELLED', NOW(), NOW(), 162.19),
+                (4, 'Delivery address for User-4', '+11111111114', 'Courier', 'CANCELLED', NOW(), NOW(), 207.17),
+                (5, 'Delivery address for User-5', '+11111111115', 'Courier', 'CANCELLED', NOW(), NOW(), 192.35),
+                (5, 'Delivery address for User-5', '+11111111115', 'Courier', 'CANCELLED', NOW(), NOW(), 271.43);
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-order-items" author="Sofia" runAlways="true" context="dev">
+        <sql>
+            INSERT INTO order_items (order_id, product_id, quantity, price_at_purchase)
+            VALUES
+                (1, 4, 2, 80.47),
+                (1, 1, 3, 31.46),
+                (1, 16, 2, 98.60),
+                (2, 11, 1, 84.13),
+                (2, 16, 3, 98.60),
+                (2, 15, 2, 33.43),
+                (2, 13, 3, 78.17),
+                (2, 5, 3, 77.41),
+                (3, 13, 2, 78.17),
+                (3, 2, 3, 4.50),
+                (3, 10, 1, 69.44),
+                (3, 19, 1, 56.35),
+                (4, 6, 2, 16.09),
+                (4, 10, 1, 69.44),
+                (4, 12, 3, 84.02),
+                (4, 2, 3, 4.50),
+                (5, 10, 3, 69.44),
+                (5, 5, 3, 77.41),
+                (6, 3, 2, 83.02),
+                (6, 15, 1, 33.43),
+                (6, 14, 3, 85.06),
+                (7, 13, 3, 78.17),
+                (7, 12, 1, 84.02),
+                (7, 17, 3, 16.17),
+                (7, 4, 3, 80.47),
+                (7, 10, 1, 69.44),
+                (8, 10, 1, 69.44),
+                (8, 12, 3, 84.02),
+                (8, 4, 2, 80.47),
+                (8, 19, 3, 56.35),
+                (9, 14, 1, 85.06),
+                (9, 6, 1, 16.09),
+                (9, 1, 3, 31.46),
+                (10, 16, 2, 98.60),
+                (10, 13, 2, 78.17),
+                (10, 17, 1, 16.17),
+                (11, 8, 3, 22.23),
+                (11, 17, 1, 16.17),
+                (12, 17, 3, 16.17),
+                (12, 16, 3, 98.60),
+                (12, 6, 1, 16.09),
+                (12, 18, 3, 14.92),
+                (12, 20, 3, 45.56),
+                (13, 19, 3, 56.35),
+                (14, 13, 1, 78.17),
+                (14, 4, 2, 80.47),
+                (14, 1, 3, 31.46),
+                (14, 6, 1, 16.09),
+                (15, 12, 1, 84.02),
+                (15, 14, 2, 85.06),
+                (15, 3, 2, 83.02),
+                (16, 5, 2, 77.41),
+                (16, 6, 1, 16.09),
+                (16, 16, 2, 98.60),
+                (16, 12, 3, 84.02),
+                (17, 10, 3, 69.44),
+                (17, 1, 3, 31.46),
+                (17, 19, 1, 56.35),
+                (17, 15, 3, 33.43),
+                (17, 18, 1, 14.92),
+                (18, 2, 2, 4.50),
+                (19, 8, 1, 22.23),
+                (19, 2, 2, 4.50),
+                (20, 4, 1, 80.47),
+                (20, 3, 3, 83.02),
+                (21, 9, 2, 85.56),
+                (21, 14, 1, 85.06),
+                (21, 8, 1, 22.23),
+                (21, 4, 1, 80.47),
+                (21, 11, 1, 84.13),
+                (22, 19, 1, 56.35),
+                (23, 12, 3, 84.02),
+                (23, 17, 2, 16.17),
+                (23, 18, 1, 14.92),
+                (23, 6, 2, 16.09),
+                (24, 14, 3, 85.06),
+                (24, 3, 2, 83.02),
+                (24, 16, 2, 98.60),
+                (25, 5, 3, 77.41),
+                (25, 20, 1, 45.56),
+                (25, 10, 3, 69.44),
+                (25, 2, 1, 4.50),
+                (26, 5, 3, 77.41),
+                (26, 4, 2, 80.47),
+                (27, 7, 3, 82.71),
+                (27, 5, 1, 77.41),
+                (27, 15, 1, 33.43),
+                (27, 11, 2, 84.13),
+                (27, 8, 1, 22.23),
+                (28, 13, 1, 78.17),
+                (28, 18, 2, 14.92),
+                (28, 3, 2, 83.02),
+                (28, 17, 2, 16.17),
+                (28, 8, 3, 22.23),
+                (29, 17, 3, 16.17),
+                (30, 20, 2, 45.56),
+                (30, 15, 3, 33.43),
+                (30, 9, 2, 85.56),
+                (30, 17, 2, 16.17),
+                (30, 19, 3, 56.35),
+                (31, 10, 2, 69.44),
+                (31, 4, 1, 80.47),
+                (31, 16, 2, 98.60),
+                (31, 11, 3, 84.13),
+                (32, 6, 2, 16.09),
+                (32, 1, 2, 31.46),
+                (33, 18, 1, 14.92),
+                (33, 4, 2, 80.47),
+                (33, 14, 1, 85.06),
+                (33, 19, 2, 56.35),
+                (34, 19, 2, 56.35),
+                (34, 6, 2, 16.09),
+                (34, 1, 2, 31.46),
+                (35, 6, 1, 16.09),
+                (35, 19, 2, 56.35),
+                (35, 18, 2, 14.92),
+                (36, 13, 3, 78.17),
+                (36, 17, 3, 16.17),
+                (37, 12, 1, 84.02),
+                (37, 13, 1, 78.17),
+                (38, 17, 3, 16.17),
+                (38, 4, 1, 80.47),
+                (38, 15, 1, 33.43),
+                (38, 18, 3, 14.92),
+                (39, 14, 1, 85.06),
+                (39, 17, 1, 16.17),
+                (39, 20, 2, 45.56),
+                (40, 1, 3, 31.46),
+                (40, 7, 1, 82.71),
+                (40, 17, 1, 16.17),
+                (40, 13, 1, 78.17);
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-payments" author="Elizaveta" runAlways="true" context="dev">
+        <sql>
+            INSERT INTO payments (order_id, amount, status, created_at, updated_at)
+            VALUES
+                (3, 295.63, 'SUCCESS', NOW(), NOW()),
+                (4, 367.18, 'SUCCESS', NOW(), NOW()),
+                (5, 440.55, 'SUCCESS', NOW(), NOW()),
+                (9, 195.53, 'SUCCESS', NOW(), NOW()),
+                (10, 369.71, 'SUCCESS', NOW(), NOW()),
+                (11, 82.86, 'SUCCESS', NOW(), NOW()),
+                (15, 420.18, 'SUCCESS', NOW(), NOW()),
+                (16, 620.17, 'SUCCESS', NOW(), NOW()),
+                (17, 474.26, 'SUCCESS', NOW(), NOW()),
+                (21, 443.01, 'SUCCESS', NOW(), NOW()),
+                (22, 56.35, 'SUCCESS', NOW(), NOW()),
+                (23, 331.50, 'SUCCESS', NOW(), NOW()),
+                (27, 549.46, 'SUCCESS', NOW(), NOW()),
+                (28, 373.08, 'SUCCESS', NOW(), NOW()),
+                (29, 48.51, 'SUCCESS', NOW(), NOW()),
+                (2, 913.53, 'PENDING', NOW(), NOW()),
+                (8, 651.49, 'PENDING', NOW(), NOW()),
+                (14, 349.58, 'PENDING', NOW(), NOW()),
+                (20, 329.53, 'PENDING', NOW(), NOW()),
+                (26, 393.17, 'PENDING', NOW(), NOW());
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-orders-for-reports" author="Sofia" runAlways="true" context="dev">
+        <sql>
+            INSERT INTO orders (user_id, delivery_address, contact_phone, delivery_method, status, created_at, updated_at, order_total_sum)
+            VALUES
+                (1, 'Delivery address for User-1', '+11111111111', 'Courier', 'AWAITING_PAYMENT', NOW()-INTERVAL '2 DAY', NOW()-INTERVAL '2 DAY', 31.46),
+                (1, 'Delivery address for User-1', '+11111111111', 'Courier', 'AWAITING_PAYMENT', NOW()-INTERVAL '3 DAY', NOW()-INTERVAL '3 DAY', 5.13),
+                (2, 'Delivery address for User-2', '+11111111112', 'Courier', 'DELIVERED', NOW()-INTERVAL '20 DAY', NOW()-INTERVAL '20 DAY', 83.02),
+                (2, 'Delivery address for User-2', '+11111111112', 'Courier', 'DELIVERED', NOW()-INTERVAL '10 DAY', NOW()-INTERVAL '10 DAY', 122.99)
+        </sql>
+    </changeSet>
+
+    <changeSet id="insert-order-items-for-reports" author="Sofia" runAlways="true" context="dev">
+        <sql>
+            INSERT INTO order_items (order_id, product_id, quantity, price_at_purchase)
+            VALUES
+                (41, 1, 1, 31.46),
+                (42, 2, 1, 5.13),
+                (43, 3, 1, 83.02),
+                (44, 1, 1, 31.46),
+                (44, 4, 1, 91.53)
+        </sql>
+    </changeSet>
+</databaseChangeLog>
