@@ -59,9 +59,7 @@ public interface PaymentControllerApi {
                     content = @Content(mediaType = "application/json",
                             examples = @ExampleObject(name = "Conflict",
                                     value = "{\"error\": \"Conflict while retrieving payments\"}")))
-    })
-    
-    @PreAuthorize("hasRole('ADMIN')")
+    })    
     ResponseEntity<List<PaymentResponseDto>> getAllPayments();
 
     @Operation(
@@ -94,7 +92,6 @@ public interface PaymentControllerApi {
                             examples = @ExampleObject(name = "Duplicate",
                                     value = "{\"error\": \"Order id 42 already has unpaid payment\"}")))
     })
-    @PreAuthorize("hasRole('USER')")
     ResponseEntity<PaymentResponseDto> create(@RequestBody @Valid PaymentCreateDto dto);
 
     @Operation(
@@ -125,7 +122,6 @@ public interface PaymentControllerApi {
                             examples = @ExampleObject(name = "Cannot confirm",
                                     value = "{\"error\": \"Cannot confirm payment in current state\"}")))
     })
-    @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<PaymentResponseDto> confirm(@PathVariable @Min(1) Long paymentId,
                                                @RequestParam(defaultValue = "SUCCESS") PaymentStatus status);
 
@@ -155,7 +151,6 @@ public interface PaymentControllerApi {
                             examples = @ExampleObject(name = "Conflict",
                                     value = "{\"error\": \"Conflict while fetching payment\"}")))
     })
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     ResponseEntity<PaymentResponseDto> getById(@PathVariable("paymentId") @Min(1) Long paymentId);
 
     @Operation(
@@ -199,6 +194,5 @@ public interface PaymentControllerApi {
                             examples = @ExampleObject(name = "Conflict",
                                     value = "{\"error\": \"Conflict while fetching payments by order\"}")))
     })
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     ResponseEntity<List<PaymentResponseDto>> getPaymentsByOrder(@PathVariable("orderId") @Min(1) Long orderId);
 }
