@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "Payments", description = "Operations related to payment processing")
-@RequestMapping("v1/payments")
 public interface PaymentControllerApi {
 
     @Operation(
@@ -63,7 +62,6 @@ public interface PaymentControllerApi {
     })
     
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping
     ResponseEntity<List<PaymentResponseDto>> getAllPayments();
 
     @Operation(
@@ -97,7 +95,6 @@ public interface PaymentControllerApi {
                                     value = "{\"error\": \"Order id 42 already has unpaid payment\"}")))
     })
     @PreAuthorize("hasRole('USER')")
-    @PostMapping
     ResponseEntity<PaymentResponseDto> create(@RequestBody @Valid PaymentCreateDto dto);
 
     @Operation(
@@ -129,7 +126,6 @@ public interface PaymentControllerApi {
                                     value = "{\"error\": \"Cannot confirm payment in current state\"}")))
     })
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("{paymentId}/confirmation")
     ResponseEntity<PaymentResponseDto> confirm(@PathVariable @Min(1) Long paymentId,
                                                @RequestParam(defaultValue = "SUCCESS") PaymentStatus status);
 
@@ -160,7 +156,6 @@ public interface PaymentControllerApi {
                                     value = "{\"error\": \"Conflict while fetching payment\"}")))
     })
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    @GetMapping("{paymentId}")
     ResponseEntity<PaymentResponseDto> getById(@PathVariable("paymentId") @Min(1) Long paymentId);
 
     @Operation(
@@ -205,6 +200,5 @@ public interface PaymentControllerApi {
                                     value = "{\"error\": \"Conflict while fetching payments by order\"}")))
     })
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    @GetMapping("payments-by-order/{orderId}")
     ResponseEntity<List<PaymentResponseDto>> getPaymentsByOrder(@PathVariable("orderId") @Min(1) Long orderId);
 }
